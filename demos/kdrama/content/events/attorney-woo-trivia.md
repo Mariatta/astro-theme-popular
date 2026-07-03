@@ -1,0 +1,14 @@
+---
+title: "Trivia night: Extraordinary Attorney Woo"
+date: 2026-08-14T19:00:00-07:00
+description: "Fifty questions across the series, from courtroom details to the correct way to greet a revolving door."
+image: "/images/post-2.png"
+tags: ["trivia"]
+time: "7:00 – 9:00 PM"
+venue: "Half Moon Café"
+address: "88 Sidestreet, (fictional)"
+speaker: "Teams of 4 · whale facts guaranteed"
+rsvp: "https://example.com/rsvp"
+---
+
+Fifty questions across the series, from courtroom details to the correct way to greet a revolving door.

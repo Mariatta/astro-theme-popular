@@ -1,0 +1,41 @@
+---
+import { SITE, STRINGS } from '../../config';
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const events = await getCollection('events');
+  return events.map((event) => ({ params: { slug: event.id }, props: { event } }));
+}
+
+const { event } = Astro.props;
+const d = event.data;
+const { Content } = await render(event);
+const dateStr = d.date.toLocaleDateString(SITE.locale, { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+---
+
+<BaseLayout title={d.title} description={d.description} image={d.image}>
+  <article>
+    <header class="g-pagehero">
+      <div class="g-narrow" style="padding-block:var(--space-6) var(--space-5)">
+        <a href="/events/" style="display:inline-flex;gap:.4rem;align-items:center;font-size:var(--text-sm);font-weight:var(--weight-medium);margin-bottom:1rem">
+          <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> {STRINGS.allEvents}
+        </a>
+        <span class="g-eyebrow">{dateStr}{d.time && ` · ${d.time}`}</span>
+        <h1 style="margin:.5rem 0 0">{d.title}</h1>
+      </div>
+    </header>
+    <div class="g-narrow g-section--sm">
+      <div class="g-meta-line" style="margin-bottom:var(--space-4)">
+        <span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> {d.venue ?? STRINGS.venueTba}{d.address && ` · ${d.address}`}</span>
+        {d.speaker && <span><i class="fa-solid fa-microphone-lines" aria-hidden="true"></i> {d.speaker}</span>}
+      </div>
+      <div class="g-prose"><Content /></div>
+      {d.rsvp && (
+        <div class="g-row" style="margin-top:var(--space-4)">
+          <a class="g-btn g-btn--primary g-btn--lg" href={d.rsvp}><i class="fa-solid fa-calendar" aria-hidden="true"></i> {STRINGS.rsvpExternal}</a>
+        </div>
+      )}
+    </div>
+  </article>
+</BaseLayout>

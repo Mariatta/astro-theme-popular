@@ -1,0 +1,8 @@
+# Astro build output
+/dist/
+/.astro/
+node_modules/
+
+# OS / editor
+.DS_Store
+Thumbs.db

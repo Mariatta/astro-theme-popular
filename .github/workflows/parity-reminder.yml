@@ -1,0 +1,50 @@
+name: Parity reminder (Astro → Hugo)
+
+# Whenever shared or parallel files change on main, open a `parity` issue
+# reminding maintainers to port the change to hugo-theme-popular.
+# See PARITY.md for the contract.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/styles/**"
+      - "public/scripts/**"
+      - "src/layouts/**"
+      - "src/components/**"
+      - "src/pages/**"
+      - "src/content/**"
+      - "src/config.ts"
+      - "src/content.config.ts"
+
+permissions:
+  issues: write
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Open parity issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const commits = context.payload.commits || [];
+            const files = [...new Set(commits.flatMap(c => [...(c.added||[]), ...(c.modified||[]), ...(c.removed||[])]))]
+              .filter(f => /^(src\/(styles|layouts|components|pages|content)\/|public\/scripts\/|src\/(config|content\.config)\.ts)/.test(f));
+            if (!files.length) return;
+            const title = `Parity: port ${files.length} changed file(s) to hugo-theme-popular`;
+            const body = [
+              "Files changed on `main` that have a counterpart in **hugo-theme-popular** (see PARITY.md):",
+              "",
+              ...files.map(f => `- \`${f}\``),
+              "",
+              `Commit range: ${context.payload.before?.slice(0,7)}…${context.payload.after?.slice(0,7)}`,
+              "",
+              "- [ ] Ported to hugo-theme-popular (or intentionally Astro-only, explain below)",
+            ].join("\n");
+            const open = await github.rest.issues.listForRepo({ ...context.repo, labels: "parity", state: "open" });
+            if (open.data.length) {
+              await github.rest.issues.createComment({ ...context.repo, issue_number: open.data[0].number, body });
+            } else {
+              await github.rest.issues.create({ ...context.repo, title, body, labels: ["parity"] });
+            }

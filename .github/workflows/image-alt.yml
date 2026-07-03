@@ -1,0 +1,35 @@
+name: Images must have alt text
+
+# Activates and builds each demo set and fails if any <img> in the output
+# lacks a non-empty alt attribute, or any markdown image in content sources
+# has empty alt text. See scripts/check-image-alt.py.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build each demo and check its output
+        run: |
+          for d in aquarium foodie kdrama; do
+            npm run "demo:$d"
+            npx astro build
+            python3 scripts/check-image-alt.py dist
+          done
+
+      - name: Check content sources
+        run: python3 scripts/check-image-alt.py demos src/content

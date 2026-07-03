@@ -1,0 +1,42 @@
+---
+import { SITE, STRINGS } from '../config';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props { event: CollectionEntry<'events'> }
+const { event } = Astro.props;
+const d = event.data;
+const tbd = d.venueWanted || !d.venue;
+const dow = d.date.toLocaleDateString(SITE.locale, { weekday: 'short' });
+const day = d.date.toLocaleDateString(SITE.locale, { month: 'short', day: 'numeric' });
+---
+
+<div class="g-event">
+  <div class="g-event__date">
+    <span class="g-event__dow">{dow}</span>
+    <span class="g-event__day">{day}</span>
+    {d.time && <span class="g-event__time">{d.time}</span>}
+  </div>
+  <div class="g-event__body">
+    {d.tags.length > 0 && (
+      <div class="g-card__footer" style="padding-top:0">
+        {d.tags.map((t) => <span class="g-tag">{t}</span>)}
+      </div>
+    )}
+    <h3><a href={`/events/${event.id}/`} style="color:inherit">{d.title}</a></h3>
+    {d.description && <p>{d.description}</p>}
+    <div class="g-event__meta">
+      <i class="fa-solid fa-location-dot" aria-hidden="true"></i>{d.venue ?? STRINGS.venueTba}{d.address && ` · ${d.address}`}
+    </div>
+    {d.speaker && (
+      <div class="g-event__meta"><i class="fa-solid fa-microphone-lines" aria-hidden="true"></i>{d.speaker}</div>
+    )}
+  </div>
+  <div class="g-event__aside">
+    {tbd
+      ? <span class="g-badge g-badge--warning g-badge--soft">{STRINGS.venueWanted}</span>
+      : <span class="g-badge g-badge--success g-badge--soft">{STRINGS.confirmed}</span>}
+    {d.rsvp && (
+      <a class="g-btn g-btn--primary g-btn--sm" href={d.rsvp}><i class="fa-solid fa-calendar" aria-hidden="true"></i>{STRINGS.rsvp}</a>
+    )}
+  </div>
+</div>

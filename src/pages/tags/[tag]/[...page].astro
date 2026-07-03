@@ -1,0 +1,41 @@
+---
+import { STRINGS, PAGINATION } from '../../../config';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/PageHero.astro';
+import PostCard from '../../../components/PostCard.astro';
+import Pagination from '../../../components/Pagination.astro';
+
+/* One route serves /tags/<tag>/ and /tags/<tag>/page/N/, matching the Hugo
+   theme's paginated term pages. */
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  const tags = [...new Set(posts.flatMap((p) => p.data.tags))];
+  const size = PAGINATION.pageSize;
+  return tags.flatMap((tag) => {
+    const tagged = posts
+      .filter((p) => p.data.tags.includes(tag))
+      .sort((a, b) => +b.data.date - +a.data.date);
+    const total = Math.max(1, Math.ceil(tagged.length / size));
+    return Array.from({ length: total }, (_, i) => ({
+      params: { tag, page: i === 0 ? undefined : `page/${i + 1}` },
+      props: { current: i + 1, total, count: tagged.length, posts: tagged.slice(i * size, (i + 1) * size) },
+    }));
+  });
+}
+
+const { tag } = Astro.params;
+const { current, total, count, posts } = Astro.props;
+---
+
+<BaseLayout title={`#${tag}`}>
+  <PageHero eyebrow={STRINGS.eyebrowTag} title={`#${tag}`} lead={STRINGS.taggedCount.replace('{n}', String(count)).replace('{tag}', tag)} />
+  <section class="g-bg-white g-section">
+    <div class="g-container">
+      <div class="g-grid-3">
+        {posts.map((p) => <PostCard post={p} />)}
+      </div>
+      <Pagination current={current} total={total} base={`/tags/${tag}/`} />
+    </div>
+  </section>
+</BaseLayout>

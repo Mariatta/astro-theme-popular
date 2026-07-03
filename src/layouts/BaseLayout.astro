@@ -1,0 +1,82 @@
+---
+/** Popular: base layout: head, brand token overrides, header, footer, shared JS. */
+import '../styles/tokens/fonts.css';
+import '../styles/tokens/colors.css';
+import '../styles/tokens/typography.css';
+import '../styles/tokens/spacing.css';
+import '../styles/tokens/elevation.css';
+import '../styles/base.css';
+import '../styles/components.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import DemoBar from '../components/DemoBar.astro';
+import { SITE, BRAND, STRINGS } from '../config';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+const { title, description, image } = Astro.props;
+const pageTitle = title ? `${title} · ${SITE.title}` : `${SITE.title}, ${SITE.tagline}`;
+const desc = description ?? SITE.description;
+const ogImage = image ?? SITE.ogImage;
+
+/* Brand overrides: mirrors the Hugo theme's brand-vars.html partial. */
+const vars: string[] = [];
+const b = BRAND;
+if (b.primary) {
+  vars.push(`--color-primary:${b.primary}`, `--raspberry-500:${b.primary}`);
+  vars.push(`--raspberry-50:color-mix(in srgb, ${b.primary} 7%, #fff)`);
+  vars.push(`--raspberry-300:color-mix(in srgb, ${b.primary} 55%, #fff)`);
+}
+if (b.primaryHover) vars.push(`--color-primary-hover:${b.primaryHover}`);
+if (b.primaryActive) vars.push(`--color-primary-active:${b.primaryActive}`, `--raspberry-700:${b.primaryActive}`, `--text-link:${b.primaryActive}`);
+if (b.secondary) vars.push(`--color-secondary:${b.secondary}`);
+if (b.accent) vars.push(`--color-accent:${b.accent}`, `--indigo-500:${b.accent}`);
+if (b.ink) vars.push(`--ink-800:${b.ink}`, `--text-strong:${b.ink}`);
+if (b.surfacePink) vars.push(`--surface-pink:${b.surfacePink}`);
+if (b.surfacePinkSoft) vars.push(`--surface-pink-soft:${b.surfacePinkSoft}`);
+if (b.surfaceInk) vars.push(`--surface-ink:${b.surfaceInk}`);
+if (b.fontSans) vars.push(`--font-sans:${b.fontSans}`);
+if (b.fontDisplay) vars.push(`--font-display:${b.fontDisplay}`);
+if (b.radiusCard) vars.push(`--radius-xl:${b.radiusCard}`);
+if (b.containerMax) vars.push(`--container-max:${b.containerMax}`);
+/* html:root outranks the token files' :root so the override wins regardless of
+   where Astro injects the bundled stylesheet in <head>. */
+const brandCss = `html:root{${vars.join(';')}}`;
+---
+
+<!DOCTYPE html>
+<html lang={SITE.locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={desc} />
+    <meta property="og:site_name" content={SITE.title} />
+    <meta property="og:title" content={title ?? SITE.title} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:url" content={Astro.url} />
+    {ogImage && <meta property="og:image" content={new URL(ogImage, Astro.site ?? Astro.url)} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href={SITE.logo} />
+    <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/rss.xml" />
+    <link rel="stylesheet" href={SITE.fontAwesome} referrerpolicy="no-referrer" />
+    <style is:inline id="popular-brand" set:html={brandCss}></style>
+  </head>
+  <body data-copy-label={STRINGS.copyCode} data-checklist-done={STRINGS.checklistDone}>
+    <a class="g-skip" href="#main">{STRINGS.skipToContent}</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <DemoBar />
+    <script src="/scripts/nav.js" is:inline defer></script>
+    <script src="/scripts/checklist.js" is:inline defer></script>
+    <script src="/scripts/toc.js" is:inline defer></script>
+    <script src="/scripts/blog-filter.js" is:inline defer></script>
+    <script src="/scripts/copy-code.js" is:inline defer></script>
+  </body>
+</html>
