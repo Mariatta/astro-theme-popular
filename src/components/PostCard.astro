@@ -1,5 +1,6 @@
 ---
 import { SITE } from '../config';
+import { tagSlug } from '../lib/slugs';
 import type { CollectionEntry } from 'astro:content';
 import { getCollection } from 'astro:content';
 
@@ -27,7 +28,7 @@ if (!names.length && d.author) names.push(d.author);
     {d.tags.length > 0 && (
       <div class="g-card__footer">
         {d.tags.slice(0, 2).map((t) => (
-          <a class="g-tag" href={`/tags/${t}/`}>{t}</a>
+          <a class="g-tag" href={`/tags/${tagSlug(t)}/`}>{t}</a>
         ))}
       </div>
     )}

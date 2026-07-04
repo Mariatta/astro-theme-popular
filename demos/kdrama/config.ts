@@ -7,6 +7,7 @@ export const SITE = {
   brandName: "KDrama",
   brandSub: "Fan Club",
   logo: '/images/logo.png',
+  favicon: '/images/logo.png',
   ogImage: '/images/hero.png',
   locale: 'en-US',
   fontAwesome: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css',
@@ -19,7 +20,6 @@ export const STRINGS: Record<string, string> = {
   skipToContent: 'Skip to content',
   primaryNav: 'Primary',
   toggleMenu: 'Toggle menu',
-  onThisPage: 'On this page',
   nextMeetup: 'Next meetup',
   venueTba: 'Venue to be announced',
   rsvp: 'RSVP',
@@ -151,12 +151,18 @@ export const HOME = {
       { label: 'About us', url: '/about/', variant: 'outline' },
     ],
   },
-  stats: [{ n: "2021", l: "club founded" }, { n: "All", l: "fans welcome" }, { n: "Free", l: "to attend" }, { n: "Monthly", l: "watch parties" }],
+  stats: [{ value: "2021", label: "club founded" }, { value: "All", label: "fans welcome" }, { value: "Free", label: "to attend" }, { value: "Monthly", label: "watch parties" }],
   featuresHead: { eyebrow: 'What we do', title: "What KDrama Fan Club is all about", lead: 'No experience necessary, come as you are.' },
   features: [
     { icon: "fa-solid fa-tv", title: "Watch parties", body: "Big screen, subtitles on, communal gasping encouraged. We pick a series and watch the openers together." },
     { icon: "fa-solid fa-circle-question", title: "Trivia nights", body: "From courtroom scenes to whale facts, test your knowledge of the dramas we all pretend we didn't binge in one weekend." },
     { icon: "fa-solid fa-music", title: "OST nights & karaoke", body: "The soundtracks deserve their own evening. Bring your ballad voice." },
+  ],
+  testimonialsHead: { eyebrow: 'Kind words', title: 'What members say' },
+  testimonials: [
+    { quote: "I showed up alone to my first watch party. By the finale I had a whole couch.", name: "Dani", role: "Watch-party regular" },
+    { quote: "Trivia night taught me more about whales than school ever did.", name: "Sam", role: "Team Whale Facts" },
+    { quote: "I've cried in public four times this year. Highly recommend.", name: "Mina", role: "Ballad enthusiast" },
   ],
   getInvolved: {
     eyebrow: 'Community',
@@ -177,5 +183,6 @@ export const DEMO_BAR = {
     { slug: 'aquarium', label: 'Aquarium', icon: 'fa-solid fa-fish' },
     { slug: 'foodie', label: 'Foodie', icon: 'fa-solid fa-utensils' },
     { slug: 'kdrama', label: 'KDrama', icon: 'fa-solid fa-tv' },
+    { slug: 'superfan', label: 'Superfan', icon: 'fa-solid fa-star' },
   ],
 };

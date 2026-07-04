@@ -25,7 +25,7 @@ jobs:
 
       - name: Build each demo and check its output
         run: |
-          for d in aquarium foodie kdrama; do
+          for d in aquarium foodie kdrama superfan; do
             npm run "demo:$d"
             npx astro build
             python3 scripts/check-image-alt.py dist

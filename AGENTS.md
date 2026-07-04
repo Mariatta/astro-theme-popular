@@ -15,10 +15,12 @@ here must be mirrored there (see "Parity rules" below).
 
 `src/` holds the **active site**, which is a *copy* produced by demo
 activation. The real sources for the demos live in `demos/<name>/`
-(aquarium, foodie, kdrama). Running:
+(aquarium, foodie, kdrama, plus `superfan`: Truly Madly Riley, a fictional
+personal site demonstrating individual use; it has no Hugo twin, see
+PARITY.md). Running:
 
 ```bash
-npm run demo:aquarium   # or demo:foodie / demo:kdrama
+npm run demo:aquarium   # or demo:foodie / demo:kdrama / demo:superfan
 ```
 
 copies that demo's `config.ts`, `content/`, and `images/` over `src/config.ts`,
@@ -30,7 +32,7 @@ copies that demo's `config.ts`, `content/`, and `images/` over `src/config.ts`,
   stale activation copy. `src/config.ts` should be identical to the activated
   demo's `config.ts`.
 - When editing shared config shape (NAV, FOOTER, BRAND), apply the same edit to
-  `src/config.ts` **and** all three `demos/*/config.ts`.
+  `src/config.ts` **and** all four `demos/*/config.ts`.
 
 ## Commands
 
@@ -86,6 +88,17 @@ Remember: add demo content under `demos/<name>/content/`, not only `src/`.
   specificity tie and revert the site to the default pink palette.
 - `FOOTER` takes `tagline`, optional `credit: { label, url }`, and `columns`.
 
+## Naming conventions
+
+- Config keys, component props, and frontmatter fields must be descriptive
+  words, never single letters or cryptic abbreviations. A reader should
+  understand a key without opening the component that consumes it. Example:
+  the `HOME.stats` entries use `value` and `label` (renamed from the old
+  `n` and `l`; do not reintroduce short forms like these).
+- The same applies to `STRINGS` keys, CSS custom properties, and JS `data-*`
+  hooks: name for meaning, and keep the names identical across both repos
+  since the key names are part of the parity contract.
+
 ## Internationalization (UI strings)
 
 - Never hardcode user-facing text in components/pages. Add a key to `STRINGS`
@@ -111,6 +124,8 @@ Remember: add demo content under `demos/<name>/content/`, not only `src/`.
 - Demo copy must identify the framework: "an Astro demo site", never just
   "a demo site". (The Hugo repo says "a Hugo demo site".)
 - All demo/example content is fictional; every outbound link in demo content
-  points to `example.com`. Do not add real organizations or people.
+  points to `example.com`. Do not add real organizations or people. Exception:
+  license attribution must keep its real links (the Code of Conduct credits
+  the Django CoC and Geek Feminism template, as CC-BY requires).
 - The theme credit is "Popular Astro theme by Mariatta" linking to
   https://mariatta.ca (set per site via `FOOTER.credit`).

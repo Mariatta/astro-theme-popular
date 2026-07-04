@@ -7,6 +7,7 @@ export const SITE = {
   brandName: "Lucky Town",
   brandSub: "Foodie Club",
   logo: '/images/logo.png',
+  favicon: '/images/logo.png',
   ogImage: '/images/hero.png',
   locale: 'en-US',
   fontAwesome: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css',
@@ -19,7 +20,6 @@ export const STRINGS: Record<string, string> = {
   skipToContent: 'Skip to content',
   primaryNav: 'Primary',
   toggleMenu: 'Toggle menu',
-  onThisPage: 'On this page',
   nextMeetup: 'Next meetup',
   venueTba: 'Venue to be announced',
   rsvp: 'RSVP',
@@ -151,12 +151,18 @@ export const HOME = {
       { label: 'About us', url: '/about/', variant: 'outline' },
     ],
   },
-  stats: [{ n: "2019", l: "club founded" }, { n: "All", l: "appetites welcome" }, { n: "Free", l: "to attend" }, { n: "Monthly", l: "dinners in Lucky Town" }],
+  stats: [{ value: "2019", label: "club founded" }, { value: "All", label: "appetites welcome" }, { value: "Free", label: "to attend" }, { value: "Monthly", label: "dinners in Lucky Town" }],
   featuresHead: { eyebrow: 'What we do', title: "What Lucky Town Foodie Club is all about", lead: 'No experience necessary, come as you are.' },
   features: [
     { icon: "fa-solid fa-utensils", title: "Cooking nights", body: "Hands-on evenings where everyone leaves with flour on their shirt and a container of leftovers." },
     { icon: "fa-solid fa-ice-cream", title: "Food crawls", body: "Guided wanders through dessert counters, dumpling windows and the occasional legendary food truck." },
     { icon: "fa-solid fa-bowl-food", title: "Potlucks & cook-offs", body: "Bring a dish, defend your recipe. The great poutine cook-off is our unofficial championship." },
+  ],
+  testimonialsHead: { eyebrow: 'Kind words', title: 'What members say' },
+  testimonials: [
+    { quote: "I came for the potluck and stayed for the people. Also the potluck.", name: "Marisol", role: "Member since the first cook-off" },
+    { quote: "My sourdough has a fan club now. I'm mostly fine with being the plus-one.", name: "Theo", role: "Bread person" },
+    { quote: "Three cooking nights in and I finally own a rolling pin. Growth.", name: "June", role: "Newest member" },
   ],
   getInvolved: {
     eyebrow: 'Community',
@@ -177,5 +183,6 @@ export const DEMO_BAR = {
     { slug: 'aquarium', label: 'Aquarium', icon: 'fa-solid fa-fish' },
     { slug: 'foodie', label: 'Foodie', icon: 'fa-solid fa-utensils' },
     { slug: 'kdrama', label: 'KDrama', icon: 'fa-solid fa-tv' },
+    { slug: 'superfan', label: 'Superfan', icon: 'fa-solid fa-star' },
   ],
 };

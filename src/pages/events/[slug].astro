@@ -17,15 +17,18 @@ const dateStr = d.date.toLocaleDateString(SITE.locale, { weekday: 'long', month:
 <BaseLayout title={d.title} description={d.description} image={d.image}>
   <article>
     <header class="g-pagehero">
-      <div class="g-narrow" style="padding-block:var(--space-6) var(--space-5)">
-        <a href="/events/" style="display:inline-flex;gap:.4rem;align-items:center;font-size:var(--text-sm);font-weight:var(--weight-medium);margin-bottom:1rem">
-          <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> {STRINGS.allEvents}
-        </a>
+      <div class="g-container" style="padding-block:var(--space-6) var(--space-5)">
+        <div style="margin-bottom:1rem">
+          <a href="/events/" style="display:inline-flex;gap:.4rem;align-items:center;font-size:var(--text-sm);font-weight:var(--weight-medium)">
+            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> {STRINGS.allEvents}
+          </a>
+        </div>
         <span class="g-eyebrow">{dateStr}{d.time && ` · ${d.time}`}</span>
         <h1 style="margin:.5rem 0 0">{d.title}</h1>
       </div>
     </header>
-    <div class="g-narrow g-section--sm">
+    <div class="g-container g-section--sm">
+     <div class="g-article">
       <div class="g-meta-line" style="margin-bottom:var(--space-4)">
         <span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> {d.venue ?? STRINGS.venueTba}{d.address && ` · ${d.address}`}</span>
         {d.speaker && <span><i class="fa-solid fa-microphone-lines" aria-hidden="true"></i> {d.speaker}</span>}
@@ -36,6 +39,7 @@ const dateStr = d.date.toLocaleDateString(SITE.locale, { weekday: 'long', month:
           <a class="g-btn g-btn--primary g-btn--lg" href={d.rsvp}><i class="fa-solid fa-calendar" aria-hidden="true"></i> {STRINGS.rsvpExternal}</a>
         </div>
       )}
+     </div>
     </div>
   </article>
 </BaseLayout>

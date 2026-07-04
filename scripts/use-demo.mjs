@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * use-demo.mjs: activate one of the demo sets (demos/<slug>) as the live site.
- *   node scripts/use-demo.mjs aquarium|foodie|kdrama
+ *   node scripts/use-demo.mjs aquarium|foodie|kdrama|superfan
  * Copies the demo's config.ts → src/config.ts, content → src/content,
  * and images → public/images. Adopters: ignore this: put your own content
  * straight into src/ and delete demos/.
@@ -15,7 +15,7 @@ const slug = process.argv[2];
 const demo = join(root, 'demos', slug ?? '');
 
 if (!slug || !existsSync(demo)) {
-  console.error('usage: node scripts/use-demo.mjs <aquarium|foodie|kdrama>');
+  console.error('usage: node scripts/use-demo.mjs <aquarium|foodie|kdrama|superfan>');
   process.exit(1);
 }
 

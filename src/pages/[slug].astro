@@ -18,7 +18,9 @@ export async function getStaticPaths() {
 const { entry, kind } = Astro.props;
 const d = entry.data;
 const { Content, headings } = await render(entry);
-const toc = headings.filter((h) => h.depth === 2);
+/* Current page's h2/h3 links nest under its sidebar entry, in document
+   order, mirroring the Hugo theme's docs/single.html. */
+const sections = headings.filter((h) => h.depth === 2 || h.depth === 3);
 const allDocs = (await getCollection('docs')).sort(
   (a, b) => (a.data.weight ?? 100) - (b.data.weight ?? 100)
 );
@@ -32,14 +34,17 @@ const allDocs = (await getCollection('docs')).sort(
       <nav class="g-doc-toc" aria-label={STRINGS.eyebrowDocs}>
         <div class="g-doc-toc__label">{STRINGS.eyebrowDocs}</div>
         {allDocs.map((e) => (
-          <a
-            href={`/${e.id}/`}
-            class={e.id === entry.id ? 'is-active' : ''}
-            aria-current={e.id === entry.id ? 'page' : undefined}
-          >{e.data.title}</a>
+          <>
+            <a
+              href={`/${e.id}/`}
+              class={e.id === entry.id ? 'is-active' : ''}
+              aria-current={e.id === entry.id ? 'page' : undefined}
+            >{e.data.title}</a>
+            {e.id === entry.id && sections.map((h) => (
+              <a href={`#${h.slug}`} style={`padding-left:${h.depth === 2 ? '1.35rem' : '2rem'};font-size:var(--text-xs)`}>{h.text}</a>
+            ))}
+          </>
         ))}
-        <div class="g-doc-toc__label" style="margin-top:1.2rem">{STRINGS.onThisPage}</div>
-        {toc.map((h) => <a href={`#${h.slug}`}>{h.text}</a>)}
       </nav>
       <div class="g-doc__content g-prose">
         <Content />
@@ -47,8 +52,10 @@ const allDocs = (await getCollection('docs')).sort(
     </div>
   ) : (
     <section class="g-bg-white g-section">
-      <div class="g-narrow g-prose">
-        <Content />
+      <div class="g-container">
+        <div class="g-article g-prose">
+          <Content />
+        </div>
       </div>
     </section>
   )}

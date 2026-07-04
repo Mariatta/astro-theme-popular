@@ -2,17 +2,32 @@ import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 import { SITE } from '../config';
 
+const escapeXml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
 export async function GET(context) {
-  const posts = (await getCollection('blog')).sort((a, b) => +b.data.date - +a.data.date);
+  const posts = (await getCollection('blog'))
+    .filter((p) => !p.data.draft)
+    .sort((a, b) => +b.data.date - +a.data.date);
+  const allAuthors = await getCollection('authors');
   return rss({
     title: SITE.title,
     description: SITE.description,
     site: context.site,
-    items: posts.map((post) => ({
-      title: post.data.title,
-      pubDate: post.data.date,
-      description: post.data.description,
-      link: `/blog/${post.id}/`,
-    })),
+    xmlns: { dc: 'http://purl.org/dc/elements/1.1/' },
+    items: posts.map((post) => {
+      const names = [
+        ...post.data.authors.map((slug) => allAuthors.find((a) => a.id === slug)?.data.title ?? slug),
+        ...post.data.guestAuthors.map((g) => g.name),
+      ];
+      if (!names.length && post.data.author) names.push(post.data.author);
+      return {
+        title: post.data.title,
+        pubDate: post.data.date,
+        description: post.data.description,
+        link: `/blog/${post.id}/`,
+        categories: post.data.tags,
+        customData: names.length ? `<dc:creator>${escapeXml(names.join(', '))}</dc:creator>` : undefined,
+      };
+    }),
   });
 }

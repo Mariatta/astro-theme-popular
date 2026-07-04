@@ -9,7 +9,7 @@ groups and small events: the Astro twin of
 [`hugo-theme-popular`](../hugo-theme-popular). Both share the same design tokens, CSS,
 behaviour JS and content model; see **PARITY.md** for the cross-repo contract.
 
-- Composable **home page** (hero, stats, features, auto next-event, latest posts, organizers, CTA)
+- Composable **home page** (hero, stats, features, auto next-event, latest posts, organizers, testimonials, CTA)
 - **Blog** with tag filtering, tag pages, RSS, and per-post speaker bios
 - **Events** that automatically split into *upcoming* and *past*
 - **Organizers / team** page
@@ -35,11 +35,12 @@ npm run dev          # http://localhost:4321
 npm run build        # static output in dist/
 ```
 
-The repo ships **three complete fictional demos** sharing the same theme code:
-**Rocky Cove Aquarium Club** (teal, active by default), **Lucky Town Foodie Club**
-(copper) and **KDrama Fan Club** (indigo). Switch the active demo with
-`npm run demo:foodie` / `demo:kdrama` / `demo:aquarium` (copies `demos/<slug>/`
-into `src/` + `public/images`). The deploy workflow publishes all three behind a
+The repo ships **four complete fictional demos** sharing the same theme code:
+**Rocky Cove Aquarium Club** (teal), **Lucky Town Foodie Club** (copper),
+**KDrama Fan Club** (indigo) and **Truly Madly Riley** (gold, a personal site
+for one fictional superfan). Switch the active demo with `npm run demo:foodie`
+/ `demo:kdrama` / `demo:aquarium` / `demo:superfan` (copies `demos/<slug>/`
+into `src/` + `public/images`). The deploy workflow publishes all four behind a
 gallery landing page with an in-page switcher (`DEMO_BAR` in `src/config.ts`, 
 set it to `null` on a real site and it never appears). All communities and venues
 in the demos are made up for demonstration.
@@ -54,7 +55,7 @@ in the demos are made up for demonstration.
 | Home page sections | `src/config.ts` → `HOME` |
 | Blog posts / events / organizers | `src/content/{blog,events,organizers}/*.md` |
 | About, Code of Conduct, Get involved | `src/content/pages/*.mdx` |
-| Handbook & runbooks | `src/content/docs/*.mdx` (use `<Callout>` and `<Checklist>`) |
+| Handbook & runbooks | `src/content/docs/*.mdx` (use `<Callout>` and `<Checklist>`); sidebar ordered by `weight`, set it on every docs page |
 
 Front-matter schemas live in `src/content.config.ts` (zod-validated) and are kept
 1:1 compatible with the Hugo theme, so content moves between the two freely.
@@ -82,6 +83,16 @@ key format as the Hugo theme.
 
 Static output: deploy `dist/` to Netlify, GitHub Pages, Cloudflare Pages, etc.
 Set `site` in `astro.config.mjs` for correct RSS/OG URLs.
+
+## Support the theme
+
+Popular is free and MIT licensed. If it made your community site easier, there are three
+ways to support the work:
+
+- **Star the repo** so other organizers can find it
+- **Tell others about it**: share it with another meetup, club or community, or use it
+  yourself for your next community site
+- **[Sponsor on GitHub](https://github.com/sponsors/Mariatta)**
 
 ## Credits & license
 

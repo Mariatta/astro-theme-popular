@@ -3,9 +3,10 @@ import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import AuthorBox from '../../components/AuthorBox.astro';
 import { SUPPORT, SITE, STRINGS } from '../../config';
+import { tagSlug } from '../../lib/slugs';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
+  const posts = (await getCollection('blog')).filter((p) => !p.data.draft);
   return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
 }
 
@@ -26,16 +27,16 @@ const byline = bylineNames.length > 1
   : bylineNames.join('');
 ---
 
-<BaseLayout title={d.title} description={d.description} image={d.image}>
+<BaseLayout title={d.title} description={d.description} image={d.image} article={{ published: d.date, authors: bylineNames, tags: d.tags }}>
   <article>
     <header class="g-pagehero">
-      <div class="g-narrow" style="padding-block:var(--space-6) var(--space-5)">
+      <div class="g-container" style="padding-block:var(--space-6) var(--space-5)">
         <a href="/blog/" style="display:inline-flex;gap:.4rem;align-items:center;font-size:var(--text-sm);font-weight:var(--weight-medium);margin-bottom:1rem">
           <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> {STRINGS.allPosts}
         </a>
         {d.tags.length > 0 && (
           <div class="g-row" style="margin-bottom:.8rem">
-            {d.tags.map((t) => <a class="g-tag" href={`/tags/${t}/`}>{t}</a>)}
+            {d.tags.map((t) => <a class="g-tag" href={`/tags/${tagSlug(t)}/`}>{t}</a>)}
           </div>
         )}
         <h1 style="margin:0">{d.title}</h1>
@@ -45,7 +46,8 @@ const byline = bylineNames.length > 1
       </div>
     </header>
 
-    <div class="g-narrow g-section--sm">
+    <div class="g-container g-section--sm">
+     <div class="g-article">
       {d.image && (
         <div style="border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-md);margin-bottom:var(--space-5)">
           <img src={d.image} alt={d.title} style="width:100%;aspect-ratio:16/9;object-fit:cover" />
@@ -89,6 +91,7 @@ const byline = bylineNames.length > 1
           </div>
         </div>
       )}
+     </div>
     </div>
   </article>
 </BaseLayout>

@@ -7,6 +7,7 @@ export const SITE = {
   brandName: "Rocky Cove",
   brandSub: "Aquarium Club",
   logo: '/images/logo.png',
+  favicon: '/images/logo.png',
   ogImage: '/images/hero.png',
   locale: 'en-US',
   fontAwesome: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css',
@@ -19,7 +20,6 @@ export const STRINGS: Record<string, string> = {
   skipToContent: 'Skip to content',
   primaryNav: 'Primary',
   toggleMenu: 'Toggle menu',
-  onThisPage: 'On this page',
   nextMeetup: 'Next meetup',
   venueTba: 'Venue to be announced',
   rsvp: 'RSVP',
@@ -151,12 +151,18 @@ export const HOME = {
       { label: 'About us', url: '/about/', variant: 'outline' },
     ],
   },
-  stats: [{ n: "2019", l: "club founded" }, { n: "All", l: "tanks welcome" }, { n: "Free", l: "to attend" }, { n: "Monthly", l: "meets in Rocky Cove" }],
+  stats: [{ value: "2019", label: "club founded" }, { value: "All", label: "tanks welcome" }, { value: "Free", label: "to attend" }, { value: "Monthly", label: "meets in Rocky Cove" }],
   featuresHead: { eyebrow: 'What we do', title: "What Rocky Cove Aquarium Club is all about", lead: 'No experience necessary, come as you are.' },
   features: [
     { icon: "fa-solid fa-fish", title: "Show & tell nights", body: "Bring photos (or a jar of shrimp) and share what's growing, spawning or misbehaving in your tank." },
     { icon: "fa-solid fa-seedling", title: "Hands-on workshops", body: "Aquascaping, planted tanks and CO₂, water chemistry, learn by doing, with helpers at every table." },
     { icon: "fa-solid fa-arrows-rotate", title: "Swap meets", body: "Trade plants, shrimp and frags with other keepers. One keeper's trimmings are another's new scape." },
+  ],
+  testimonialsHead: { eyebrow: 'Kind words', title: 'What members say' },
+  testimonials: [
+    { quote: "I joined with one betta. I now run three tanks and have zero regrets.", name: "Priya", role: "Freshwater keeper" },
+    { quote: "The only place where 'my tank crashed' gets you sympathy and a rescue plan in the same breath.", name: "Marcus", role: "Reef keeper" },
+    { quote: "The swap meet furnished my entire aquascape. My wallet thanks this club.", name: "Elle", role: "Plant person" },
   ],
   getInvolved: {
     eyebrow: 'Community',
@@ -177,5 +183,6 @@ export const DEMO_BAR = {
     { slug: 'aquarium', label: 'Aquarium', icon: 'fa-solid fa-fish' },
     { slug: 'foodie', label: 'Foodie', icon: 'fa-solid fa-utensils' },
     { slug: 'kdrama', label: 'KDrama', icon: 'fa-solid fa-tv' },
+    { slug: 'superfan', label: 'Superfan', icon: 'fa-solid fa-star' },
   ],
 };

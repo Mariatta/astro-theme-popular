@@ -59,14 +59,19 @@ Same behaviour, different language. When you change one, port the other.
 
 **Config invariant:** the `[params.brand]` keys in Hugo and the `BRAND` keys in
 `src/config.ts` must stay identical (`primary`, `primaryHover`, `primaryActive`,
-`secondary`, `accent`, `ink`, `surfacePink`, `surfacePinkSoft`, `surfaceInk`,
-`fontSans`, `fontDisplay`, `radiusCard`, `containerMax`).
+`link`, `linkHover`, `secondary`, `accent`, `ink`, `surfacePink`,
+`surfacePinkSoft`, `surfaceInk`, `fontSans`, `fontDisplay`, `radiusCard`,
+`containerMax`, plus the dark-palette keys `surfacePage`, `surfaceCard`,
+`surfaceTertiary`, `textBody`, `textMuted`, `textOnBrand`, `borderSubtle`). `params.favicon` ⇄
+`SITE.favicon`, falling back to the logo on both sides. `params.customCSS` ⇄
+`SITE.customCSS` (extra stylesheet URLs, e.g. web fonts).
 
 **Pagination invariant:** list pages paginate with `/…/page/N/` URLs on both
 sides (page 1 is the section root). Page size comes from Hugo's standard
 `[pagination] pagerSize` ⇄ `PAGINATION.pageSize` in `config.ts`; the demo
 sites set both to 3. Blog, tag, and organizer lists paginate their full set;
 the events list paginates past events only (upcoming always shows in full).
+Both event sections group rows under `.g-year` year headings.
 
 ## Tier 2¾: UI strings (i18n)
 
@@ -96,7 +101,7 @@ Front-matter fields must accept the same names on both sides
 
 - **blog**: `title, date, author, authors[], guestAuthors[{name,title,photo,bio,website,social[]}], description, image, tags[], speaker{name,title,photo,bio}`
 - **authors**: `title, role, photo, bio, website, social[{label,icon,url}]`
-- **events**: `title, date (event start; upcoming/past pivot), description, image, tags[], time, venue, venueWanted, address, speaker, rsvp`
+- **events**: `title, date (event start; upcoming/past pivot), description, image, tags[], time, venue, venueWanted, address, speaker, rsvp, meetupUrl (metadata only; not rendered)`
 - **organizers**: `title, weight, role, photo, description, social[{label,icon,url}]`
 - **docs / pages**: `title, eyebrow, lead`
 
@@ -106,11 +111,18 @@ Adding a field = update Hugo templates + Astro schema & components + this doc.
 
 ## Tier 3½: demo sets
 
-Both repos ship the same three fictional demos (Rocky Cove Aquarium Club /
-Lucky Town Foodie Club / KDrama Fan Club). Demo *content and config values* must
-stay equivalent across repos: Hugo `exampleSite/` + `demos/*` ⇄ Astro `demos/*`
-(slugs `aquarium`, `foodie`, `kdrama`). The demo switcher bar is `params.demoBar`
-(Hugo) ⇄ `DEMO_BAR` in `config.ts` (Astro) with identical slugs/labels/icons.
+Both repos ship the same four fictional demos: three communities (Rocky Cove
+Aquarium Club / Lucky Town Foodie Club / KDrama Fan Club) and one personal
+site (Truly Madly Riley: a superfan's site with the blog as a news feed,
+events as an influencer's appearances, and no organizers). Demo *content and
+config values* must stay equivalent across repos: Hugo `demos/*` ⇄ Astro
+`demos/*` (slugs `aquarium`, `foodie`, `kdrama`, `superfan`; Hugo dirs use
+full names, so `demos/truly-madly-riley` ⇄ `demos/superfan`). The demo
+switcher bar is `params.demoBar` (Hugo) ⇄ `DEMO_BAR` in `config.ts` (Astro)
+with identical slugs/labels/icons.
+
+Single-repo extra (allowed asymmetry): Hugo ships `exampleSite/`, the neutral
+"Your Community" starter adopters copy. It never sets the demo bar.
 
 ## Release checklist
 

@@ -8,6 +8,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "demo:superfan": "node scripts/use-demo.mjs superfan",
     "demo:aquarium": "node scripts/use-demo.mjs aquarium",
     "demo:foodie": "node scripts/use-demo.mjs foodie",
     "demo:kdrama": "node scripts/use-demo.mjs kdrama"

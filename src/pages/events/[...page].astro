@@ -23,6 +23,20 @@ export async function getStaticPaths() {
 }
 
 const { current, total, upcoming, past } = Astro.props;
+
+/* Group consecutive events by year for the .g-year headings; the lists are
+   already sorted, so consecutive grouping preserves their order. */
+type EventEntry = (typeof upcoming)[number];
+const groupByYear = (events: EventEntry[]) => {
+  const groups: { year: number; events: EventEntry[] }[] = [];
+  for (const event of events) {
+    const year = event.data.date.getFullYear();
+    const last = groups[groups.length - 1];
+    if (last && last.year === year) last.events.push(event);
+    else groups.push({ year, events: [event] });
+  }
+  return groups;
+};
 ---
 
 <BaseLayout title="Events">
@@ -40,7 +54,12 @@ const { current, total, upcoming, past } = Astro.props;
         <p class="g-lead">{STRINGS.upcomingLead}</p>
       </div>
       <div class="g-stack" style="margin-top:var(--space-4);gap:var(--space-3)">
-        {upcoming.map((e) => <EventRow event={e} />)}
+        {groupByYear(upcoming).map((group) => (
+          <>
+            <h3 class="g-year">{group.year}</h3>
+            {group.events.map((e) => <EventRow event={e} />)}
+          </>
+        ))}
         {upcoming.length === 0 && (
           <p class="g-lead">{STRINGS.noUpcomingEvents}</p>
         )}
@@ -53,7 +72,12 @@ const { current, total, upcoming, past } = Astro.props;
       <div class="g-container">
         <div class="g-section-head"><span class="g-eyebrow">{STRINGS.lookingBack}</span><h2>{STRINGS.pastEvents}</h2></div>
         <div class="g-stack" style="margin-top:var(--space-4);gap:var(--space-3)">
-          {past.map((e) => <EventRow event={e} />)}
+          {groupByYear(past).map((group) => (
+            <>
+              <h3 class="g-year">{group.year}</h3>
+              {group.events.map((e) => <EventRow event={e} />)}
+            </>
+          ))}
         </div>
         <Pagination current={current} total={total} base="/events/" />
       </div>

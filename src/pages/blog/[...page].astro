@@ -10,7 +10,7 @@ import { SECTIONS, STRINGS, PAGINATION } from '../../config';
    paginator URLs. /blog/<slug> still goes to [slug].astro: named params
    take priority over rest params. */
 export async function getStaticPaths() {
-  const posts = (await getCollection('blog')).sort((a, b) => +b.data.date - +a.data.date);
+  const posts = (await getCollection('blog')).filter((p) => !p.data.draft).sort((a, b) => +b.data.date - +a.data.date);
   const size = PAGINATION.pageSize;
   const total = Math.max(1, Math.ceil(posts.length / size));
   const tags = [...new Set(posts.flatMap((p) => p.data.tags))];

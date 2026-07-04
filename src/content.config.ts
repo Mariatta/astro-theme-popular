@@ -8,6 +8,7 @@ const blog = defineCollection({
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
+    draft: z.boolean().default(false), // drafts are excluded from builds, matching Hugo
     author: z.string().optional(), // simple byline fallback
     authors: z.array(z.string()).default([]), // slugs of entries in the authors collection
     guestAuthors: z
@@ -50,6 +51,7 @@ const events = defineCollection({
     address: z.string().optional(),
     speaker: z.string().optional(),
     rsvp: z.string().optional(),
+    meetupUrl: z.string().optional(), // metadata convention; the theme renders no external links on event rows
   }),
 });
 
@@ -87,6 +89,7 @@ const docs = defineCollection({
     title: z.string(),
     eyebrow: z.string().optional(),
     lead: z.string().optional(),
+    weight: z.number().default(100), // sidebar order, matching Hugo's weight
   }),
 });
 

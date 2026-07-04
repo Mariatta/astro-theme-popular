@@ -14,7 +14,7 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 const posts = (await getCollection('blog'))
-  .filter((p) => p.data.authors.includes(entry.id))
+  .filter((p) => !p.data.draft && p.data.authors.includes(entry.id))
   .sort((a, b) => +b.data.date - +a.data.date);
 ---
 
@@ -22,7 +22,7 @@ const posts = (await getCollection('blog'))
   <PageHero eyebrow={STRINGS.eyebrowAuthor} title={entry.data.title} lead={entry.data.bio} />
   <section class="g-bg-white g-section">
     <div class="g-container">
-      <div class="g-narrow" style="margin:0 auto var(--space-5)">
+      <div class="g-article" style="margin-bottom:var(--space-5)">
         <AuthorBox entry={entry} />
         <div class="g-prose" style="margin-top:var(--space-4)"><Content /></div>
       </div>

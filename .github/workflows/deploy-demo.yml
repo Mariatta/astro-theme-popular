@@ -47,7 +47,7 @@ jobs:
           BASE_PATH: ${{ steps.pages.outputs.base_path }}
         run: |
           mkdir -p public
-          for slug in aquarium foodie kdrama; do
+          for slug in aquarium foodie kdrama superfan; do
             node scripts/use-demo.mjs "$slug"
             npx astro build
             # Rewrite root-absolute URLs to the demo subpath

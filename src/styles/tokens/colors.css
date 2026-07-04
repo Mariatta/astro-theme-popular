@@ -74,6 +74,7 @@
     --surface-card:      var(--white);
     --surface-tertiary:  var(--ink-50);     /* "body-tertiary" bands */
     --surface-code:      var(--ink-100);    /* inline code chip */
+    --surface-code-block: var(--ink-900);   /* fenced code blocks */
     --surface-ink:       var(--ink-800);    /* footer / dark sections */
 
     /* Borders */

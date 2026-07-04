@@ -10,7 +10,7 @@ const events = await getCollection('events');
 const upcoming = events.filter((e) => e.data.date >= now).sort((a, b) => +a.data.date - +b.data.date);
 const next = upcoming[0];
 
-const posts = (await getCollection('blog')).sort((a, b) => +b.data.date - +a.data.date).slice(0, 3);
+const posts = (await getCollection('blog')).filter((p) => !p.data.draft).sort((a, b) => +b.data.date - +a.data.date).slice(0, 3);
 const organizers = (await getCollection('organizers')).sort((a, b) => a.data.weight - b.data.weight);
 
 const h = HOME;
@@ -45,7 +45,7 @@ const h = HOME;
     <section class="g-bg-ink">
       <div class="g-container g-stats">
         {h.stats.map((s) => (
-          <div class="g-stat"><div class="g-stat__n">{s.n}</div><div class="g-stat__l">{s.l}</div></div>
+          <div class="g-stat"><div class="g-stat__n">{s.value}</div><div class="g-stat__l">{s.label}</div></div>
         ))}
       </div>
     </section>
@@ -125,6 +125,31 @@ const h = HOME;
         </div>
         <div class="g-row" style="justify-content:center;margin-top:var(--space-4)">
           <a class="g-btn g-btn--outline" href="/organizers/">All organizers</a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  {h.testimonials && (
+    <section class="g-bg-white g-section">
+      <div class="g-container">
+        {h.testimonialsHead && (
+          <div class="g-section-head g-section-head--center">
+            {h.testimonialsHead.eyebrow && <span class="g-eyebrow">{h.testimonialsHead.eyebrow}</span>}
+            <h2>{h.testimonialsHead.title}</h2>
+            {h.testimonialsHead.lead && <p class="g-lead">{h.testimonialsHead.lead}</p>}
+          </div>
+        )}
+        <div class="g-grid-3" style="margin-top:var(--space-5)">
+          {h.testimonials.map((t) => (
+            <figure class="g-quote">
+              <blockquote>{t.quote}</blockquote>
+              <figcaption>
+                {t.photo && <img src={t.photo} alt={t.name} />}
+                <div><span class="g-quote__name">{t.name}</span>{t.role && <span class="g-quote__role">{t.role}</span>}</div>
+              </figcaption>
+            </figure>
+          ))}
         </div>
       </div>
     </section>
