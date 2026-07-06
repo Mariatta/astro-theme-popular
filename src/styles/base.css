@@ -90,8 +90,10 @@ pre code { font-size: inherit; background: none; padding: 0; border-radius: 0; }
 
 .g-prose { font-size: var(--text-md); line-height: var(--leading-relaxed); color: var(--text-body); }
 /* Underline prose links so color is never the only distinguisher (WCAG 1.4.1);
-   matters for adopters whose brand link color is close to the body text. */
-.g-prose a { text-decoration: underline; text-underline-offset: 2px; }
+   matters for adopters whose brand link color is close to the body text.
+   Only bare markdown links: components inside prose (buttons, tags) carry a
+   class and are already visually distinct. */
+.g-prose a:not([class]) { text-decoration: underline; text-underline-offset: 2px; }
 .g-prose > * + * { margin-top: 1.1rem; }
 .g-prose ul, .g-prose ol { padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem; }
 .g-prose h2 { margin-top: 1.8rem; }
