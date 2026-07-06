@@ -200,7 +200,7 @@ export const HOME = {
 /** Demo-only switcher bar. Adopters: set to null (or delete the demo bar usage). */
 export const DEMO_BAR = {
   current: "superfan",
-  repo: 'https://github.com/your-org/astro-popular',
+  repo: 'https://github.com/Mariatta/astro-popular',
   links: [
     { slug: 'aquarium', label: 'Aquarium', icon: 'fa-solid fa-fish' },
     { slug: 'foodie', label: 'Foodie', icon: 'fa-solid fa-utensils' },
