@@ -29,12 +29,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
 const vars: string[] = [];
 const b = BRAND;
 if (b.primary) {
-  vars.push(`--color-primary:${b.primary}`, `--raspberry-500:${b.primary}`);
-  vars.push(`--raspberry-50:color-mix(in srgb, ${b.primary} 7%, #fff)`);
-  vars.push(`--raspberry-300:color-mix(in srgb, ${b.primary} 55%, #fff)`);
+  vars.push(`--color-primary:${b.primary}`, `--gold-500:${b.primary}`);
+  vars.push(`--gold-50:color-mix(in srgb, ${b.primary} 7%, #fff)`);
+  vars.push(`--gold-300:color-mix(in srgb, ${b.primary} 55%, #fff)`);
 }
 if (b.primaryHover) vars.push(`--color-primary-hover:${b.primaryHover}`);
-if (b.primaryActive) vars.push(`--color-primary-active:${b.primaryActive}`, `--raspberry-700:${b.primaryActive}`, `--text-link:${b.primaryActive}`);
+if (b.primaryActive) vars.push(`--color-primary-active:${b.primaryActive}`, `--gold-700:${b.primaryActive}`, `--text-link:${b.primaryActive}`);
 if (b.link) vars.push(`--text-link:${b.link}`);
 if (b.linkHover) vars.push(`--text-link-hover:${b.linkHover}`);
 if (b.secondary) vars.push(`--color-secondary:${b.secondary}`);

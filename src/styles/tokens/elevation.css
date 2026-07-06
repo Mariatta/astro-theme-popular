@@ -10,7 +10,7 @@
     --shadow-sm: 0 2px 8px rgba(20, 42, 54, 0.08);
     --shadow-md: 0 6px 20px rgba(20, 42, 54, 0.10);
     --shadow-lg: 0 16px 40px rgba(20, 42, 54, 0.14);
-    --shadow-brand: 0 10px 28px rgba(250, 2, 60, 0.22); /* raspberry glow */
+    --shadow-brand: 0 10px 28px rgba(161, 98, 7, 0.25); /* marquee-gold glow */
 
     /* Focus ring shadow */
     --shadow-focus: 0 0 0 0.25rem var(--focus-ring);

@@ -95,7 +95,7 @@ Remember: add demo content under `demos/<name>/content/`, not only `src/`.
 - `BRAND` drives all colors/fonts; `BaseLayout.astro` emits an `html:root`
   override. Keep the `html:root` selector: since Astro 7, the bundled token CSS
   is injected after the inline override, and plain `:root` would lose the
-  specificity tie and revert the site to the default pink palette.
+  specificity tie and revert the site to the theme's default palette.
 - `FOOTER` takes `tagline`, optional `credit: { label, url }`, and `columns`.
 
 ## Naming conventions
