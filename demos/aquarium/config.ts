@@ -60,6 +60,12 @@ export const STRINGS: Record<string, string> = {
   eyebrowDocs: 'Docs',
   eyebrowTag: 'Tag',
   taggedCount: '{n} post(s) tagged {tag}',
+  speakers: 'Speakers',
+  eyebrowSpeaker: 'Speaker',
+  sessionsBy: 'Sessions by {name}',
+  eyebrowVenue: 'Venue',
+  venueEvents: 'Events held here',
+  beforeYouArrive: 'Before you arrive',
   paginationLabel: 'Pagination',
   paginationPrev: 'Previous',
   paginationNext: 'Next',
@@ -75,8 +81,8 @@ export const BRAND: Record<string, string> = {
   secondary: "#0b4f4a",
   accent: "#b45309",
   ink: '#142a36',
-  surfacePink: "#d7ece9",
-  surfacePinkSoft: "#ecf6f4",
+  surfaceWash: "#d7ece9",
+  surfaceWashSoft: "#ecf6f4",
   surfaceInk: '#142a36',
   fontSans: 'Inter, system-ui, sans-serif',
   fontDisplay: 'Quantico, Inter, sans-serif',
@@ -111,7 +117,7 @@ export const SOCIAL = [
 
 export const FOOTER = {
   tagline: "Fish · Plants · Community, an Astro demo site for the Popular theme",
-  credit: { label: 'Popular Astro theme by Mariatta', url: 'https://mariatta.ca' },
+  credit: { label: 'Popular. An Astro theme by Mariatta.', url: 'https://mariatta.ca' },
   columns: [
     { title: 'Community', links: [
       { label: 'About us', href: '/about/' },

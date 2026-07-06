@@ -11,6 +11,7 @@ const upcoming = events.filter((e) => e.data.date >= now).sort((a, b) => +a.data
 const next = upcoming[0];
 
 const posts = (await getCollection('blog')).filter((p) => !p.data.draft).sort((a, b) => +b.data.date - +a.data.date).slice(0, 3);
+const nextVenue = next?.data.venueRef ? (await getCollection('venues')).find((v) => v.id === next.data.venueRef)?.data.title : undefined;
 const organizers = (await getCollection('organizers')).sort((a, b) => a.data.weight - b.data.weight);
 
 const h = HOME;
@@ -75,7 +76,7 @@ const h = HOME;
   )}
 
   {next && (
-    <section class="g-bg-pink-soft">
+    <section class="g-bg-wash-soft">
       <div class="g-container g-feature">
         <div class="g-feature__media"><img src={next.data.image ?? h.hero.image} alt={next.data.title} /></div>
         <div class="g-feature__body">
@@ -83,7 +84,7 @@ const h = HOME;
           <h2 style="margin:0">{next.data.title}</h2>
           <div class="g-meta-line">
             <span><i class="fa-solid fa-calendar-day" aria-hidden="true"></i> {next.data.date.toLocaleDateString(SITE.locale, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}{next.data.time && ` · ${next.data.time}`}</span>
-            <span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> {next.data.venue ?? STRINGS.venueTba}</span>
+            <span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> {nextVenue ?? next.data.venue ?? STRINGS.venueTba}</span>
           </div>
           {next.data.description && <p style="margin:0;color:var(--text-muted);max-width:34rem">{next.data.description}</p>}
           <div class="g-row">
@@ -156,7 +157,7 @@ const h = HOME;
   )}
 
   {h.getInvolved && (
-    <section class="g-bg-pink g-section">
+    <section class="g-bg-wash g-section">
       <div class="g-container" style="text-align:center;display:flex;flex-direction:column;align-items:center;gap:1rem">
         <span class="g-eyebrow">{h.getInvolved.eyebrow ?? 'Community'}</span>
         <h2 style="margin:0;max-width:40rem">{h.getInvolved.title}</h2>

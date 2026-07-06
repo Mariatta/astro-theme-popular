@@ -27,6 +27,10 @@ in both repos. The Hugo repo is the canonical source; copy Hugo → Astro.
 | `assets/js/copy-code.js`             | `public/scripts/copy-code.js` |
 | `assets/js/nav.js`                   | `public/scripts/nav.js`      |
 | `exampleSite/static/images/`         | `public/images/`             |
+| `scripts/sessionize-import.py`       | `scripts/sessionize-import.py` |
+| `scripts/spreadsheet-import.py`      | `scripts/spreadsheet-import.py` |
+| `scripts/sample-community.xlsx`      | `scripts/sample-community.xlsx` |
+| `scripts/tests/`                     | `scripts/tests/`             |
 
 Use `scripts/sync-shared.sh` to copy or verify (`--check` diffs and fails on drift).
 
@@ -54,13 +58,15 @@ Same behaviour, different language. When you change one, port the other.
 | Cards / rows       | `partials/post-card.html`, `event-row.html`, `organizer-card.html` | `components/PostCard.astro`, `EventRow.astro`, `OrganizerCard.astro` |
 | Callout            | `shortcodes/callout.html`              | `components/Callout.astro`              |
 | Author box / pages | `partials/author-box.html`, `author-line.html`, `layouts/authors/*` | `components/AuthorBox.astro`, `pages/authors/[slug].astro` |
+| Speaker pages      | `layouts/speakers/*` (reuses author-box) | `pages/speakers/[slug].astro` (AuthorBox with `base`) |
+| Venue pages        | `layouts/venues/*`                     | `pages/venues/[slug].astro`             |
 | Checklist          | `shortcodes/checklist.html`            | `components/Checklist.astro`            |
 | Site configuration | `exampleSite/hugo.toml` `[params]`     | `src/config.ts`                         |
 
 **Config invariant:** the `[params.brand]` keys in Hugo and the `BRAND` keys in
 `src/config.ts` must stay identical (`primary`, `primaryHover`, `primaryActive`,
-`link`, `linkHover`, `secondary`, `accent`, `ink`, `surfacePink`,
-`surfacePinkSoft`, `surfaceInk`, `fontSans`, `fontDisplay`, `radiusCard`,
+`link`, `linkHover`, `secondary`, `accent`, `ink`, `surfaceWash`,
+`surfaceWashSoft`, `surfaceInk`, `fontSans`, `fontDisplay`, `radiusCard`,
 `containerMax`, plus the dark-palette keys `surfacePage`, `surfaceCard`,
 `surfaceTertiary`, `textBody`, `textMuted`, `textOnBrand`, `borderSubtle`). `params.favicon` ⇄
 `SITE.favicon`, falling back to the logo on both sides. `params.customCSS` ⇄
@@ -101,7 +107,9 @@ Front-matter fields must accept the same names on both sides
 
 - **blog**: `title, date, author, authors[], guestAuthors[{name,title,photo,bio,website,social[]}], description, image, tags[], speaker{name,title,photo,bio}`
 - **authors**: `title, role, photo, bio, website, social[{label,icon,url}]`
-- **events**: `title, date (event start; upcoming/past pivot), description, image, tags[], time, venue, venueWanted, address, speaker, rsvp, meetupUrl (metadata only; not rendered)`
+- **events**: `title, date (event start; upcoming/past pivot), description, image, tags[], time, venue, venueWanted, address, venueRef (venues slug; wins over flat venue fields), checkin, venueNotes (overrides the venue page's notes), speaker (one-liner fallback), speakers[] (speaker slugs), rsvp, meetupUrl (metadata only; not rendered)`
+- **speakers**: `title, role, photo, bio, website, social[{label,icon,url}]` (same shape as authors)
+- **venues**: `title, address, photo, notes (arrival notes, inherited by events), accessibility, website`
 - **organizers**: `title, weight, role, photo, description, social[{label,icon,url}]`
 - **docs / pages**: `title, eyebrow, lead`
 

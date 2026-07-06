@@ -69,8 +69,8 @@
 
     /* Surfaces */
     --surface-page:      var(--white);
-    --surface-pink:      var(--pink-200);   /* hero / section wash */
-    --surface-pink-soft: var(--pink-50);
+    --surface-wash:      var(--pink-200);   /* hero / section wash */
+    --surface-wash-soft: var(--pink-50);
     --surface-card:      var(--white);
     --surface-tertiary:  var(--ink-50);     /* "body-tertiary" bands */
     --surface-code:      var(--ink-100);    /* inline code chip */

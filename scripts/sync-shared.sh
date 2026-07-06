@@ -21,6 +21,10 @@ PAIRS=(
   "assets/css/components.css:src/styles/components.css"
   "assets/js:public/scripts"
   "exampleSite/static/images:public/images"
+  "scripts/sessionize-import.py:scripts/sessionize-import.py"
+  "scripts/spreadsheet-import.py:scripts/spreadsheet-import.py"
+  "scripts/sample-community.xlsx:scripts/sample-community.xlsx"
+  "scripts/tests:scripts/tests"
 )
 
 MODE="${1:-copy}"
@@ -28,9 +32,9 @@ STATUS=0
 for pair in "${PAIRS[@]}"; do
   SRC="$HUGO/${pair%%:*}"; DEST="$ASTRO/${pair##*:}"
   if [ "$MODE" = "--check" ]; then
-    if ! diff -rq "$SRC" "$DEST" >/dev/null 2>&1; then
+    if ! diff -rq -x __pycache__ "$SRC" "$DEST" >/dev/null 2>&1; then
       echo "DRIFT: ${pair%%:*}  ⇄  ${pair##*:}"
-      diff -rq "$SRC" "$DEST" || true
+      diff -rq -x __pycache__ "$SRC" "$DEST" || true
       STATUS=1
     fi
   else

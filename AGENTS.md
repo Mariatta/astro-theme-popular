@@ -43,6 +43,11 @@ npm run build          # builds to dist/
 npm run demo:<name>    # activate a demo (copies into src/, see above)
 ```
 
+To bulk-populate events and speakers from a Sessionize event, run
+`python3 scripts/sessionize-import.py --url <sessionize view/All endpoint> --site .`
+(or `scripts/spreadsheet-import.py --xlsx <workbook>` for spreadsheet-based
+planning; both share the same conventions) instead of writing the files by hand (never overwrites existing files).
+
 `dist/` and `.astro/` are generated; never hand-edit them.
 `public/` here is **source** (static assets, shared scripts), unlike Hugo
 where `public/` is build output.
@@ -71,6 +76,11 @@ Front matter is YAML (`---`). Key content types (full schema in
 - **Event** (`content/events/*.md`): `title`, `date`, `image`, plus venue fields.
 - **Organizer** (`content/organizers/*.md`): `title`, `weight`, `role`, `photo`,
   `description`, `social` list (`label`, `icon`, `url`).
+- **Speaker** (`content/speakers/*.md`): same shape as authors; events reference
+  them via `speakers: ["slug"]`.
+- **Venue** (`content/venues/*.md`): `title`, `address`, `notes` (arrival
+  instructions, inherited by events), `accessibility`, `website`; events
+  reference one via `venueRef: "slug"`.
 
 Image paths are **root-absolute** (`/images/post-1.png`), both in front matter
 and in markdown bodies. The theme's links assume deployment at a domain root.
@@ -117,6 +127,9 @@ Remember: add demo content under `demos/<name>/content/`, not only `src/`.
   any `<img>` lacks a non-empty `alt` attribute, or any markdown image is
   written as `![](...)`. Always give images meaningful alt text (image captions
   go in an italic line after the image, not in `alt`).
+- `.github/workflows/helper-tests.yml` runs the Python helper-script tests
+  (`python3 -m unittest discover -s scripts/tests`); run them after touching
+  anything in `scripts/`.
 
 ## Writing style for content and docs
 
@@ -127,5 +140,5 @@ Remember: add demo content under `demos/<name>/content/`, not only `src/`.
   points to `example.com`. Do not add real organizations or people. Exception:
   license attribution must keep its real links (the Code of Conduct credits
   the Django CoC and Geek Feminism template, as CC-BY requires).
-- The theme credit is "Popular Astro theme by Mariatta" linking to
+- The theme credit is "Popular. An Astro theme by Mariatta." linking to
   https://mariatta.ca (set per site via `FOOTER.credit`).

@@ -8,6 +8,7 @@ time: "2:00 – 3:00 PM"
 venue: "FanCon (a fictional convention)"
 address: "Hall B, 500 Imaginary Blvd"
 speaker: "Panel, with Q&A and a singalong risk"
+checkin: "Bring your FanCon badge and photo ID for the panel-hall queue."
 rsvp: "https://example.com/fancon"
 ---
 

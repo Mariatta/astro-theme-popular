@@ -8,6 +8,8 @@ time: "6:00 – 9:00 PM"
 venue: "Lucky Town Community Kitchen"
 address: "7 Butter Lane, Lucky Town"
 speaker: "Led by our resident pierogi grandmother-in-training"
+checkin: "Bring your RSVP confirmation and an apron; loaner aprons run out fast."
+venueNotes: "Side entrance on Butter Lane: buzz 12 and come up to the teaching kitchen."
 rsvp: "https://example.com/rsvp"
 ---
 

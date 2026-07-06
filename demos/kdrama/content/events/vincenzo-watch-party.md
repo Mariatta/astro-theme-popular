@@ -8,6 +8,8 @@ time: "6:30 – 9:00 PM"
 venue: "The Corner Screen"
 address: "201 Fictional Ave (a made-up screening room)"
 speaker: "Hosted by Hana: spoiler-free intro included"
+checkin: "Show your RSVP confirmation at the door, a screenshot is fine."
+venueNotes: "Buzz 3 at the alley entrance and take the stairs to the screening room."
 rsvp: "https://example.com/rsvp"
 ---
 

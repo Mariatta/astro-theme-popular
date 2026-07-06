@@ -1,11 +1,23 @@
 ---
 import { SITE, STRINGS } from '../config';
 import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
 
 interface Props { event: CollectionEntry<'events'> }
 const { event } = Astro.props;
 const d = event.data;
-const tbd = d.venueWanted || !d.venue;
+
+/* Venue: a venueRef to the venues collection wins over the flat fields. */
+const venuePage = d.venueRef ? (await getCollection('venues')).find((v) => v.id === d.venueRef) : undefined;
+const venueName = venuePage?.data.title ?? d.venue;
+const venueAddress = venuePage?.data.address ?? (venuePage ? undefined : d.address);
+const tbd = d.venueWanted || !venueName;
+
+/* Speaker line: resolved speaker-profile names, falling back to the string. */
+const allSpeakers = d.speakers.length ? await getCollection('speakers') : [];
+const names = d.speakers.map((slug) => allSpeakers.find((s) => s.id === slug)?.data.title).filter(Boolean);
+const speakerLine = names.length ? names.join(', ') : d.speaker;
+
 const dow = d.date.toLocaleDateString(SITE.locale, { weekday: 'short' });
 const day = d.date.toLocaleDateString(SITE.locale, { month: 'short', day: 'numeric' });
 ---
@@ -25,10 +37,10 @@ const day = d.date.toLocaleDateString(SITE.locale, { month: 'short', day: 'numer
     <h3><a href={`/events/${event.id}/`} style="color:inherit">{d.title}</a></h3>
     {d.description && <p>{d.description}</p>}
     <div class="g-event__meta">
-      <i class="fa-solid fa-location-dot" aria-hidden="true"></i>{d.venue ?? STRINGS.venueTba}{d.address && ` · ${d.address}`}
+      <i class="fa-solid fa-location-dot" aria-hidden="true"></i>{venueName ?? STRINGS.venueTba}{venueAddress && ` · ${venueAddress}`}
     </div>
-    {d.speaker && (
-      <div class="g-event__meta"><i class="fa-solid fa-microphone-lines" aria-hidden="true"></i>{d.speaker}</div>
+    {speakerLine && (
+      <div class="g-event__meta"><i class="fa-solid fa-microphone-lines" aria-hidden="true"></i>{speakerLine}</div>
     )}
   </div>
   <div class="g-event__aside">

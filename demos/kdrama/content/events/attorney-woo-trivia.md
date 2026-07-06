@@ -5,9 +5,10 @@ description: "Fifty questions across the series, from courtroom details to the c
 image: "/images/post-2.png"
 tags: ["trivia"]
 time: "7:00 – 9:00 PM"
-venue: "Half Moon Café"
-address: "88 Sidestreet, (fictional)"
+venueRef: "half-moon-cafe"
+speakers: ["minji"]
 speaker: "Teams of 4 · whale facts guaranteed"
+checkin: "Bring your RSVP QR code (email or phone), we check the door list by name."
 rsvp: "https://example.com/rsvp"
 ---
 

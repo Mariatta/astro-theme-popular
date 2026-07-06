@@ -8,6 +8,7 @@ time: "6:30 – 8:30 PM"
 venue: "The Boathouse Café"
 address: "48 Harbour Lane, Rocky Cove"
 speaker: "Guest host: a member's jungle tank, dissected"
+checkin: "Bring photo ID for the building sign-in sheet."
 rsvp: "https://example.com/rsvp"
 ---
 

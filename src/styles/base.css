@@ -61,8 +61,8 @@ pre code { font-size: inherit; background: none; padding: 0; border-radius: 0; }
 
 /* Surface bands */
 .g-bg-white { background: var(--surface-page); }
-.g-bg-pink { background: var(--surface-pink); }
-.g-bg-pink-soft { background: var(--surface-pink-soft); }
+.g-bg-wash { background: var(--surface-wash); }
+.g-bg-wash-soft { background: var(--surface-wash-soft); }
 .g-bg-tertiary { background: var(--surface-tertiary); }
 .g-bg-ink { background: var(--surface-ink); color: var(--ink-200); }
 

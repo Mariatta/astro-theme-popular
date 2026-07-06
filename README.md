@@ -11,11 +11,12 @@ behaviour JS and content model; see **PARITY.md** for the cross-repo contract.
 
 - Composable **home page** (hero, stats, features, auto next-event, latest posts, organizers, testimonials, CTA)
 - **Blog** with tag filtering, tag pages, RSS, and per-post speaker bios
-- **Events** that automatically split into *upcoming* and *past*
+- **Events** that split into *upcoming* and *past* automatically, with speaker profiles, venue pages (address, buzz-code arrival notes, accessibility) and check-in instructions
 - **Organizers / team** page
 - **Docs** (handbook & runbooks) with scroll-spy TOC and **checklists that remember progress**
 - Dark footer with **land-acknowledgement** slot and social links
 - **Alt text, required**: CI builds every site and fails if any image lacks alt text
+- **One-command imports**: populate events, speakers and venues from Sessionize or a spreadsheet (`scripts/`), cross-referenced and dependency-free
 - **Agent & human friendly**: ships [`AGENTS.md`](AGENTS.md) so AI coding agents follow the same rules as human contributors
 - **Translatable UI**: every template string lives in one place (Hugo `i18n/`, Astro `STRINGS` config), so a site can run in any language
 - Re-brand the whole theme from `src/config.ts`, no CSS edits needed
@@ -78,6 +79,24 @@ import Checklist from '../../components/Checklist.astro';
 
 `Checklist` progress persists in the visitor's browser (`localStorage`), using the same
 key format as the Hugo theme.
+
+## Helper scripts
+
+- `scripts/sessionize-import.py`: populate `src/content/events/` and `src/content/speakers/`
+  from a [Sessionize](https://sessionize.com) event's public "API / Embeds" endpoint:
+
+  ```bash
+  python3 scripts/sessionize-import.py --url https://sessionize.com/api/v2/<embed-id>/view/All --site .
+  ```
+
+  Existing files are never overwritten, so edit freely after importing.
+
+- `scripts/spreadsheet-import.py`: the same import from one spreadsheet with tabs for
+  Speakers, Venues, Organizers and Events (dependency-free .xlsx or per-tab CSVs).
+  `--make-sample community.xlsx` writes a starter workbook; one ships at
+  `scripts/sample-community.xlsx`.
+
+The helper scripts have a dependency-free test suite: `python3 -m unittest discover -s scripts/tests` (also run in CI).
 
 ## Deploying
 

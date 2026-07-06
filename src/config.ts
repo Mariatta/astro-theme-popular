@@ -66,6 +66,12 @@ export const STRINGS: Record<string, string> = {
   eyebrowDocs: 'Guides',
   eyebrowTag: 'Tag',
   taggedCount: '{n} post(s) tagged {tag}',
+  speakers: 'Speakers',
+  eyebrowSpeaker: 'Speaker',
+  sessionsBy: 'Sessions by {name}',
+  eyebrowVenue: 'Venue',
+  venueEvents: 'Events held here',
+  beforeYouArrive: 'Before you arrive',
   paginationLabel: 'Pagination',
   paginationPrev: 'Previous',
   paginationNext: 'Next',
@@ -85,8 +91,8 @@ export const BRAND: Record<string, string> = {
   ink: '#F4F1EA',            // silk-cream headings on the dark backgrounds
   link: '#D9BA7B',           // prose links need light gold on midnight
   linkHover: '#F3E5AB',
-  surfacePink: '#121B2D',    // midnight-blue hero / section wash
-  surfacePinkSoft: '#141F36',
+  surfaceWash: '#121B2D',    // midnight-blue hero / section wash
+  surfaceWashSoft: '#141F36',
   surfaceInk: '#0A0E1A',     // deep cosmos footer bands
   surfacePage: '#0A0E1A',    // the page itself goes dark
   surfaceCard: '#121B2D',
@@ -121,7 +127,7 @@ export const SOCIAL = [
 
 export const FOOTER = {
   tagline: "Truly, madly, deeply a fan site, an Astro demo site for the Popular theme",
-  credit: { label: 'Popular Astro theme by Mariatta', url: 'https://mariatta.ca' },
+  credit: { label: 'Popular. An Astro theme by Mariatta.', url: 'https://mariatta.ca' },
   columns: [
     { title: 'Site', links: [
       { label: 'About', href: '/about/' },

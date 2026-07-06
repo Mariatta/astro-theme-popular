@@ -9,8 +9,13 @@ interface Guest {
   name: string; title?: string; photo?: string; bio?: string; website?: string;
   social?: { label: string; icon: string; url: string }[];
 }
-interface Props { entry?: CollectionEntry<'authors'>; guest?: Guest }
-const { entry, guest } = Astro.props;
+interface Props {
+  entry?: CollectionEntry<'authors'> | CollectionEntry<'speakers'>;
+  guest?: Guest;
+  /** Profile URL prefix; speakers pass '/speakers/'. */
+  base?: string;
+}
+const { entry, guest, base = '/authors/' } = Astro.props;
 const d = entry?.data;
 ---
 
@@ -19,7 +24,7 @@ const d = entry?.data;
     <>
       {d.photo && <img class="g-persona__img" src={d.photo} alt={entry.data.title} />}
       <div>
-        <div class="g-persona__name"><a href={`/authors/${entry.id}/`} style="color:inherit">{d.title}</a></div>
+        <div class="g-persona__name"><a href={`${base}${entry.id}/`} style="color:inherit">{d.title}</a></div>
         {d.role && <div class="g-persona__role">{d.role}</div>}
         {d.bio && <p class="g-persona__bio">{d.bio}</p>}
         <div class="g-persona__socials">

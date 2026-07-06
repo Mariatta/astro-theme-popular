@@ -49,7 +49,11 @@ const events = defineCollection({
     venue: z.string().optional(),
     venueWanted: z.boolean().default(false),
     address: z.string().optional(),
-    speaker: z.string().optional(),
+    speaker: z.string().optional(), // one-liner fallback when no speaker profiles are referenced
+    speakers: z.array(z.string()).default([]), // slugs of entries in the speakers collection
+    venueRef: z.string().optional(), // slug of a venues-collection entry; wins over the flat venue fields
+    checkin: z.string().optional(), // e.g. "Bring your registration email (print or phone) and photo ID."
+    venueNotes: z.string().optional(), // e.g. "Buzz 204 at the side door."; overrides the venue page's notes
     rsvp: z.string().optional(),
     meetupUrl: z.string().optional(), // metadata convention; the theme renders no external links on event rows
   }),
@@ -82,6 +86,32 @@ const authors = defineCollection({
   }),
 });
 
+/** Speaker profiles: referenced from events via `speakers: [slug]`. */
+const speakers = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/speakers' }),
+  schema: z.object({
+    title: z.string(), // the speaker's name
+    role: z.string().optional(),
+    photo: z.string().optional(),
+    bio: z.string().optional(),
+    website: z.string().optional(),
+    social: z.array(z.object({ label: z.string(), icon: z.string(), url: z.string() })).default([]),
+  }),
+});
+
+/** Venue pages: referenced from events via `venueRef: slug`. */
+const venues = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/venues' }),
+  schema: z.object({
+    title: z.string(), // the venue's name
+    address: z.string().optional(),
+    photo: z.string().optional(),
+    notes: z.string().optional(), // arrival notes inherited by events held here
+    accessibility: z.string().optional(),
+    website: z.string().optional(),
+  }),
+});
+
 /** Long-form docs (handbook, runbooks), MDX with Callout/Checklist components. */
 const docs = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/docs' }),
@@ -103,4 +133,4 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { blog, events, organizers, authors, docs, pages };
+export const collections = { blog, events, organizers, authors, speakers, venues, docs, pages };
