@@ -1,12 +1,12 @@
 # Popular: an Astro theme for meetups & communities
 
-> *Built to make your community seen and famous.* (Yes, it's named after *Pop!ular* by Darren Hayes.)
+> *Built to make your community seen and famous.*
 
 > **AI agents / automated contributors:** read [AGENTS.md](AGENTS.md) before making changes. It covers the repo layout, build commands, the Hugo-Astro parity contract, and content conventions.
 
 **Popular** is a warm, community-first [Astro](https://astro.build) theme for meetups, user
-groups and small events: the Astro twin of
-[`hugo-theme-popular`](../hugo-theme-popular). Both share the same design tokens, CSS,
+groups and small events. Named after the song *Pop!ular* by Darren Hayes, it is the Astro
+twin of [`hugo-theme-popular`](https://github.com/Mariatta/hugo-theme-popular). Both share the same design tokens, CSS,
 behaviour JS and content model; see **PARITY.md** for the cross-repo contract.
 
 - Composable **home page** (hero, stats, features, auto next-event, latest posts, organizers, testimonials, CTA)
