@@ -7,7 +7,7 @@ image: "/images/concert.svg"
 tags: ["concert-diary"]
 ---
 
-Queue at dawn, barrier by noon, transcendence by nine.
+Queue at dawn, barrier by noon, glorious by nine.
 
 I have attended twenty-seven of these and I still cried during the acoustic bridge. The person next to me, a first-timer, cried harder, which felt like passing a torch.
 
