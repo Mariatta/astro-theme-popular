@@ -1,0 +1,57 @@
+# Cut a release: tags v<version> and publishes a GitHub Release whose notes
+# are the handwritten CHANGELOG section for that version.
+#
+# Flow: write the CHANGELOG entry in a normal PR first, merge it, then run
+#   gh workflow run release.yml -R Mariatta/astro-theme-popular -f version=X.Y.Z
+# in BOTH repos (versions are tagged in lockstep; see PARITY.md).
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (X.Y.Z, no leading v); its CHANGELOG section must already be merged"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate
+        run: |
+          V="${{ inputs.version }}"
+          echo "$V" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' \
+            || { echo "::error::version must be X.Y.Z (got '$V')"; exit 1; }
+          grep -q "^## \[$V\]" CHANGELOG.md \
+            || { echo "::error::CHANGELOG.md has no '## [$V]' section; write it in a PR first"; exit 1; }
+          if git ls-remote --tags origin "refs/tags/v$V" | grep -q .; then
+            echo "::error::tag v$V already exists"; exit 1
+          fi
+          PKG=$(node -p "require('./package.json').version")
+          [ "$PKG" = "${{ inputs.version }}" ] \
+            || { echo "::error::package.json says $PKG; bump it to ${{ inputs.version }} in the versioning PR"; exit 1; }
+
+      - name: Refuse to release out of parity
+        run: |
+          git clone --depth 1 https://github.com/Mariatta/hugo-theme-popular ../hugo-theme-popular
+          bash scripts/sync-shared.sh --check
+
+      - name: Tag and publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          V="${{ inputs.version }}"
+          awk -v ver="$V" '$0 ~ "^## \\[" ver "\\]" {flag=1; next} /^## \[/{flag=0} flag' CHANGELOG.md \
+            | sed '/./,$!d' > /tmp/notes.md
+          echo "--- release notes ---"; cat /tmp/notes.md
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "v$V" -m "Popular v$V"
+          git push origin "v$V"
+          gh release create "v$V" --title "Popular v$V" --notes-file /tmp/notes.md
