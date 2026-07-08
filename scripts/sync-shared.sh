@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # sync-shared.sh: keep the Tier-1 shared files identical between
-# hugo-theme-popular (canonical) and astro-popular. See PARITY.md.
+# hugo-theme-popular (canonical) and astro-theme-popular. See PARITY.md.
 #
 # Usage (run from either repo root, with both repos checked out as siblings):
 #   ./scripts/sync-shared.sh            # copy Hugo → Astro
@@ -9,10 +9,10 @@ set -euo pipefail
 
 # Locate the two repos regardless of which one we're run from.
 HERE="$(cd "$(dirname "$0")/.." && pwd)"
-if [ -d "$HERE/assets/css" ]; then HUGO="$HERE"; ASTRO="$(dirname "$HERE")/astro-popular";
+if [ -d "$HERE/assets/css" ]; then HUGO="$HERE"; ASTRO="$(dirname "$HERE")/astro-theme-popular";
 else ASTRO="$HERE"; HUGO="$(dirname "$HERE")/hugo-theme-popular"; fi
 
-[ -d "$HUGO" ] && [ -d "$ASTRO" ] || { echo "error: expected sibling checkouts of hugo-theme-popular and astro-popular"; exit 2; }
+[ -d "$HUGO" ] && [ -d "$ASTRO" ] || { echo "error: expected sibling checkouts of hugo-theme-popular and astro-theme-popular"; exit 2; }
 
 # canonical → astro  (keep this list in sync with PARITY.md Tier 1)
 PAIRS=(

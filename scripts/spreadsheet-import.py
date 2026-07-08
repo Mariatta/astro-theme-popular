@@ -23,7 +23,7 @@ Usage:
 Options: --format hugo|astro (auto-detected), --force, --dry-run.
 
 Existing files are never overwritten unless --force: import once, edit freely.
-This file ships identically in hugo-theme-popular and astro-popular (PARITY.md).
+This file ships identically in hugo-theme-popular and astro-theme-popular (PARITY.md).
 """
 import argparse
 import csv

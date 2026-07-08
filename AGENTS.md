@@ -1,4 +1,4 @@
-# AGENTS.md: working in astro-popular
+# AGENTS.md: working in astro-theme-popular
 
 Instructions for AI agents (and new contributors) working in this repository.
 

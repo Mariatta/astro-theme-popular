@@ -184,7 +184,7 @@ export const HOME = {
 /** Demo-only switcher bar. Adopters: set to null (or delete the demo bar usage). */
 export const DEMO_BAR = {
   current: "foodie",
-  repo: 'https://github.com/Mariatta/astro-popular',
+  repo: 'https://github.com/Mariatta/astro-theme-popular',
   links: [
     { slug: 'aquarium', label: 'Aquarium', icon: 'fa-solid fa-fish' },
     { slug: 'foodie', label: 'Foodie', icon: 'fa-solid fa-utensils' },

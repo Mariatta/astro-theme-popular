@@ -25,7 +25,7 @@ Options:
 
 Existing files are never overwritten unless --force: import once, then edit
 freely. Speaker photos use Sessionize's hosted URLs. This file ships
-identically in hugo-theme-popular and astro-popular (see PARITY.md Tier 1).
+identically in hugo-theme-popular and astro-theme-popular (see PARITY.md Tier 1).
 """
 import argparse
 import json

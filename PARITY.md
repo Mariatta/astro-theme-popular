@@ -3,7 +3,7 @@
 **Popular** ships in two implementations that must stay in sync:
 
 - `hugo-theme-popular`: Hugo theme (canonical for shared assets)
-- `astro-popular`: Astro theme
+- `astro-theme-popular`: Astro theme
 
 This document is the contract. Any PR that changes one side must either port the
 change to the other side, or open an issue labelled `parity` describing what's
