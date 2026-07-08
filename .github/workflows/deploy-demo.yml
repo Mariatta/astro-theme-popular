@@ -59,6 +59,23 @@ jobs:
           done
           cp demos/gallery/index.html public/index.html
 
+
+      - name: No internal link may escape the base path
+        env:
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+        run: |
+          # Root-relative href/src that skips the base path 404s on the
+          # subpath deployment (the bug class fixed by rel-href). Quoted or
+          # minified-unquoted attributes both match; // (protocol-relative)
+          # is external and exempt.
+          if [ -z "$BASE_PATH" ]; then echo "root deployment; nothing to scan"; exit 0; fi
+          leaks=$(grep -rhoE '(href|src)="?/[^/][^" >]*' public --include='*.html' \
+                  | grep -vE "^(href|src)=\"?$BASE_PATH(/|\"|$)" | sort -u | head -20 || true)
+          if [ -n "$leaks" ]; then
+            echo "::error::internal links escape $BASE_PATH:"; echo "$leaks"; exit 1
+          fi
+          echo "no escapes"
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: public
