@@ -14,6 +14,8 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-07-08
+
 ### Fixed
 - Query-string URLs no longer double-escape (`&` became `&amp;amp;`, breaking
   links) in buttons, footer and header links, social icons, and markdown
