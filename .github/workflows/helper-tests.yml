@@ -19,9 +19,12 @@ jobs:
       - run: python3 -m unittest discover -s scripts/tests -v
       - name: Parity check against hugo-theme-popular
         run: |
-          if git clone --depth 1 https://github.com/Mariatta/hugo-theme-popular ../hugo-theme-popular 2>/dev/null; then
-            bash scripts/sync-shared.sh --check
-          else
-            echo "::notice::sibling repo not clonable (private?); parity check skipped"
-          fi
+          # Lockstep changes (a Tier-1 file added in both repos) use the SAME
+          # branch name in both repos; prefer that branch on the sibling so
+          # paired PRs check against each other, not against stale main.
+          BRANCH="${{ github.head_ref || github.ref_name }}"
+          git clone --depth 1 -b "$BRANCH" https://github.com/Mariatta/hugo-theme-popular ../hugo-theme-popular 2>/dev/null \
+            || git clone --depth 1 https://github.com/Mariatta/hugo-theme-popular ../hugo-theme-popular 2>/dev/null \
+            || { echo "::notice::sibling repo not clonable; parity check skipped"; exit 0; }
+          bash scripts/sync-shared.sh --check
 
