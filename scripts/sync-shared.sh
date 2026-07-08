@@ -24,6 +24,7 @@ PAIRS=(
   "scripts/spreadsheet-import.py:scripts/spreadsheet-import.py"
   "scripts/sample-community.xlsx:scripts/sample-community.xlsx"
   "scripts/tests:scripts/tests"
+  "CHANGELOG.md:CHANGELOG.md"
 )
 
 MODE="${1:-copy}"
