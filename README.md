@@ -21,7 +21,7 @@ behaviour JS and content model; see **PARITY.md** for the cross-repo contract.
 - **Translatable UI**: every template string lives in one place (Hugo `i18n/`, Astro `STRINGS` config), so a site can run in any language
 - Re-brand the whole theme from `src/config.ts`, no CSS edits needed
 
-**Full documentation** lives on the theme's product site (deployed from the Hugo
+**Full documentation** lives on the theme's project site (deployed from the Hugo
 repo): start at `/docs/quick-start/?fw=astro`. This README covers the essentials.
 
 **Multi-author blogging:** posts support `authors: ["slug"]` (profiles in
