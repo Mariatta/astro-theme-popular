@@ -26,13 +26,14 @@ in both repos. The Hugo repo is the canonical source; copy Hugo → Astro.
 | `assets/js/blog-filter.js`           | `public/scripts/blog-filter.js` |
 | `assets/js/copy-code.js`             | `public/scripts/copy-code.js` |
 | `assets/js/nav.js`                   | `public/scripts/nav.js`      |
-| `exampleSite/static/images/`         | `public/images/`             |
 | `scripts/sessionize-import.py`       | `scripts/sessionize-import.py` |
 | `scripts/spreadsheet-import.py`      | `scripts/spreadsheet-import.py` |
 | `scripts/sample-community.xlsx`      | `scripts/sample-community.xlsx` |
 | `scripts/tests/`                     | `scripts/tests/`             |
 
 Use `scripts/sync-shared.sh` to copy or verify (`--check` diffs and fails on drift).
+Demo images are *not* in this tier: Astro's `public/images/` is an activation
+copy of whichever demo is active, and per-demo imagery may drift.
 
 **Shared invariants inside these files:**
 - CSS class names (`g-*`) are the API. Renaming a class is a breaking change on BOTH sides.
@@ -129,8 +130,10 @@ full names, so `demos/truly-madly-riley` ⇄ `demos/superfan`). The demo
 switcher bar is `params.demoBar` (Hugo) ⇄ `DEMO_BAR` in `config.ts` (Astro)
 with identical slugs/labels/icons.
 
-Single-repo extra (allowed asymmetry): Hugo ships `exampleSite/`, the neutral
-"Your Community" starter adopters copy. It never sets the demo bar.
+The neutral "Your Community" starter ships on both sides: Hugo
+`exampleSite/` ⇄ Astro `demos/starter/` (which is also the Astro repo's
+default active `src/`). The starter never sets the demo bar and is not part
+of the deployed demo set.
 
 ## Release checklist
 

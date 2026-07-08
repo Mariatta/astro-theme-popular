@@ -15,8 +15,9 @@ Options:
   --file PATH      read the JSON from disk instead of the network
   --site PATH      site root to write into (default: current directory).
                    Format is auto-detected: hugo.toml → Hugo TOML under
-                   content/; config.ts or src/ → Astro YAML under src/content/
-                   (or content/ for a demo source dir). Override with --format.
+                   content/; a src/content/ dir → Astro YAML there; a root
+                   config.ts (a demo source dir) → Astro YAML under content/.
+                   Override with --format.
   --format hugo|astro
   --rsvp URL       rsvp link to stamp on every imported event (optional)
   --force          overwrite existing files (default: skip, so your edits are safe)
@@ -49,10 +50,28 @@ SOCIAL_ICONS = {
 WEBSITE_TYPES = {"Blog", "Company_Website", "Other"}
 
 
-def slugify(text):
-    text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode()
-    text = re.sub(r"[^a-zA-Z0-9]+", "-", text).strip("-").lower()
-    return text or "untitled"
+def slugify(text, fallback="untitled"):
+    """Unicode-preserving slug, mirroring the theme's tagSlug (src/lib/slugs.ts):
+    lowercase, quotes dropped, runs of non-letter/number become hyphens.
+    Latin accents fold to ASCII; other scripts (한글, кириллица) are kept."""
+    text = unicodedata.normalize("NFKC", str(text)).lower()
+    folded = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode()
+    if any(ch.isalnum() for ch in folded):
+        text = folded
+    text = re.sub(r"['\"]+", "", text)
+    text = re.sub(r"[\W_]+", "-", text, flags=re.UNICODE).strip("-")
+    return text or fallback
+
+
+def unique_slug(text, seen, fallback="untitled"):
+    """Slugify with -2/-3 suffixes so two names never share a file."""
+    base = slugify(text, fallback)
+    slug, n = base, 1
+    while slug in seen:
+        n += 1
+        slug = f"{base}-{n}"
+    seen.add(slug)
+    return slug
 
 
 def q(s):
@@ -188,15 +207,18 @@ def main():
             path.write_text(text)
         written += 1
 
+    seen_speakers = set()
     for s in data.get("speakers") or []:
-        slug = slugify(s.get("fullName") or s["id"])
+        slug = unique_slug(s.get("fullName") or "", seen_speakers, fallback=str(s["id"]))
         speaker_slugs[s["id"]] = slug
         emit(content / "speakers" / f"{slug}.md", speaker_page(s, fmt))
 
+    seen_events = set()
     for sess in data.get("sessions") or []:
         if sess.get("isServiceSession"):
             continue
-        emit(content / "events" / f"{slugify(sess.get('title') or sess['id'])}.md",
+        slug = unique_slug(sess.get("title") or "", seen_events, fallback=str(sess["id"]))
+        emit(content / "events" / f"{slug}.md",
              event_page(sess, rooms, speaker_slugs, fmt, args.rsvp))
 
     print(f"done ({fmt}): {written} written, {skipped} skipped. Review the files, then build.")

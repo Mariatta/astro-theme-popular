@@ -14,7 +14,7 @@ const { entry } = Astro.props;
 const d = entry.data;
 const { Content } = await render(entry);
 const events = (await getCollection('events'))
-  .filter((e) => e.data.venueRef === entry.id)
+  .filter((e) => !e.data.draft && e.data.venueRef === entry.id)
   .sort((a, b) => +b.data.date - +a.data.date);
 ---
 

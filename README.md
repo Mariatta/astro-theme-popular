@@ -36,12 +36,13 @@ npm run dev          # http://localhost:4321
 npm run build        # static output in dist/
 ```
 
-The repo ships **four complete fictional demos** sharing the same theme code:
-**Rocky Cove Aquarium Club** (teal), **Lucky Town Foodie Club** (copper),
+Out of the box, `npm run dev` boots the neutral **"Your Community" starter**.
+The repo also ships **four complete fictional demos** sharing the same theme
+code: **Rocky Cove Aquarium Club** (teal), **Lucky Town Foodie Club** (copper),
 **KDrama Fan Club** (indigo) and **Truly Madly Riley** (gold, a personal site
-for one fictional superfan). Switch the active demo with `npm run demo:foodie`
-/ `demo:kdrama` / `demo:aquarium` / `demo:superfan` (copies `demos/<slug>/`
-into `src/` + `public/images`). The deploy workflow publishes all four behind a
+for one fictional superfan). Switch the active set with `npm run demo:aquarium`
+/ `demo:foodie` / `demo:kdrama` / `demo:superfan`, and back with
+`demo:starter` (copies `demos/<slug>/` into `src/` + `public/images`). The deploy workflow publishes all four behind a
 gallery landing page with an in-page switcher (`DEMO_BAR` in `src/config.ts`, 
 set it to `null` on a real site and it never appears). All communities and venues
 in the demos are made up for demonstration.
@@ -93,8 +94,9 @@ key format as the Hugo theme.
 
 - `scripts/spreadsheet-import.py`: the same import from one spreadsheet with tabs for
   Speakers, Venues, Organizers and Events (dependency-free .xlsx or per-tab CSVs).
-  `--make-sample community.xlsx` writes a starter workbook; one ships at
-  `scripts/sample-community.xlsx`.
+  `--make-sample community.xlsx` writes a starter workbook (one ships at
+  `scripts/sample-community.xlsx`); import it with
+  `--xlsx community.xlsx --site .`.
 
 The helper scripts have a dependency-free test suite: `python3 -m unittest discover -s scripts/tests` (also run in CI).
 

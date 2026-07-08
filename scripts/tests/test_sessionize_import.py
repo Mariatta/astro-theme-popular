@@ -15,6 +15,21 @@ class Units(unittest.TestCase):
         self.assertEqual(mod.slugify("Águeda Núñez-Smith!"), "agueda-nunez-smith")
         self.assertEqual(mod.slugify("???"), "untitled")
 
+    def test_slugify_preserves_non_latin_scripts(self):
+        # a KDrama fan club will import 한글 names on week one
+        self.assertEqual(mod.slugify("김민지"), "김민지")
+        self.assertEqual(mod.slugify("박 서준"), "박-서준")
+        self.assertEqual(mod.slugify("Мария Иванова"), "мария-иванова")
+
+    def test_slugify_falls_back_to_id_not_untitled(self):
+        self.assertEqual(mod.slugify("???", fallback="sp42"), "sp42")
+
+    def test_unique_slug_suffixes_collisions(self):
+        seen = set()
+        self.assertEqual(mod.unique_slug("Kim Minji", seen), "kim-minji")
+        self.assertEqual(mod.unique_slug("Kim Minji", seen), "kim-minji-2")
+        self.assertEqual(mod.unique_slug("Kim Minji", seen), "kim-minji-3")
+
     def test_time_range_same_meridiem(self):
         self.assertEqual(mod.time_range("2026-09-19T14:00:00", "2026-09-19T15:00:00"), "2:00 – 3:00 PM")
 

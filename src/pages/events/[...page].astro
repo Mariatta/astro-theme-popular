@@ -11,7 +11,7 @@ import { SECTIONS, STRINGS, PAGINATION } from '../../config';
    full, mirroring layouts/events/list.html on the Hugo side. */
 export async function getStaticPaths() {
   const now = new Date();
-  const all = await getCollection('events');
+  const all = (await getCollection('events')).filter((e) => !e.data.draft);
   const upcoming = all.filter((e) => e.data.date >= now).sort((a, b) => +a.data.date - +b.data.date);
   const past = all.filter((e) => e.data.date < now).sort((a, b) => +b.data.date - +a.data.date);
   const size = PAGINATION.pageSize;

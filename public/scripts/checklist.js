@@ -16,7 +16,7 @@
         btn.classList.toggle("is-done", on);
         var box = btn.querySelector(".g-check__box");
         if (box) box.innerHTML = on ? '<i class="fa-solid fa-check" aria-hidden="true"></i>' : "";
-        btn.setAttribute("aria-pressed", on ? "true" : "false");
+        btn.setAttribute("aria-checked", on ? "true" : "false");
         if (on) done++;
       });
       if (countEl) {
@@ -25,6 +25,7 @@
       }
     }
 
+    if (countEl) countEl.setAttribute("aria-live", "polite");
     items.forEach(function (btn, i) {
       btn.setAttribute("role", "checkbox");
       btn.addEventListener("click", function () {

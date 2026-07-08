@@ -14,13 +14,14 @@ here must be mirrored there (see "Parity rules" below).
 ## The single most important thing to know
 
 `src/` holds the **active site**, which is a *copy* produced by demo
-activation. The real sources for the demos live in `demos/<name>/`
-(aquarium, foodie, kdrama, plus `superfan`: Truly Madly Riley, a fictional
-personal site demonstrating individual use; it has no Hugo twin, see
-PARITY.md). Running:
+activation. The default active site is `demos/starter` (the neutral
+"Your Community" skeleton, twin of hugo-theme-popular's `exampleSite/`).
+The flavored sets live alongside it in `demos/<name>/` (aquarium, foodie,
+kdrama, and `superfan`: Truly Madly Riley, a fictional personal site).
+Running:
 
 ```bash
-npm run demo:aquarium   # or demo:foodie / demo:kdrama / demo:superfan
+npm run demo:starter    # or demo:aquarium / demo:foodie / demo:kdrama / demo:superfan
 ```
 
 copies that demo's `config.ts`, `content/`, and `images/` over `src/config.ts`,

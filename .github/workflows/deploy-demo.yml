@@ -1,6 +1,6 @@
 name: Deploy Astro demo sites (GitHub Pages)
 
-# Builds all three demo sets and the gallery landing page:
+# Builds the four flavored demo sets and the gallery landing page:
 #
 #   /            ← demos/gallery/index.html
 #   /aquarium/   ← demos/aquarium (Rocky Cove Aquarium Club, canonical)

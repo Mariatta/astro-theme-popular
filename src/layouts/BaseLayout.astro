@@ -82,7 +82,9 @@ const brandCss = `html:root{${vars.join(';')}}`;
     <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
     <link rel="icon" href={SITE.favicon ?? SITE.logo} />
     <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/rss.xml" />
-    <link rel="stylesheet" href={SITE.fontAwesome} referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href={SITE.fontAwesome} referrerpolicy="no-referrer"
+      integrity={SITE.fontAwesome.includes("font-awesome/6.5.2/css/all.min.css") ? "sha384-PPIZEGYM1v8zp5Py7UjFb79S58UeqCL9pYVnVPURKEqvioPROaVAJKKLzvH2rDnI" : undefined}
+      crossorigin={SITE.fontAwesome.includes("font-awesome/6.5.2/css/all.min.css") ? "anonymous" : undefined} />
     {(SITE as Record<string, any>).customCSS?.map((href: string) => <link rel="stylesheet" href={href} />)}
     <style is:inline id="popular-brand" set:html={brandCss}></style>
   </head>

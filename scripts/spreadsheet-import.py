@@ -68,9 +68,28 @@ SAMPLE = {
 }
 
 
-def slugify(text):
-    text = unicodedata.normalize("NFKD", str(text)).encode("ascii", "ignore").decode()
-    return re.sub(r"[^a-zA-Z0-9]+", "-", text).strip("-").lower() or "untitled"
+def slugify(text, fallback="untitled"):
+    """Unicode-preserving slug, mirroring the theme's tagSlug (src/lib/slugs.ts):
+    lowercase, quotes dropped, runs of non-letter/number become hyphens.
+    Latin accents fold to ASCII; other scripts (한글, кириллица) are kept."""
+    text = unicodedata.normalize("NFKC", str(text)).lower()
+    folded = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode()
+    if any(ch.isalnum() for ch in folded):
+        text = folded
+    text = re.sub(r"['\"]+", "", text)
+    text = re.sub(r"[\W_]+", "-", text, flags=re.UNICODE).strip("-")
+    return text or fallback
+
+
+def unique_slug(text, seen, fallback="untitled"):
+    """Slugify with -2/-3 suffixes so two names never share a file."""
+    base = slugify(text, fallback)
+    slug, n = base, 1
+    while slug in seen:
+        n += 1
+        slug = f"{base}-{n}"
+    seen.add(slug)
+    return slug
 
 
 def q(s):
@@ -252,8 +271,9 @@ def main():
         fmt, content = detect(site)
 
     tabs = {t: to_records(sheets.get(t, [])) for t in TABS}
-    venue_slugs = {r.get("name", ""): slugify(r["name"]) for r in tabs["venues"] if r.get("name")}
-    speaker_slugs = {r.get("name", ""): slugify(r["name"]) for r in tabs["speakers"] if r.get("name")}
+    seen_v, seen_s = set(), set()
+    venue_slugs = {r["name"]: unique_slug(r["name"], seen_v) for r in tabs["venues"] if r.get("name")}
+    speaker_slugs = {r["name"]: unique_slug(r["name"], seen_s) for r in tabs["speakers"] if r.get("name")}
     written = skipped = 0
 
     def emit(path, text):
@@ -270,12 +290,12 @@ def main():
 
     for r in tabs["speakers"]:
         socials = [(k.title(), icon, r[k]) for k, icon in SOCIAL_COLS.items() if r.get(k)]
-        emit(content / "speakers" / f"{slugify(r['name'])}.md",
+        emit(content / "speakers" / f"{speaker_slugs[r['name']]}.md",
              fm(fmt, [("title", r.get("name")), ("role", r.get("role")), ("photo", r.get("photo")),
                       ("bio", r.get("bio")), ("website", r.get("website"))], socials=socials))
 
     for r in tabs["venues"]:
-        emit(content / "venues" / f"{slugify(r['name'])}.md",
+        emit(content / "venues" / f"{venue_slugs[r['name']]}.md",
              fm(fmt, [("title", r.get("name")), ("address", r.get("address")), ("photo", r.get("photo")),
                       ("notes", r.get("notes")), ("accessibility", r.get("accessibility")),
                       ("website", r.get("website"))]))
@@ -289,18 +309,21 @@ def main():
         idx = content / "sponsors" / "_index.md"
         if not idx.exists():
             emit(idx, '+++\ntitle = "Our sponsors"\ntype = "organizers"\neyebrow = "Sponsors"\nlead = "The organizations that keep our events free."\n+++\n')
+    seen_sp = set()
     for i, r in enumerate(tabs["sponsors"], start=1):
-        emit(content / "sponsors" / f"{slugify(r['name'])}.md",
+        emit(content / "sponsors" / f"{unique_slug(r['name'], seen_sp)}.md",
              fm(fmt, [("title", r.get("name")), ("weight", str(i * 10)), ("role", r.get("level")),
                       ("photo", r.get("logo")), ("description", r.get("description")),
                       ("website", r.get("website"))]))
 
+    seen_o = set()
     for i, r in enumerate(tabs["organizers"], start=1):
-        emit(content / "organizers" / f"{slugify(r['name'])}.md",
+        emit(content / "organizers" / f"{unique_slug(r['name'], seen_o)}.md",
              fm(fmt, [("title", r.get("name")), ("weight", r.get("weight") or str(i * 10)),
                       ("role", r.get("role")), ("photo", r.get("photo")),
                       ("description", r.get("description")), ("website", r.get("website"))]))
 
+    seen_e = set()
     for r in tabs["events"]:
         date = excel_serial_to_iso(r.get("date", ""))
         venue = r.get("venue", "")
@@ -324,7 +347,7 @@ def main():
         if tags:
             arrays.append(("tags", tags))
         body = (r.get("description") or "") + "\n"
-        emit(content / "events" / f"{slugify(r['title'])}.md", fm(fmt, pairs, arrays=arrays) + "\n" + body)
+        emit(content / "events" / f"{unique_slug(r['title'], seen_e)}.md", fm(fmt, pairs, arrays=arrays) + "\n" + body)
 
     print(f"done ({fmt}): {written} written, {skipped} skipped. Review the files, then build.")
 

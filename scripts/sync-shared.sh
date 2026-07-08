@@ -20,7 +20,6 @@ PAIRS=(
   "assets/css/base.css:src/styles/base.css"
   "assets/css/components.css:src/styles/components.css"
   "assets/js:public/scripts"
-  "exampleSite/static/images:public/images"
   "scripts/sessionize-import.py:scripts/sessionize-import.py"
   "scripts/spreadsheet-import.py:scripts/spreadsheet-import.py"
   "scripts/sample-community.xlsx:scripts/sample-community.xlsx"

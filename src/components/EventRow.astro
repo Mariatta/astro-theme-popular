@@ -9,13 +9,18 @@ const d = event.data;
 
 /* Venue: a venueRef to the venues collection wins over the flat fields. */
 const venuePage = d.venueRef ? (await getCollection('venues')).find((v) => v.id === d.venueRef) : undefined;
+if (d.venueRef && !venuePage) console.warn(`events/${event.id}: venueRef "${d.venueRef}" matches no venue page`);
 const venueName = venuePage?.data.title ?? d.venue;
 const venueAddress = venuePage?.data.address ?? (venuePage ? undefined : d.address);
 const tbd = d.venueWanted || !venueName;
 
 /* Speaker line: resolved speaker-profile names, falling back to the string. */
 const allSpeakers = d.speakers.length ? await getCollection('speakers') : [];
-const names = d.speakers.map((slug) => allSpeakers.find((s) => s.id === slug)?.data.title).filter(Boolean);
+const names = d.speakers.map((slug) => {
+  const found = allSpeakers.find((s) => s.id === slug);
+  if (!found) console.warn(`events/${event.id}: speaker "${slug}" matches no speaker page`);
+  return found?.data.title;
+}).filter(Boolean);
 const speakerLine = names.length ? names.join(', ') : d.speaker;
 
 const dow = d.date.toLocaleDateString(SITE.locale, { weekday: 'short' });

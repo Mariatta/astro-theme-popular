@@ -19,7 +19,7 @@ const { id, items } = Astro.props;
   <ul>
     {items.map((item) => (
       <li>
-        <button class="g-check" type="button" aria-pressed="false">
+        <button class="g-check" type="button" role="checkbox" aria-checked="false">
           <span class="g-check__box"></span>
           <span class="g-check__label">{item}</span>
         </button>

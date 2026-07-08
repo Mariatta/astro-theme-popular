@@ -6,11 +6,16 @@ import OrganizerCard from '../components/OrganizerCard.astro';
 import { HOME, SITE, STRINGS } from '../config';
 
 const now = new Date();
-const events = await getCollection('events');
+const events = (await getCollection('events')).filter((e) => !e.data.draft);
 const upcoming = events.filter((e) => e.data.date >= now).sort((a, b) => +a.data.date - +b.data.date);
 const next = upcoming[0];
 
 const posts = (await getCollection('blog')).filter((p) => !p.data.draft).sort((a, b) => +b.data.date - +a.data.date).slice(0, 3);
+/* value = "@pastEventCount" renders the live number of past events,
+   rounded down to a "70+" style once there are ten or more (Hugo parity). */
+const pastCount = events.filter((e) => e.data.date < now).length;
+const statValue = (v: string) =>
+  v === '@pastEventCount' ? (pastCount >= 10 ? `${Math.floor(pastCount / 10) * 10}+` : String(pastCount)) : v;
 const nextVenue = next?.data.venueRef ? (await getCollection('venues')).find((v) => v.id === next.data.venueRef)?.data.title : undefined;
 const organizers = (await getCollection('organizers')).sort((a, b) => a.data.weight - b.data.weight);
 
@@ -46,7 +51,7 @@ const h = HOME;
     <section class="g-bg-ink">
       <div class="g-container g-stats">
         {h.stats.map((s) => (
-          <div class="g-stat"><div class="g-stat__n">{s.value}</div><div class="g-stat__l">{s.label}</div></div>
+          <div class="g-stat"><div class="g-stat__n">{statValue(s.value)}</div><div class="g-stat__l">{s.label}</div></div>
         ))}
       </div>
     </section>
@@ -78,7 +83,7 @@ const h = HOME;
   {next && (
     <section class="g-bg-wash-soft">
       <div class="g-container g-feature">
-        <div class="g-feature__media"><img src={next.data.image ?? h.hero.image} alt={next.data.title} /></div>
+        {(next.data.image ?? h.hero.image) && <div class="g-feature__media"><img src={next.data.image ?? h.hero.image} alt={next.data.title} /></div>}
         <div class="g-feature__body">
           <span class="g-badge g-badge--soft"><i class="fa-solid fa-calendar" aria-hidden="true"></i> {STRINGS.nextMeetup}</span>
           <h2 style="margin:0">{next.data.title}</h2>

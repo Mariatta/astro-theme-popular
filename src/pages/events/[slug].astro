@@ -5,7 +5,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import AuthorBox from '../../components/AuthorBox.astro';
 
 export async function getStaticPaths() {
-  const events = await getCollection('events');
+  const events = (await getCollection('events')).filter((e) => !e.data.draft);
   return events.map((event) => ({ params: { slug: event.id }, props: { event } }));
 }
 
@@ -17,11 +17,16 @@ const dateStr = d.date.toLocaleDateString(SITE.locale, { weekday: 'long', month:
 /* Venue: a venueRef to the venues collection wins over the flat fields;
    its arrival notes are inherited unless the event sets venueNotes. */
 const venuePage = d.venueRef ? (await getCollection('venues')).find((v) => v.id === d.venueRef) : undefined;
+if (d.venueRef && !venuePage) throw new Error(`events/${event.id}: venueRef "${d.venueRef}" matches no venue page`);
 const venueNotes = d.venueNotes ?? venuePage?.data.notes;
 
 /* Speaker profile cards, resolved from the speakers collection. */
 const allSpeakers = await getCollection('speakers');
-const speakerEntries = d.speakers.map((slug) => allSpeakers.find((s) => s.id === slug)).filter(Boolean);
+const speakerEntries = d.speakers.map((slug) => {
+  const entry = allSpeakers.find((s) => s.id === slug);
+  if (!entry) throw new Error(`events/${event.id}: speaker "${slug}" matches no speaker page`);
+  return entry;
+});
 ---
 
 <BaseLayout title={d.title} description={d.description} image={d.image}>
