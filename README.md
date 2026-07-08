@@ -132,3 +132,9 @@ Since Astro sites vendor the theme (you copy this repo), updating means
 re-copying the files you haven't customized; the changelog tells you which
 areas moved.
 
+Releases are cut by the Release workflow after the CHANGELOG entry is merged:
+`gh workflow run release.yml -f version=X.Y.Z`, run in **both** repos. It
+validates the CHANGELOG section and cross-repo parity, then tags `vX.Y.Z` and
+publishes the GitHub Release with that section as the notes. On this repo it also checks that
+`package.json` matches the version.
+
