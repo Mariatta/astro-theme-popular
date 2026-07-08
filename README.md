@@ -119,3 +119,16 @@ ways to support the work:
 
 Typography: **Inter** & **Quantico** (Google Fonts). Icons: **Font Awesome 6**.
 MIT: see `LICENSE`. Fork it, adapt it, and share your community's version.
+
+## Versioning & staying up to date
+
+Releases are tagged `v0.x` (semver, in lockstep with
+[`hugo-theme-popular`](https://github.com/Mariatta/hugo-theme-popular)); the
+1.0 release will mark the content model and brand keys as stable. Changes are
+documented in [CHANGELOG.md](CHANGELOG.md). To hear about updates, watch this
+repo (Watch → Custom → Releases) or subscribe to the
+[releases feed](https://github.com/Mariatta/astro-theme-popular/releases.atom).
+Since Astro sites vendor the theme (you copy this repo), updating means
+re-copying the files you haven't customized; the changelog tells you which
+areas moved.
+
