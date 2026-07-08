@@ -10,7 +10,7 @@ time: "6:00 – 8:00 PM"
 venueRef: "community-hall"
 speakers: ["alex"]
 checkin: "Bring your registration email (print or phone) and photo ID."
-rsvp: "https://example.com/rsvp"
+rsvp: "https://example.com/rsvp?event=first-meetup&src=site"
 ---
 
 Describe the event. This one is dated in the future so it shows under **Upcoming**, events move to **Past** automatically after their date.

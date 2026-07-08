@@ -49,6 +49,7 @@
     --color-primary-active: var(--gold-700);
     --color-secondary:      var(--ink-800);        /* sunglass black */
     --color-accent:         var(--indigo-500);
+    --color-accent-hover:   color-mix(in srgb, var(--indigo-500) 85%, #000);
 
     --color-primary-subtle: var(--gold-50);        /* tinted fills, 10% vibe */
     --color-accent-subtle:  #eef0fd;

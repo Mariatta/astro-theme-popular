@@ -67,7 +67,7 @@ Same behaviour, different language. When you change one, port the other.
 
 **Config invariant:** the `[params.brand]` keys in Hugo and the `BRAND` keys in
 `src/config.ts` must stay identical (`primary`, `primaryHover`, `primaryActive`,
-`link`, `linkHover`, `secondary`, `accent`, `ink`, `surfaceWash`,
+`link`, `linkHover`, `secondary`, `accent`, `accentHover`, `ink`, `surfaceWash`,
 `surfaceWashSoft`, `surfaceInk`, `fontSans`, `fontDisplay`, `radiusCard`,
 `containerMax`, plus the dark-palette keys `surfacePage`, `surfaceCard`,
 `surfaceTertiary`, `textBody`, `textMuted`, `textOnBrand`, `borderSubtle`). `params.favicon` ⇄
@@ -142,3 +142,10 @@ of the deployed demo set.
 2. Tier-2 changes ported (or a `parity` issue exists).
 3. Both example sites build: `hugo server` / `npm run build`.
 4. Bump versions together; note cross-repo changes in both changelogs.
+
+## Allowed asymmetries (by design)
+
+- `head-extra.html` hook is Hugo-only: Hugo sites override a partial, Astro
+  sites vendor the repo and edit `BaseLayout.astro` directly.
+- `SITE.rssTitle` is Astro-only: Hugo's feed link title comes from the RSS
+  output format and site title.

@@ -30,6 +30,8 @@
 .g-btn--outline:hover { background: var(--color-primary); color: var(--text-on-brand); box-shadow: var(--shadow-sm); }
 .g-btn--ghost { background: transparent; color: var(--text-link); }
 .g-btn--ghost:hover { background: var(--color-primary-subtle); color: var(--text-link); }
+.g-btn--accent { background: var(--color-accent); color: var(--text-on-brand); }
+.g-btn--accent:hover { background: var(--color-accent-hover); color: var(--text-on-brand); box-shadow: var(--shadow-sm); }
 .g-btn--dark { background: var(--ink-800); color: var(--text-on-brand); }
 .g-btn--dark:hover { background: var(--ink-900); color: var(--text-on-brand); box-shadow: var(--shadow-sm); }
 

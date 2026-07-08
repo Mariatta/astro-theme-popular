@@ -14,6 +14,28 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+### Fixed
+- Query-string URLs no longer double-escape (`&` became `&amp;amp;`, breaking
+  links) in buttons, footer and header links, social icons, and markdown
+  links. CI now fails on any double-escaped ampersand in built output.
+- Markdown links no longer render a stray space before following punctuation.
+- Astro: the RSS `<link rel="alternate">` resolves against the configured
+  site instead of hardcoding `/rss.xml`, fixing subpath deployments.
+
+### Changed
+- The footer theme credit in demos and starters now links to the project
+  site (mariatta.ca/hugo-theme-popular) instead of the author's personal
+  site. Adopters control their own credit via footer config.
+
+### Added
+- `g-btn--accent` button variant, with an `accentHover` brand key (defaults
+  to a darkened accent).
+- `--gold-100` (card image placeholder tint) now derives from `brand.primary`
+  like its sibling tints, instead of staying champagne on re-branded sites.
+- Hugo: a `head-extra.html` hook for analytics or any other head markup,
+  overridable per site without replacing the whole head partial.
+- Astro: optional `SITE.rssTitle` for the feed link title.
+
 ## [0.1.0] - 2026-07-08
 
 First public release.
