@@ -31,6 +31,7 @@ const b = BRAND;
 if (b.primary) {
   vars.push(`--color-primary:${b.primary}`, `--gold-500:${b.primary}`);
   vars.push(`--gold-50:color-mix(in srgb, ${b.primary} 7%, #fff)`);
+  vars.push(`--gold-100:color-mix(in srgb, ${b.primary} 20%, #fff)`);
   vars.push(`--gold-300:color-mix(in srgb, ${b.primary} 55%, #fff)`);
 }
 if (b.primaryHover) vars.push(`--color-primary-hover:${b.primaryHover}`);
@@ -39,6 +40,7 @@ if (b.link) vars.push(`--text-link:${b.link}`);
 if (b.linkHover) vars.push(`--text-link-hover:${b.linkHover}`);
 if (b.secondary) vars.push(`--color-secondary:${b.secondary}`);
 if (b.accent) vars.push(`--color-accent:${b.accent}`, `--indigo-500:${b.accent}`);
+if (b.accentHover) vars.push(`--color-accent-hover:${b.accentHover}`);
 if (b.ink) vars.push(`--ink-800:${b.ink}`, `--text-strong:${b.ink}`);
 if (b.surfaceWash) vars.push(`--surface-wash:${b.surfaceWash}`);
 if (b.surfaceWashSoft) vars.push(`--surface-wash-soft:${b.surfaceWashSoft}`);
@@ -81,7 +83,7 @@ const brandCss = `html:root{${vars.join(';')}}`;
     {ogImage && <meta property="og:image" content={new URL(ogImage, Astro.site ?? Astro.url)} />}
     <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
     <link rel="icon" href={SITE.favicon ?? SITE.logo} />
-    <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title={(SITE as Record<string, any>).rssTitle ?? SITE.title} href={new URL("rss.xml", Astro.site ?? Astro.url)} />
     <link rel="stylesheet" href={SITE.fontAwesome} referrerpolicy="no-referrer"
       integrity={SITE.fontAwesome.includes("font-awesome/6.5.2/css/all.min.css") ? "sha384-PPIZEGYM1v8zp5Py7UjFb79S58UeqCL9pYVnVPURKEqvioPROaVAJKKLzvH2rDnI" : undefined}
       crossorigin={SITE.fontAwesome.includes("font-awesome/6.5.2/css/all.min.css") ? "anonymous" : undefined} />
