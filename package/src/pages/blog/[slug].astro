@@ -7,10 +7,19 @@ import { tagSlug } from '../../lib/slugs';
 
 export async function getStaticPaths() {
   const posts = (await getCollection('blog')).filter((p) => !p.data.draft);
-  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+  /* PARITY.md pins the ordering: date desc, then title, then id, matching
+     Hugo's section order (posts must not set weight). next = newer. */
+  const cmp = (x: string, y: string) => (x < y ? -1 : x > y ? 1 : 0);
+  const sorted = [...posts].sort(
+    (a, b) => +b.data.date - +a.data.date || cmp(a.data.title, b.data.title) || cmp(a.id, b.id),
+  );
+  return sorted.map((post, i) => ({
+    params: { slug: post.id },
+    props: { post, newer: sorted[i - 1], older: sorted[i + 1] },
+  }));
 }
 
-const { post } = Astro.props;
+const { post, newer, older } = Astro.props;
 const d = post.data;
 const { Content } = await render(post);
 const dateStr = d.date.toLocaleDateString(SITE.locale, { month: 'short', day: 'numeric', year: 'numeric' });
@@ -80,6 +89,22 @@ const byline = bylineNames.length > 1
         </>
       )}
 
+      {(older || newer) && (
+        <nav class="g-postnav" aria-label={STRINGS.postNavigation}>
+          {older ? (
+            <a class="g-postnav__card" href={`/blog/${older.id}/`} rel="prev">
+              <span class="g-postnav__label"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> {STRINGS.olderPost}</span>
+              <span class="g-postnav__title">{older.data.title}</span>
+            </a>
+          ) : <span></span>}
+          {newer && (
+            <a class="g-postnav__card g-postnav__card--next" href={`/blog/${newer.id}/`} rel="next">
+              <span class="g-postnav__label">{STRINGS.newerPost} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+              <span class="g-postnav__title">{newer.data.title}</span>
+            </a>
+          )}
+        </nav>
+      )}
       {SUPPORT && (
         <div class="g-callout" style="margin-top:var(--space-5);flex-direction:column;gap:.9rem">
           <span class="g-badge g-badge--secondary g-badge--soft"><i class="fa-solid fa-heart" aria-hidden="true"></i> {SUPPORT.badge}</span>
