@@ -1,0 +1,62 @@
+---
+import { STRINGS } from 'popular:config';
+/** Root-level content pages: prose pages (about, code-of-conduct, get-involved)
+ *  and docs pages (handbook, runbooks, rendered with a scroll-spy TOC). */
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+
+export async function getStaticPaths() {
+  const pages = await getCollection('pages');
+  const docs = await getCollection('docs');
+  return [
+    ...pages.map((entry) => ({ params: { slug: entry.id }, props: { entry, kind: 'page' } })),
+    ...docs.map((entry) => ({ params: { slug: entry.id }, props: { entry, kind: 'doc' } })),
+  ];
+}
+
+const { entry, kind } = Astro.props;
+const d = entry.data;
+const { Content, headings } = await render(entry);
+/* Current page's h2/h3 links nest under its sidebar entry, in document
+   order, mirroring the Hugo theme's docs/single.html. */
+const sections = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const allDocs = (await getCollection('docs')).sort(
+  (a, b) => (a.data.weight ?? 100) - (b.data.weight ?? 100)
+);
+---
+
+<BaseLayout title={d.title} description={d.lead}>
+  <PageHero eyebrow={d.eyebrow} title={d.title} lead={d.lead} />
+
+  {kind === 'doc' ? (
+    <div class="g-container g-doc">
+      <nav class="g-doc-toc" aria-label={STRINGS.eyebrowDocs}>
+        <div class="g-doc-toc__label">{STRINGS.eyebrowDocs}</div>
+        {allDocs.map((e) => (
+          <>
+            <a
+              href={`/${e.id}/`}
+              class={e.id === entry.id ? 'is-active' : ''}
+              aria-current={e.id === entry.id ? 'page' : undefined}
+            >{e.data.title}</a>
+            {e.id === entry.id && sections.map((h) => (
+              <a href={`#${h.slug}`} style={`padding-left:${h.depth === 2 ? '1.35rem' : '2rem'};font-size:var(--text-xs)`}>{h.text}</a>
+            ))}
+          </>
+        ))}
+      </nav>
+      <div class="g-doc__content g-prose">
+        <Content />
+      </div>
+    </div>
+  ) : (
+    <section class="g-bg-white g-section">
+      <div class="g-container">
+        <div class="g-article g-prose">
+          <Content />
+        </div>
+      </div>
+    </section>
+  )}
+</BaseLayout>

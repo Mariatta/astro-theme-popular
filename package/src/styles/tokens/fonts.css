@@ -1,0 +1,9 @@
+/* ============================================================
+   FONTS: Popular theme
+   The live site uses Inter as its single workhorse typeface
+   (Hinode/Bootstrap theme). Quantico is an OPTIONAL geometric
+   display accent that echoes the squared "VANCOUVER" lettering
+   in the logo wordmark: use sparingly for hero/section accents.
+   Swap or extend these via the brand config or your own fonts.css.
+   ============================================================ */
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,200..800;1,14..32,400..600&family=Quantico:ital,wght@0,400;0,700;1,400;1,700&display=swap");

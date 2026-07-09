@@ -1,0 +1,81 @@
+---
+import { SITE, STRINGS } from 'popular:config';
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AuthorBox from '../../components/AuthorBox.astro';
+
+export async function getStaticPaths() {
+  const events = (await getCollection('events')).filter((e) => !e.data.draft);
+  return events.map((event) => ({ params: { slug: event.id }, props: { event } }));
+}
+
+const { event } = Astro.props;
+const d = event.data;
+const { Content } = await render(event);
+const dateStr = d.date.toLocaleDateString(SITE.locale, { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+
+/* Venue: a venueRef to the venues collection wins over the flat fields;
+   its arrival notes are inherited unless the event sets venueNotes. */
+const venuePage = d.venueRef ? (await getCollection('venues')).find((v) => v.id === d.venueRef) : undefined;
+if (d.venueRef && !venuePage) throw new Error(`events/${event.id}: venueRef "${d.venueRef}" matches no venue page`);
+const venueNotes = d.venueNotes ?? venuePage?.data.notes;
+
+/* Speaker profile cards, resolved from the speakers collection. */
+const allSpeakers = await getCollection('speakers');
+const speakerEntries = d.speakers.map((slug) => {
+  const entry = allSpeakers.find((s) => s.id === slug);
+  if (!entry) throw new Error(`events/${event.id}: speaker "${slug}" matches no speaker page`);
+  return entry;
+});
+---
+
+<BaseLayout title={d.title} description={d.description} image={d.image}>
+  <article>
+    <header class="g-pagehero">
+      <div class="g-container" style="padding-block:var(--space-6) var(--space-5)">
+        <div style="margin-bottom:1rem">
+          <a href="/events/" style="display:inline-flex;gap:.4rem;align-items:center;font-size:var(--text-sm);font-weight:var(--weight-medium)">
+            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> {STRINGS.allEvents}
+          </a>
+        </div>
+        <span class="g-eyebrow">{dateStr}{d.time && ` · ${d.time}`}</span>
+        <h1 style="margin:.5rem 0 0">{d.title}</h1>
+      </div>
+    </header>
+    <div class="g-container g-section--sm">
+     <div class="g-article">
+      <div class="g-meta-line" style="margin-bottom:var(--space-4)">
+        <span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> {venuePage
+          ? <><a href={`/venues/${venuePage.id}/`}>{venuePage.data.title}</a>{venuePage.data.address && ` · ${venuePage.data.address}`}</>
+          : <>{d.venue ?? STRINGS.venueTba}{d.address && ` · ${d.address}`}</>}</span>
+        {d.speaker && <span><i class="fa-solid fa-microphone-lines" aria-hidden="true"></i> {d.speaker}</span>}
+      </div>
+
+      {(d.checkin || venueNotes) && (
+        <div class="g-callout" style="flex-direction:column;gap:.6rem;margin:0 0 var(--space-4)">
+          <div class="g-callout__title">{STRINGS.beforeYouArrive}</div>
+          {d.checkin && <div class="g-callout__body"><i class="fa-solid fa-ticket" aria-hidden="true"></i> {d.checkin}</div>}
+          {venueNotes && <div class="g-callout__body"><i class="fa-solid fa-door-open" aria-hidden="true"></i> {venueNotes}</div>}
+        </div>
+      )}
+
+      <div class="g-prose"><Content /></div>
+
+      {speakerEntries.length > 0 && (
+        <>
+          <h2 style="font-size:var(--text-xl);margin:var(--space-5) 0 1rem">{STRINGS.speakers}</h2>
+          <div class="g-stack" style="gap:var(--space-3)">
+            {speakerEntries.map((s) => <AuthorBox entry={s} base="/speakers/" />)}
+          </div>
+        </>
+      )}
+
+      {d.rsvp && (
+        <div class="g-row" style="margin-top:var(--space-4)">
+          <a class="g-btn g-btn--primary g-btn--lg" href={d.rsvp}><i class="fa-solid fa-calendar" aria-hidden="true"></i> {STRINGS.rsvpExternal}</a>
+        </div>
+      )}
+     </div>
+    </div>
+  </article>
+</BaseLayout>

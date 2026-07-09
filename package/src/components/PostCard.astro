@@ -1,0 +1,36 @@
+---
+import { SITE } from 'popular:config';
+import { tagSlug } from '../lib/slugs';
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+
+interface Props { post: CollectionEntry<'blog'> }
+const { post } = Astro.props;
+const d = post.data;
+const href = `/blog/${post.id}/`;
+const month = d.date.toLocaleDateString(SITE.locale, { month: 'short', year: 'numeric' });
+const allAuthors = await getCollection('authors');
+const names = [
+  ...d.authors.map((slug) => allAuthors.find((a) => a.id === slug)?.data.title ?? slug),
+  ...d.guestAuthors.map((g) => g.name),
+];
+if (!names.length && d.author) names.push(d.author);
+---
+
+<article class="g-card" data-tags={d.tags.join(',')}>
+  {d.image && (
+    <a href={href} class="g-card__media"><img src={d.image} alt={d.title} loading="lazy" /></a>
+  )}
+  <div class="g-card__body">
+    <span class="g-card__eyebrow">{month}{names.length > 0 && ` · ${names.join(', ')}`}</span>
+    <h3 class="g-card__title"><a href={href}>{d.title}</a></h3>
+    {d.description && <div class="g-card__text">{d.description}</div>}
+    {d.tags.length > 0 && (
+      <div class="g-card__footer">
+        {d.tags.slice(0, 2).map((t) => (
+          <a class="g-tag" href={`/tags/${tagSlug(t)}/`}>{t}</a>
+        ))}
+      </div>
+    )}
+  </div>
+</article>

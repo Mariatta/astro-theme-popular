@@ -1,0 +1,56 @@
+# Phase 1 of PACKAGING.md: build the packaged theme's smoke consumer and
+# keep the transitional copies (src/ template model vs package/) identical.
+name: Package smoke build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Transitional drift guard (template model vs package)
+        run: |
+          # Until the phase-4 cutover, theme code exists twice in this repo.
+          # The package copies must match the canonical src/ + public/ files:
+          # byte-identical for styles/scripts, identical after normalizing the
+          # config import (src uses ../config, the package uses popular:config).
+          diff -r src/styles package/src/styles
+          diff -r public/scripts package/scripts
+          norm() {
+            mkdir -p "/tmp/norm/$2"
+            (cd "$1" && find . -type f | while read -r f; do
+              mkdir -p "/tmp/norm/$2/$(dirname "$f")"
+              sed -E "s#from '(\.\./)+config'#from 'THEME_CONFIG'#; s#from 'popular:config'#from 'THEME_CONFIG'#" "$f" > "/tmp/norm/$2/$f"
+            done)
+          }
+          # BaseLayout.astro is the one designed divergence: the package
+          # version has no static /scripts tags (the integration injects
+          # them); mirror edits to it by hand, everything else must match.
+          for d in components layouts pages lib; do
+            rm -rf /tmp/norm; norm "src/$d" a; norm "package/src/$d" b
+            diff -r -x BaseLayout.astro /tmp/norm/a /tmp/norm/b
+          done
+      - name: Install the package's own dependencies
+        # the smoke consumer links the package via file:, so the package's
+        # deps (@astrojs/rss) must be installed at its real path
+        working-directory: package
+        run: npm ci
+      - name: Build the smoke consumer
+        working-directory: smoke
+        run: |
+          npm ci
+          npx astro build
+      - name: Output guards
+        run: |
+          python3 scripts/check-image-alt.py smoke/dist
+          if grep -rl --include='*.html' '&amp;amp;' smoke/dist; then
+            echo "::error::double-escaped ampersand in smoke output"; exit 1
+          fi

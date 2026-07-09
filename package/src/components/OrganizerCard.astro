@@ -1,0 +1,21 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props { organizer: CollectionEntry<'organizers'> }
+const { organizer } = Astro.props;
+const d = organizer.data;
+---
+
+<div class="g-org">
+  {d.photo && <img class="g-org__img" src={d.photo} alt={d.title} loading="lazy" />}
+  <div class="g-org__name">{d.title}</div>
+  {d.role && <div class="g-org__role">{d.role}</div>}
+  {d.description && <p class="g-org__bio">{d.description}</p>}
+  {d.social.length > 0 && (
+    <div class="g-persona__socials">
+      {d.social.map((s) => (
+        <a href={s.url} aria-label={s.label} rel="noopener" target="_blank"><i class={s.icon} aria-hidden="true"></i></a>
+      ))}
+    </div>
+  )}
+</div>

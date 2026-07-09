@@ -1,4 +1,15 @@
 declare module 'astro:content' {
+	interface Render {
+		'.mdx': Promise<{
+			Content: import('astro').MDXContent;
+			headings: import('astro').MarkdownHeading[];
+			remarkPluginFrontmatter: Record<string, any>;
+			components: import('astro').MDXInstance<{}>['components'];
+		}>;
+	}
+}
+
+declare module 'astro:content' {
 	export interface RenderResult {
 		Content: import('astro/runtime/server/index.js').AstroComponentFactory;
 		headings: import('astro').MarkdownHeading[];
@@ -124,7 +135,71 @@ declare module 'astro:content' {
 		: any;
 
 	type DataEntryMap = {
-		
+		"authors": Record<string, {
+  id: string;
+  body?: string;
+  collection: "authors";
+  data: InferEntrySchema<"authors">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
+"blog": Record<string, {
+  id: string;
+  body?: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
+"docs": Record<string, {
+  id: string;
+  body?: string;
+  collection: "docs";
+  data: InferEntrySchema<"docs">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
+"events": Record<string, {
+  id: string;
+  body?: string;
+  collection: "events";
+  data: InferEntrySchema<"events">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
+"organizers": Record<string, {
+  id: string;
+  body?: string;
+  collection: "organizers";
+  data: InferEntrySchema<"organizers">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
+"pages": Record<string, {
+  id: string;
+  body?: string;
+  collection: "pages";
+  data: InferEntrySchema<"pages">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
+"speakers": Record<string, {
+  id: string;
+  body?: string;
+  collection: "speakers";
+  data: InferEntrySchema<"speakers">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
+"venues": Record<string, {
+  id: string;
+  body?: string;
+  collection: "venues";
+  data: InferEntrySchema<"venues">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
+
 	};
 
 	type ExtractLoaderTypes<T> = T extends import('astro/loaders').LiveLoader<
@@ -154,6 +229,6 @@ declare module 'astro:content' {
 		LiveContentConfig['collections'][C]['loader']
 	>;
 
-	export type ContentConfig = never;
+	export type ContentConfig = typeof import("../src/content.config.js");
 	export type LiveContentConfig = never;
 }

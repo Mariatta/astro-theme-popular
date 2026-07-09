@@ -1,0 +1,50 @@
+---
+import { STRINGS } from 'popular:config';
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import EventRow from '../../components/EventRow.astro';
+
+export async function getStaticPaths() {
+  const venues = await getCollection('venues');
+  return venues.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+const events = (await getCollection('events'))
+  .filter((e) => !e.data.draft && e.data.venueRef === entry.id)
+  .sort((a, b) => +b.data.date - +a.data.date);
+---
+
+<BaseLayout title={d.title} description={d.address}>
+  <PageHero eyebrow={STRINGS.eyebrowVenue} title={d.title} lead={d.address} />
+  <section class="g-bg-white g-section">
+    <div class="g-container">
+      <div class="g-article" style="margin-bottom:var(--space-5)">
+        {d.photo && <img src={d.photo} alt={d.title} style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:var(--radius-xl);box-shadow:var(--shadow-md);margin-bottom:var(--space-4)" />}
+        <div class="g-meta-line" style="margin-bottom:var(--space-3)">
+          {d.address && <span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> {d.address}</span>}
+          {d.website && <span><i class="fa-solid fa-globe" aria-hidden="true"></i> <a href={d.website} rel="noopener" target="_blank">{STRINGS.website}</a></span>}
+        </div>
+        {(d.notes || d.accessibility) && (
+          <div class="g-callout" style="flex-direction:column;gap:.6rem">
+            <div class="g-callout__title">{STRINGS.beforeYouArrive}</div>
+            {d.notes && <div class="g-callout__body"><i class="fa-solid fa-door-open" aria-hidden="true"></i> {d.notes}</div>}
+            {d.accessibility && <div class="g-callout__body"><i class="fa-solid fa-universal-access" aria-hidden="true"></i> {d.accessibility}</div>}
+          </div>
+        )}
+        <div class="g-prose" style="margin-top:var(--space-4)"><Content /></div>
+      </div>
+      {events.length > 0 && (
+        <>
+          <div class="g-section-head"><span class="g-eyebrow">{STRINGS.eyebrowEvents}</span><h2>{STRINGS.venueEvents}</h2></div>
+          <div class="g-stack" style="margin-top:var(--space-4);gap:var(--space-3)">
+            {events.map((e) => <EventRow event={e} />)}
+          </div>
+        </>
+      )}
+    </div>
+  </section>
+</BaseLayout>
