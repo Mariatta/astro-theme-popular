@@ -39,6 +39,17 @@ copies that demo's `config.ts`, `content/`, and `images/` over `src/config.ts`,
   speaker, venue). Forks that merge from upstream (rather than copy) should
   expect to delete or replace those samples; only `demos/**` is inert.
 
+## The npm package transition (PACKAGING.md, PR #9)
+
+`package/` is the theme as a publishable Astro integration (phase 1);
+`smoke/` is its minimal consumer, built in CI. Until the cutover, theme code
+exists **twice**: the canonical template-model copy (`src/`,
+`public/scripts/`) and the package copy (`package/src/`, `package/scripts/`).
+Any edit to one must be applied to the other; the package-smoke workflow
+fails on drift (styles/scripts byte-identical; components/layouts/pages/lib
+identical modulo the config import, `../config` in src vs `popular:config`
+in the package).
+
 ## Commands
 
 ```bash
