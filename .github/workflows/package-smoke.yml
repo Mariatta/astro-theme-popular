@@ -38,6 +38,11 @@ jobs:
             rm -rf /tmp/norm; norm "src/$d" a; norm "package/src/$d" b
             diff -r -x BaseLayout.astro /tmp/norm/a /tmp/norm/b
           done
+      - name: Install the package's own dependencies
+        # the smoke consumer links the package via file:, so the package's
+        # deps (@astrojs/rss) must be installed at its real path
+        working-directory: package
+        run: npm ci
       - name: Build the smoke consumer
         working-directory: smoke
         run: |
