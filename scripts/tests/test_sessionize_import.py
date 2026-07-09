@@ -30,6 +30,29 @@ class Units(unittest.TestCase):
         self.assertEqual(mod.unique_slug("Kim Minji", seen), "kim-minji-2")
         self.assertEqual(mod.unique_slug("Kim Minji", seen), "kim-minji-3")
 
+    def test_sessionize_url_from_id(self):
+        self.assertEqual(mod.sessionize_url("abc123"),
+                         "https://sessionize.com/api/v2/abc123/view/All")
+
+    def test_stored_source_reads_popular_import_toml(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            site = pathlib.Path(tmp)
+            self.assertIsNone(mod.stored_source(site))
+            (site / "popular-import.toml").write_text('[sessionize]\nid = "xyz9"\n')
+            self.assertEqual(mod.stored_source(site),
+                             "https://sessionize.com/api/v2/xyz9/view/All")
+            (site / "popular-import.toml").write_text(
+                '[sessionize]\nurl = "https://sessionize.com/api/v2/full/view/All"\n')
+            self.assertEqual(mod.stored_source(site),
+                             "https://sessionize.com/api/v2/full/view/All")
+
+    def test_no_source_exits_with_guidance(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            (pathlib.Path(tmp) / "hugo.toml").write_text('title = "T"\n')
+            r = run_script("sessionize-import.py", "--site", tmp)
+            self.assertNotEqual(r.returncode, 0)
+            self.assertIn("popular-import.toml", r.stderr)
+
     def test_time_range_same_meridiem(self):
         self.assertEqual(mod.time_range("2026-09-19T14:00:00", "2026-09-19T15:00:00"), "2:00 – 3:00 PM")
 

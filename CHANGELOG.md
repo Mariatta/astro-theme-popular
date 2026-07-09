@@ -14,6 +14,22 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-09
+
+### Added
+- Older/newer post navigation on blog posts, with the cross-framework
+  ordering contract pinned in PARITY.md (date descending, then title, then
+  slug; `weight` on posts is unsupported). New UI string keys:
+  `postNavigation`, `newerPost`, `olderPost`.
+- The Sessionize importer can store a site's endpoint: `--id <embed-id>`
+  shorthand, or persist it in `popular-import.toml` (`[sessionize]` with
+  `id` or `url`) and run with just `--site .`.
+- An updating guide at /docs/updating/: release discovery, per-install-method
+  update steps, and which customization hooks survive updates.
+- Astro: phase 1 of npm packaging (PACKAGING.md): the theme as an installable
+  Astro integration under `package/`, with a smoke consumer built in CI.
+  Experimental; the copy-this-repo model is unchanged and remains canonical.
+
 ## [0.2.0] - 2026-07-08
 
 ### Fixed
