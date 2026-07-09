@@ -1,8 +1,14 @@
 # Plan: shipping the Astro theme as an npm package
 
-Status: proposal, awaiting go/no-go. Written while the theme is at v0.2.0
-with a single (maintainer-owned) downstream, which is the cheapest moment
-to make a breaking architectural change.
+Status: approved (work begun); phase 1 is PR #10 (package skeleton + smoke
+consumer). Phase-1 learnings:
+
+- MDX content imports theme components by package id
+  (`astro-theme-popular/components/Callout.astro`), not by relative path.
+- Behavior JS is injected by the integration (`injectScript('page', ...)`),
+  bundled and hashed, instead of static `/scripts/*.js` tags.
+- Until the phase-4 cutover, theme code exists twice in this repo (template
+  `src/` + `package/`); the package-smoke workflow fails on drift.
 
 ## Why
 
