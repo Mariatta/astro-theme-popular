@@ -1,6 +1,6 @@
 # Astro build output
-/dist/
-/.astro/
+dist/
+.astro/
 node_modules/
 
 # OS / editor
