@@ -143,6 +143,14 @@ of the deployed demo set.
 3. Both example sites build: `hugo server` / `npm run build`.
 4. Bump versions together; note cross-repo changes in both changelogs.
 
+## Blog post ordering (the post-navigation contract)
+
+Older/newer navigation on blog singles orders posts by **date descending,
+then title ascending, then slug/path ascending**; "next" is the newer post.
+Hugo gets this from `.NextInSection` (its native section order); Astro sorts
+explicitly with the same keys. Setting `weight` on a blog post is
+unsupported: it would reorder Hugo but not Astro.
+
 ## Allowed asymmetries (by design)
 
 - `head-extra.html` hook is Hugo-only: Hugo sites override a partial, Astro
