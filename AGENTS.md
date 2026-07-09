@@ -48,7 +48,9 @@ exists **twice**: the canonical template-model copy (`src/`,
 Any edit to one must be applied to the other; the package-smoke workflow
 fails on drift (styles/scripts byte-identical; components/layouts/pages/lib
 identical modulo the config import, `../config` in src vs `popular:config`
-in the package).
+in the package). The one exception is `BaseLayout.astro`, which diverges by
+design (the package version has no static script tags; the integration
+injects them): mirror edits to it by hand.
 
 ## Commands
 

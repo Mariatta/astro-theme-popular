@@ -31,9 +31,12 @@ jobs:
               sed -E "s#from '(\.\./)+config'#from 'THEME_CONFIG'#; s#from 'popular:config'#from 'THEME_CONFIG'#" "$f" > "/tmp/norm/$2/$f"
             done)
           }
+          # BaseLayout.astro is the one designed divergence: the package
+          # version has no static /scripts tags (the integration injects
+          # them); mirror edits to it by hand, everything else must match.
           for d in components layouts pages lib; do
             rm -rf /tmp/norm; norm "src/$d" a; norm "package/src/$d" b
-            diff -r /tmp/norm/a /tmp/norm/b
+            diff -r -x BaseLayout.astro /tmp/norm/a /tmp/norm/b
           done
       - name: Build the smoke consumer
         working-directory: smoke
