@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "draft": {
+      "default": false,
+      "type": "boolean"
+    },
+    "description": {
+      "type": "string"
+    },
+    "image": {
+      "type": "string"
+    },
+    "tags": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "time": {
+      "type": "string"
+    },
+    "venue": {
+      "type": "string"
+    },
+    "venueWanted": {
+      "default": false,
+      "type": "boolean"
+    },
+    "address": {
+      "type": "string"
+    },
+    "speaker": {
+      "type": "string"
+    },
+    "speakers": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "venueRef": {
+      "type": "string"
+    },
+    "checkin": {
+      "type": "string"
+    },
+    "venueNotes": {
+      "type": "string"
+    },
+    "rsvp": {
+      "type": "string"
+    },
+    "meetupUrl": {
+      "type": "string"
+    },
+    "$schema": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "date"
+  ]
+}

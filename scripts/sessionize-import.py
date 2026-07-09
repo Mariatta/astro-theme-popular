@@ -8,10 +8,19 @@ types, in Hugo (TOML) or Astro (YAML) front matter.
 
 Usage:
   python3 scripts/sessionize-import.py --url https://sessionize.com/api/v2/<embed-id>/view/All --site path/to/site
+  python3 scripts/sessionize-import.py --id <embed-id> --site .
+  python3 scripts/sessionize-import.py --site .   # reads popular-import.toml
   python3 scripts/sessionize-import.py --file all.json --site . --dry-run
 
+Store your event's endpoint once in <site>/popular-import.toml and drop the
+flag entirely:
+
+  [sessionize]
+  id = "<embed-id>"        # or: url = "https://sessionize.com/api/v2/.../view/All"
+
 Options:
-  --url URL        Sessionize "view/All" endpoint (or --file for saved JSON)
+  --url URL        Sessionize "view/All" endpoint
+  --id EMBED_ID    Sessionize API/Embeds id (shorthand; builds the URL)
   --file PATH      read the JSON from disk instead of the network
   --site PATH      site root to write into (default: current directory).
                    Format is auto-detected: hugo.toml → Hugo TOML under
@@ -32,6 +41,7 @@ import json
 import pathlib
 import re
 import sys
+import tomllib
 import unicodedata
 import urllib.request
 from datetime import datetime
@@ -97,6 +107,24 @@ def time_range(starts, ends):
 def first_para(text, limit=200):
     para = (text or "").strip().split("\n")[0].strip()
     return para if len(para) <= limit else para[: limit - 1].rsplit(" ", 1)[0] + "…"
+
+
+def sessionize_url(embed_id):
+    return f"https://sessionize.com/api/v2/{embed_id}/view/All"
+
+
+def stored_source(site):
+    """The site's stored Sessionize endpoint, from <site>/popular-import.toml
+    ([sessionize] url = "..." or id = "..."), or None."""
+    cfg = site / "popular-import.toml"
+    if not cfg.exists():
+        return None
+    section = tomllib.loads(cfg.read_text()).get("sessionize") or {}
+    if section.get("url"):
+        return section["url"]
+    if section.get("id"):
+        return sessionize_url(section["id"])
+    return None
 
 
 def detect(site):
@@ -169,8 +197,9 @@ def event_page(sess, rooms, speaker_slugs, fmt, rsvp):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    src = ap.add_mutually_exclusive_group(required=True)
+    src = ap.add_mutually_exclusive_group()
     src.add_argument("--url")
+    src.add_argument("--id", help="Sessionize API/Embeds id")
     src.add_argument("--file")
     ap.add_argument("--site", default=".")
     ap.add_argument("--format", choices=["hugo", "astro"])
@@ -179,11 +208,16 @@ def main():
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
+    url = args.url or (sessionize_url(args.id) if args.id else None) \
+        or stored_source(pathlib.Path(args.site))
     if args.file:
         data = json.loads(pathlib.Path(args.file).read_text())
-    else:
-        with urllib.request.urlopen(args.url) as resp:
+    elif url:
+        with urllib.request.urlopen(url) as resp:
             data = json.loads(resp.read())
+    else:
+        sys.exit("No source: pass --url/--id/--file, or store the endpoint in "
+                 "popular-import.toml ([sessionize] id = \"<embed-id>\").")
 
     site = pathlib.Path(args.site).resolve()
     if args.format:
