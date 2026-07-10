@@ -105,6 +105,7 @@ theme's intentional article layout, and the upstream post page is internally
 consistent (hero and body both narrow). The misalignment seen on the summit's
 event pages came from the port placing a new full-width subnav next to the
 narrow hero, and was fixed in the fork by widening those pages.
+
 ## Round 2: fork syncs and the npm package (2026-07)
 
 Status of round 1: items 1 through 8 shipped by v0.3.0 (several in 0.2.0).
