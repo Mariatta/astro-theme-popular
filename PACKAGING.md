@@ -96,7 +96,9 @@ export default defineConfig({
 
 1. **Package skeleton**: workspace layout, integration with injected routes,
    virtual config module, schema exports. Demos still on the old model.
-2. **Override surface + head/customCSS hooks**; component docs.
+2. **Override surface + head/customCSS hooks**; component docs. Route
+   flexibility (first half) shipped: `routes` opt-outs, rest-param slug
+   routes, quiet no-op on undefined collections.
 3. **Demos become consumers; scaffolder; CI reshaped** (image-alt and the
    base-path scan run per demo workspace; parity paths update).
 4. **Cutover**: old `src/` activation model removed, docs + updating guide
