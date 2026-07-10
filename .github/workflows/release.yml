@@ -1,5 +1,8 @@
-# Cut a release: tags v<version> and publishes a GitHub Release whose notes
-# are the handwritten CHANGELOG section for that version.
+# Cut a release: tags v<version>, publishes a GitHub Release whose notes are
+# the handwritten CHANGELOG section for that version, and publishes the
+# package to npm (needs an NPM_TOKEN repo secret, a granular automation
+# token scoped to astro-theme-popular; without it the npm step skips with a
+# notice so tag + Release still succeed).
 #
 # Flow: write the CHANGELOG entry in a normal PR first, merge it, then run
 #   gh workflow run release.yml -R Mariatta/astro-theme-popular -f version=X.Y.Z
@@ -36,6 +39,9 @@ jobs:
           PKG=$(node -p "require('./package.json').version")
           [ "$PKG" = "${{ inputs.version }}" ] \
             || { echo "::error::package.json says $PKG; bump it to ${{ inputs.version }} in the versioning PR"; exit 1; }
+          NPMPKG=$(node -p "require('./package/package.json').version")
+          [ "$NPMPKG" = "${{ inputs.version }}" ] \
+            || { echo "::error::package/package.json says $NPMPKG; bump it to ${{ inputs.version }} in the versioning PR"; exit 1; }
 
       - name: Refuse to release out of parity
         run: |
@@ -55,3 +61,19 @@ jobs:
           git tag -a "v$V" -m "Popular v$V"
           git push origin "v$V"
           gh release create "v$V" --title "Popular v$V" --notes-file /tmp/notes.md
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      - name: Publish to npm
+        working-directory: package
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "::notice::NPM_TOKEN secret not set; skipping npm publish (tag + GitHub Release succeeded)"
+            exit 0
+          fi
+          npm publish
