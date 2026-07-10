@@ -96,7 +96,16 @@ export default defineConfig({
 
 1. **Package skeleton**: workspace layout, integration with injected routes,
    virtual config module, schema exports. Demos still on the old model.
-2. **Override surface + head/customCSS hooks**; component docs.
+2. **Override surface + head/customCSS hooks**; component docs. Scope
+   sharpened by a real adoption attempt (UPSTREAM-HANDOFF round 2, item 10):
+   - `routes` option: per-route opt-outs
+     (`popular({ routes: { speakers: false } })`) for sites replacing part
+     of the content model; also the durable answer to `/` and `/rss.xml`
+     shadowing, since Astro is deprecating silent route collisions.
+   - Injected slug routes use rest params (`[...slug]`) so folder-organized
+     content ids (`2019-pycon-us/cooper-lees`) work.
+   - Injected routes no-op quietly when their collection is undefined or
+     empty.
 3. **Demos become consumers; scaffolder; CI reshaped** (image-alt and the
    base-path scan run per demo workspace; parity paths update).
 4. **Cutover**: old `src/` activation model removed, docs + updating guide

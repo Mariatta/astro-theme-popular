@@ -141,15 +141,13 @@ Reproduction: branch `npm-package-experiment` in the fork worktree
 (`~/github/mariatta/maintainersummit-theme`), one commit on top of the
 v0.3.0 sync.
 
-### 11. Accent button variant
+### 11. Accent button variant (already shipped: v0.2.0)
 
-The theme defines `BRAND.accent` but no button variant that uses it. The
-fork added `.g-btn--accent` with a hover state in `components.css`, a
-`BRAND.accentHover` key, and the `--color-accent-hover` mapping in
-BaseLayout's brand vars (with a `var(--color-accent-hover,
-var(--color-accent))` fallback). The summit home hero uses
-`variant: 'accent'`; any adopter would reasonably expect that variant to
-exist. Small and Hugo-mirrorable.
+Correction on review: upstream shipped `.g-btn--accent` + `accentHover` in
+v0.2.0 (shared `components.css`, brand mapping in both frameworks, default
+hover derived via `color-mix`). This finding was drafted against a stale
+sync. Fork action: drop the local override on the next merge; no upstream
+action needed.
 
 ### 12. Starter content and theme-only CI are papercuts for merge-based forks
 

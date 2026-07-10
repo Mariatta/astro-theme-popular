@@ -22,6 +22,8 @@ permissions:
 
 jobs:
   release:
+    # theme-repo only: forks inherit this file but must not run it
+    if: github.repository == 'Mariatta/astro-theme-popular'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
