@@ -105,3 +105,68 @@ theme's intentional article layout, and the upstream post page is internally
 consistent (hero and body both narrow). The misalignment seen on the summit's
 event pages came from the port placing a new full-width subnav next to the
 narrow hero, and was fixed in the fork by widening those pages.
+## Round 2: fork syncs and the npm package (2026-07)
+
+Status of round 1: items 1 through 8 shipped by v0.3.0 (several in 0.2.0).
+Item 9, the multi-edition event mode, remains open and is still the fork's
+reason to exist. The findings below come from three upstream merges into the
+fork (up to v0.3.0) and from a real adoption attempt of the published npm
+package.
+
+### 10. npm package: phase 2 needs route opt-outs and rest params
+
+`astro-theme-popular@0.3.0` installs and builds cleanly for a fresh consumer
+(the package README quickstart was verified against the registry tarball, 15
+pages). Pointing the integration at the summit fork instead fails, and the
+failure modes are exactly the phase-2 surface PACKAGING.md anticipates:
+
+- **No route opt-outs.** The integration injects all twelve routes
+  unconditionally. A site that replaces part of the content model needs
+  something like `popular({ routes: { speakers: false, venues: false } })`
+  or the planned override map before it can adopt the package.
+- **`[slug]` params reject nested ids.** The summit's speakers live at
+  `<event>/<person>` (`2019-pycon-us/cooper-lees`). The injected
+  `/speakers/[slug]` route hard-fails the build with "Missing parameter:
+  slug" because a slash cannot fill a single param. Injected routes should
+  use rest params (`[...slug]`) so organized-into-folders content works.
+- **Undefined collections are queried.** The injected venues route logs
+  "The collection venues does not exist" when the adopter never defined it.
+  Injected routes should no-op when their collection is absent.
+- **Static routes collide.** `/` and `/rss.xml` collide with the adopter's
+  own files; Astro warns this becomes a hard error in a future version, so
+  "project route wins" is not a durable shadowing story.
+
+Reproduction: branch `npm-package-experiment` in the fork worktree
+(`~/github/mariatta/maintainersummit-theme`), one commit on top of the
+v0.3.0 sync.
+
+### 11. Accent button variant
+
+The theme defines `BRAND.accent` but no button variant that uses it. The
+fork added `.g-btn--accent` with a hover state in `components.css`, a
+`BRAND.accentHover` key, and the `--color-accent-hover` mapping in
+BaseLayout's brand vars (with a `var(--color-accent-hover,
+var(--color-accent))` fallback). The summit home hero uses
+`variant: 'accent'`; any adopter would reasonably expect that variant to
+exist. Small and Hugo-mirrorable.
+
+### 12. Starter content and theme-only CI are papercuts for merge-based forks
+
+A fork that tracks this repo by `git merge` inherits things a diverged site
+must delete every sync:
+
+- **Live sample content in `src/content`.** Since the starter-skeleton
+  change, `src/content` ships sample entries (event, post, organizer,
+  speaker, venue, docs, pages). On a fork with replaced schemas the sample
+  event fails the build outright; the rest silently publishes sample pages.
+  Options: mark samples `draft: true`, move the skeleton under `demos/`
+  (already inert for forks), or document that forks delete them.
+- **Theme-only workflows run in forks.** `package-smoke.yml`'s drift guard
+  compares `src/` against `package/` and will fail on every push in a fork
+  whose `src/` is deliberately diverged; `release.yml` and `deploy-demo.yml`
+  do not belong in a downstream site repo either. Guarding jobs with
+  `if: github.repository == 'Mariatta/astro-theme-popular'` would let forks
+  keep the files (and merge cleanly) without running them.
+
+Most adopters copy rather than merge, so this is low priority; it mainly
+taxes the summit fork until the npm package makes vendoring unnecessary.
