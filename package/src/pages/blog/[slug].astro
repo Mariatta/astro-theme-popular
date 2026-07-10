@@ -1,12 +1,13 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
+import { safeCollection } from '../../lib/collections';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import AuthorBox from '../../components/AuthorBox.astro';
 import { SUPPORT, SITE, STRINGS } from 'popular:config';
 import { tagSlug } from '../../lib/slugs';
 
 export async function getStaticPaths() {
-  const posts = (await getCollection('blog')).filter((p) => !p.data.draft);
+  const posts = (await safeCollection('blog')).filter((p) => !p.data.draft);
   /* PARITY.md pins the ordering: date desc, then title, then id, matching
      Hugo's section order (posts must not set weight). next = newer. */
   const cmp = (x: string, y: string) => (x < y ? -1 : x > y ? 1 : 0);
@@ -24,7 +25,7 @@ const d = post.data;
 const { Content } = await render(post);
 const dateStr = d.date.toLocaleDateString(SITE.locale, { month: 'short', day: 'numeric', year: 'numeric' });
 
-const allAuthors = await getCollection('authors');
+const allAuthors = await safeCollection('authors');
 const resolved = d.authors.map((slug) => allAuthors.find((a) => a.id === slug)).filter(Boolean);
 const bylineNames = [
   ...d.authors.map((slug) => allAuthors.find((a) => a.id === slug)?.data.title ?? slug),

@@ -54,3 +54,13 @@ jobs:
           if grep -rl --include='*.html' '&amp;amp;' smoke/dist; then
             echo "::error::double-escaped ampersand in smoke output"; exit 1
           fi
+          # rest params: a folder-organized content id must build
+          test -f smoke/dist/speakers/2026-summit/nested-guest/index.html
+      - name: Route opt-outs build
+        working-directory: smoke
+        run: |
+          npx astro build --config astro.optout.config.mjs
+          test ! -d dist-optout/speakers
+          test ! -d dist-optout/venues
+          test ! -f dist-optout/rss.xml
+          test -d dist-optout/events
