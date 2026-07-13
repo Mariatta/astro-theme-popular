@@ -1,14 +1,14 @@
 import rss from '@astrojs/rss';
-import { getCollection } from 'astro:content';
+import { safeCollection } from '../lib/collections';
 import { SITE } from 'popular:config';
 
 const escapeXml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 export async function GET(context) {
-  const posts = (await getCollection('blog'))
+  const posts = (await safeCollection('blog'))
     .filter((p) => !p.data.draft)
     .sort((a, b) => +b.data.date - +a.data.date);
-  const allAuthors = await getCollection('authors');
+  const allAuthors = await safeCollection('authors');
   return rss({
     title: SITE.title,
     description: SITE.description,

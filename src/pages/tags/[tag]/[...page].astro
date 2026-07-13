@@ -1,7 +1,7 @@
 ---
 import { STRINGS, PAGINATION } from '../../../config';
 import { tagSlug } from '../../../lib/slugs';
-import { getCollection } from 'astro:content';
+import { safeCollection } from '../../../lib/collections';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageHero from '../../../components/PageHero.astro';
 import PostCard from '../../../components/PostCard.astro';
@@ -11,7 +11,7 @@ import Pagination from '../../../components/Pagination.astro';
    theme's paginated term pages. URLs use the Hugo-compatible slug; the page
    displays the tag's first-seen spelling. */
 export async function getStaticPaths() {
-  const posts = (await getCollection('blog')).filter((p) => !p.data.draft);
+  const posts = (await safeCollection('blog')).filter((p) => !p.data.draft);
   const labels = new Map(); // slug -> first-seen tag spelling
   for (const p of posts) for (const t of p.data.tags) {
     const slug = tagSlug(t);

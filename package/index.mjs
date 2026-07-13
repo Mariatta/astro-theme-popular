@@ -14,20 +14,29 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const PAGES = [
-  ['/', 'index.astro'],
-  ['/[slug]', '[slug].astro'],
-  ['/authors/[slug]', 'authors/[slug].astro'],
-  ['/blog/[...page]', 'blog/[...page].astro'],
-  ['/blog/[slug]', 'blog/[slug].astro'],
-  ['/events/[...page]', 'events/[...page].astro'],
-  ['/events/[slug]', 'events/[slug].astro'],
-  ['/organizers/[...page]', 'organizers/[...page].astro'],
-  ['/speakers/[slug]', 'speakers/[slug].astro'],
-  ['/venues/[slug]', 'venues/[slug].astro'],
-  ['/tags/[tag]/[...page]', 'tags/[tag]/[...page].astro'],
-  ['/rss.xml', 'rss.xml.js'],
-];
+/* Injected routes, grouped by opt-out key: popular({ routes: { speakers:
+   false } }) skips a group. Disabling is also the durable answer when your
+   site provides its own page at a theme path (`/`, `/rss.xml`): Astro is
+   deprecating silent route collisions. Slug routes use rest params so
+   folder-organized content ids (2019-pycon-us/cooper-lees) resolve. */
+const ROUTES = {
+  home: [['/', 'index.astro']],
+  pages: [['/[...slug]', '[slug].astro']],
+  authors: [['/authors/[...slug]', 'authors/[slug].astro']],
+  blog: [
+    ['/blog/[...page]', 'blog/[...page].astro'],
+    ['/blog/[...slug]', 'blog/[slug].astro'],
+  ],
+  events: [
+    ['/events/[...page]', 'events/[...page].astro'],
+    ['/events/[...slug]', 'events/[slug].astro'],
+  ],
+  organizers: [['/organizers/[...page]', 'organizers/[...page].astro']],
+  speakers: [['/speakers/[...slug]', 'speakers/[slug].astro']],
+  venues: [['/venues/[...slug]', 'venues/[slug].astro']],
+  tags: [['/tags/[tag]/[...page]', 'tags/[tag]/[...page].astro']],
+  rss: [['/rss.xml', 'rss.xml.js']],
+};
 
 export default function popular(options = {}) {
   const configFile = options.configFile ?? './popular.config.ts';
@@ -68,12 +77,15 @@ export default function popular(options = {}) {
             'copy-code',
           ].map((s) => `import 'astro-theme-popular/scripts/${s}.js';`).join('\n'),
         );
-        for (const [pattern, entry] of PAGES) {
-          injectRoute({
-            pattern,
-            entrypoint: `astro-theme-popular/pages/${entry}`,
-            prerender: true,
-          });
+        for (const [key, routes] of Object.entries(ROUTES)) {
+          if (options.routes?.[key] === false) continue;
+          for (const [pattern, entry] of routes) {
+            injectRoute({
+              pattern,
+              entrypoint: `astro-theme-popular/pages/${entry}`,
+              prerender: true,
+            });
+          }
         }
       },
     },

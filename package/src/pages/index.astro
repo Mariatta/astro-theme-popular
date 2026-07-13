@@ -1,23 +1,23 @@
 ---
-import { getCollection } from 'astro:content';
+import { safeCollection } from '../lib/collections';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import OrganizerCard from '../components/OrganizerCard.astro';
 import { HOME, SITE, STRINGS } from 'popular:config';
 
 const now = new Date();
-const events = (await getCollection('events')).filter((e) => !e.data.draft);
+const events = (await safeCollection('events')).filter((e) => !e.data.draft);
 const upcoming = events.filter((e) => e.data.date >= now).sort((a, b) => +a.data.date - +b.data.date);
 const next = upcoming[0];
 
-const posts = (await getCollection('blog')).filter((p) => !p.data.draft).sort((a, b) => +b.data.date - +a.data.date).slice(0, 3);
+const posts = (await safeCollection('blog')).filter((p) => !p.data.draft).sort((a, b) => +b.data.date - +a.data.date).slice(0, 3);
 /* value = "@pastEventCount" renders the live number of past events,
    rounded down to a "70+" style once there are ten or more (Hugo parity). */
 const pastCount = events.filter((e) => e.data.date < now).length;
 const statValue = (v: string) =>
   v === '@pastEventCount' ? (pastCount >= 10 ? `${Math.floor(pastCount / 10) * 10}+` : String(pastCount)) : v;
-const nextVenue = next?.data.venueRef ? (await getCollection('venues')).find((v) => v.id === next.data.venueRef)?.data.title : undefined;
-const organizers = (await getCollection('organizers')).sort((a, b) => a.data.weight - b.data.weight);
+const nextVenue = next?.data.venueRef ? (await safeCollection('venues')).find((v) => v.id === next.data.venueRef)?.data.title : undefined;
+const organizers = (await safeCollection('organizers')).sort((a, b) => a.data.weight - b.data.weight);
 
 const h = HOME;
 ---

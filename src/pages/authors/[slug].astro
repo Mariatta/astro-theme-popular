@@ -1,19 +1,20 @@
 ---
 import { STRINGS } from '../../config';
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
+import { safeCollection } from '../../lib/collections';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/PageHero.astro';
 import AuthorBox from '../../components/AuthorBox.astro';
 import PostCard from '../../components/PostCard.astro';
 
 export async function getStaticPaths() {
-  const authors = await getCollection('authors');
+  const authors = await safeCollection('authors');
   return authors.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
 }
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
-const posts = (await getCollection('blog'))
+const posts = (await safeCollection('blog'))
   .filter((p) => !p.data.draft && p.data.authors.includes(entry.id))
   .sort((a, b) => +b.data.date - +a.data.date);
 ---

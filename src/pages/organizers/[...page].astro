@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { safeCollection } from '../../lib/collections';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/PageHero.astro';
 import OrganizerCard from '../../components/OrganizerCard.astro';
@@ -9,7 +9,7 @@ import { SECTIONS, PAGINATION } from '../../config';
 /* One route serves /organizers/ and /organizers/page/N/, matching the Hugo
    theme's paginator URLs. */
 export async function getStaticPaths() {
-  const organizers = (await getCollection('organizers')).sort((a, b) => a.data.weight - b.data.weight);
+  const organizers = (await safeCollection('organizers')).sort((a, b) => a.data.weight - b.data.weight);
   const size = PAGINATION.pageSize;
   const total = Math.max(1, Math.ceil(organizers.length / size));
   return Array.from({ length: total }, (_, i) => ({

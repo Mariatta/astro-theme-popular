@@ -21,6 +21,13 @@ export default defineConfig({
 });
 ```
 
+Disable any injected route group when your site replaces it (also the
+answer when you provide your own `/` or `/rss.xml`):
+
+```js
+popular({ routes: { speakers: false, venues: false } })
+```
+
 Your site keeps its own content (`src/content/`) and one typed config file
 (`popular.config.ts`); the theme injects the routes, layouts, styles and
 behavior. Adopt the content model in one line:
