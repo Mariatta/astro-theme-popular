@@ -14,6 +14,8 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-07-14
+
 ### Added
 
 - Astro package: `popular({ routes: { speakers: false, ... } })` disables
