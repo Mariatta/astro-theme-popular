@@ -24,8 +24,10 @@ Releases) or subscribe to the releases feed
 
 ### Changed
 
-- Astro: theme pages tolerate undefined/empty collections (return no pages
-  instead of failing); theme-only CI workflows no longer run in forks.
+- Astro: theme pages tolerate undefined or empty collections, rendering no
+  pages instead of failing the build.
+- Theme-only CI workflows (deploys, releases, parity checks and reminders)
+  no longer run in forks of either repo.
 
 ## [0.3.0] - 2026-07-09
 
