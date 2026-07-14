@@ -14,9 +14,25 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+### Added
+
+- Astro package: `popular({ routes: { speakers: false, ... } })` disables
+  any injected route group, the supported way to replace part of the
+  content model or provide your own `/` or `/rss.xml`.
+- Astro package: injected slug routes use rest params, so folder-organized
+  content ids (`2019-pycon-us/cooper-lees`) build.
+
+### Changed
+
+- Astro: theme pages tolerate undefined or empty collections, rendering no
+  pages instead of failing the build.
+- Theme-only CI workflows (deploys, releases, parity checks and reminders)
+  no longer run in forks of either repo.
+
 ## [0.3.0] - 2026-07-09
 
 ### Added
+
 - Older/newer post navigation on blog posts, with the cross-framework
   ordering contract pinned in PARITY.md (date descending, then title, then
   slug; `weight` on posts is unsupported). New UI string keys:
@@ -33,6 +49,7 @@ Releases) or subscribe to the releases feed
 ## [0.2.0] - 2026-07-08
 
 ### Fixed
+
 - Query-string URLs no longer double-escape (`&` became `&amp;amp;`, breaking
   links) in buttons, footer and header links, social icons, and markdown
   links. CI now fails on any double-escaped ampersand in built output.
@@ -41,11 +58,13 @@ Releases) or subscribe to the releases feed
   site instead of hardcoding `/rss.xml`, fixing subpath deployments.
 
 ### Changed
+
 - The footer theme credit in demos and starters now links to the project
   site (mariatta.ca/hugo-theme-popular) instead of the author's personal
   site. Adopters control their own credit via footer config.
 
 ### Added
+
 - `g-btn--accent` button variant, with an `accentHover` brand key (defaults
   to a darkened accent).
 - `--gold-100` (card image placeholder tint) now derives from `brand.primary`
@@ -59,6 +78,7 @@ Releases) or subscribe to the releases feed
 First public release.
 
 ### Added
+
 - The theme, in Hugo and Astro parity: events (upcoming/past, venues,
   speakers, check-in and arrival notes, RSVP, "venue wanted"), multi-author
   blog with tag filtering and pagination, organizers, sponsors, and a docs
