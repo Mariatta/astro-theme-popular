@@ -32,23 +32,23 @@ act. Nothing releases with the repos out of parity.
 
 Two different credentials for two different jobs; don't mix them up.
 
-### CI (the release workflow): a granular access token
+### CI (the release workflow): trusted publishing, no token
 
-The workflow publishes with the `NPM_TOKEN` repository secret. Requirements:
+The workflow authenticates to npm with its OIDC identity (like PyPI's
+trusted publishers): nothing expires, nothing is stored, and provenance
+attestations are generated automatically. One-time setup on npmjs.com,
+package page → **Settings** → **Trusted Publisher**:
 
-- On npmjs.com: avatar → **Access Tokens** → **Generate New Token** →
-  **Granular Access Token**. Packages and scopes: **Read and write**,
-  limited to **only** `astro-theme-popular`. Set an expiration and put its
-  renewal on your calendar: when the token expires the publish step starts
-  failing (or skipping, if the secret is removed), never silently.
-- On the package page → **Settings** → **Publishing access**: must be
-  "Require two-factor authentication **or** an automation or granular access
-  token". The strictest setting ("…and disallow tokens") makes CI publishing
-  impossible by policy, and a classic "Publish" token is subject to OTP:
-  both produce `EOTP` ("This operation requires a one-time password") in the
-  workflow log.
-- Store it: `gh secret set NPM_TOKEN -R Mariatta/astro-theme-popular`
-  (prompts for the value; never paste tokens into files or shell history).
+- Publisher: **GitHub Actions**
+- Organization or user: `Mariatta`
+- Repository: `astro-theme-popular`
+- Workflow filename: `release.yml`
+- Environment: leave blank
+
+The workflow side is already wired: `permissions: id-token: write` and
+Node 24 (trusted publishing needs npm >= 11.5.1). Any old `NPM_TOKEN`
+secret and granular tokens can be deleted
+(`gh secret delete NPM_TOKEN -R Mariatta/astro-theme-popular`).
 
 ### Local (one-off publishes): your own login
 
@@ -67,9 +67,13 @@ future releases.
 
 ## Troubleshooting
 
-- **`EOTP` in the workflow**: wrong token type or package publishing-access
-  setting; see above. Fix on npmjs.com, publish the stranded version
-  manually, and the next release is hands-off.
+- **Auth errors in the workflow's npm step** (`EOTP`, 401/404 on PUT):
+  the Trusted Publisher is missing or misconfigured on npmjs.com (the repo
+  and workflow filename must match exactly); see above. Fix it, publish the
+  stranded version manually, and the next release is hands-off.
+- **Local `npm whoami` says E401 / publish 404s on PUT**: your login
+  session was revoked (npm expires sessions aggressively now); `npm login`
+  again and retry.
 - **"tag vX.Y.Z already exists"**: that version is released; the workflow
   refuses reruns by design. If npm is behind, use the local publish.
 - **Parity refusal**: the two repos' shared files differ; sync them
