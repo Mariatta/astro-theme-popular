@@ -1,8 +1,8 @@
 # Cut a release: tags v<version>, publishes a GitHub Release whose notes are
 # the handwritten CHANGELOG section for that version, and publishes the
-# package to npm (needs an NPM_TOKEN repo secret, a granular automation
-# token scoped to astro-theme-popular; without it the npm step skips with a
-# notice so tag + Release still succeed).
+# package to npm via trusted publishing (OIDC): no token, no secret. The
+# Trusted Publisher must be configured on npmjs.com for this repo and
+# workflow file; see RELEASING.md.
 #
 # Flow: write the CHANGELOG entry in a normal PR first, merge it, then run
 #   gh workflow run release.yml -R Mariatta/astro-theme-popular -f version=X.Y.Z
@@ -19,6 +19,7 @@ on:
 
 permissions:
   contents: write
+  id-token: write # npm trusted publishing (OIDC)
 
 jobs:
   release:
@@ -66,16 +67,14 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
-          registry-url: https://registry.npmjs.org
+          # Node 24 ships npm >= 11.5.1, required for trusted publishing
+          node-version: 24
 
-      - name: Publish to npm
+      - name: Publish to npm (trusted publishing)
+        # No token: npm authenticates via the workflow's OIDC identity.
+        # Requires the Trusted Publisher configured on npmjs.com for this
+        # repo + workflow file (see RELEASING.md). Provenance is automatic.
         working-directory: package
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          if [ -z "$NODE_AUTH_TOKEN" ]; then
-            echo "::notice::NPM_TOKEN secret not set; skipping npm publish (tag + GitHub Release succeeded)"
-            exit 0
-          fi
+          npm --version
           npm publish
