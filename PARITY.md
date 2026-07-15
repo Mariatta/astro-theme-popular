@@ -31,6 +31,7 @@ in both repos. The Hugo repo is the canonical source; copy Hugo → Astro.
 | `scripts/sample-community.xlsx`      | `scripts/sample-community.xlsx` |
 | `scripts/tests/`                     | `scripts/tests/`             |
 | `CHANGELOG.md`                       | `CHANGELOG.md`               |
+| `RELEASING.md`                       | `RELEASING.md`               |
 
 Use `scripts/sync-shared.sh` to copy or verify (`--check` diffs and fails on drift).
 Demo images are *not* in this tier: Astro's `public/images/` is an activation

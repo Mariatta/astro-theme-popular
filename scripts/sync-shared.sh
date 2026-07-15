@@ -25,6 +25,7 @@ PAIRS=(
   "scripts/sample-community.xlsx:scripts/sample-community.xlsx"
   "scripts/tests:scripts/tests"
   "CHANGELOG.md:CHANGELOG.md"
+  "RELEASING.md:RELEASING.md"
 )
 
 MODE="${1:-copy}"
