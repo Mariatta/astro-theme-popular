@@ -8,7 +8,10 @@ interface Props { post: CollectionEntry<'blog'> }
 const { post } = Astro.props;
 const d = post.data;
 const href = `/blog/${post.id}/`;
-const month = d.date.toLocaleDateString(SITE.locale, { month: 'short', year: 'numeric' });
+// Mirror of the Hugo card's date guard: this component can render date-less
+// content, so omit the date (and, below, the whole eyebrow) when absent.
+const hasDate = d.date instanceof Date && !Number.isNaN(+d.date) && d.date.getFullYear() > 1;
+const month = hasDate ? d.date.toLocaleDateString(SITE.locale, { month: 'short', year: 'numeric' }) : '';
 const allAuthors = await safeCollection(SECTIONS_MAP.authors);
 const names = [
   ...d.authors.map((slug) => allAuthors.find((a) => a.id === slug)?.data.title ?? slug),
@@ -22,7 +25,9 @@ if (!names.length && d.author) names.push(d.author);
     <a href={href} class="g-card__media"><img src={d.image} alt={d.title} loading="lazy" /></a>
   )}
   <div class="g-card__body">
-    <span class="g-card__eyebrow">{month}{names.length > 0 && ` · ${names.join(', ')}`}</span>
+    {(month || names.length > 0) && (
+      <span class="g-card__eyebrow">{month}{month && names.length > 0 && ' · '}{names.length > 0 && names.join(', ')}</span>
+    )}
     <h3 class="g-card__title"><a href={href}>{d.title}</a></h3>
     {d.description && <div class="g-card__text">{d.description}</div>}
     {d.tags.length > 0 && (
