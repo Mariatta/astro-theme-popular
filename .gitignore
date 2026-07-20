@@ -1,6 +1,7 @@
 # Astro build output
 dist/
 dist-optout/
+dist-sections/
 .astro/
 node_modules/
 

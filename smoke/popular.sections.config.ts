@@ -1,17 +1,19 @@
-/** Popular: theme configuration (Rocky Cove Aquarium Club demo). See README for all options. */
+/** Popular: theme configuration ("Your Community" starter skeleton).
+ *  The neutral baseline adopters copy, and the default active site: the
+ *  Astro counterpart of the Hugo theme's exampleSite. See README. */
 
 export const SITE = {
-  title: "Rocky Cove Aquarium Club",
-  tagline: "A fictional aquarium club, demo content for the Popular theme",
-  description: "A friendly club for freshwater and saltwater keepers in Rocky Cove. (Rocky Cove is a made-up place, this is example content demonstrating the Popular theme.)",
-  brandName: "Rocky Cove",
-  brandSub: "Aquarium Club",
+  title: "Your Community",
+  tagline: "A starter site for the Popular theme",
+  description: "Describe your community here.",
+  brandName: "Your",
+  brandSub: "Community",
   logo: '/images/logo.png',
   favicon: '/images/logo.png',
   ogImage: '/images/hero.png',
   locale: 'en-US',
   fontAwesome: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css',
-  landAcknowledgement: "Add your community's land acknowledgement or welcome statement here, this demo keeps it as a placeholder.",
+  landAcknowledgement: "Add your community's land acknowledgement or welcome statement here, this starter keeps it as a placeholder.",
 };
 
 /* UI strings. Translate your site by editing these values; keys map 1:1 to
@@ -74,31 +76,24 @@ export const STRINGS: Record<string, string> = {
   paginationNext: 'Next',
 };
 
-/* List pagination size. Mirrors Hugo's [pagination] pagerSize (see PARITY.md). */
-export const PAGINATION = { pageSize: 3 };
+/* List pagination size. Mirrors Hugo's [pagination] pagerSize (see PARITY.md);
+   10 is Hugo's default. The flavored demos use 3 to show the pager. */
+export const PAGINATION = { pageSize: 10 };
 
 /* Renameable content sections: point post-author bylines or the homepage
    team grid at a differently-named collection (must exist in your
    content.config.ts). Defaults are the theme's own section names.
    Hugo parity: [params.sections] (see PARITY.md). */
 export const SECTIONS_MAP = {
-  authors: 'authors',
+  authors: 'organizers',
   team: 'organizers',
 };
 
-export const BRAND: Record<string, string> = {
-  primary: "#0f766e",
-  primaryHover: "#0d5f59",
-  primaryActive: "#0b4f4a",
-  secondary: "#0b4f4a",
-  accent: "#b45309",
-  ink: '#142a36',
-  surfaceWash: "#d7ece9",
-  surfaceWashSoft: "#ecf6f4",
-  surfaceInk: '#142a36',
-  fontSans: 'Inter, system-ui, sans-serif',
-  fontDisplay: 'Quantico, Inter, sans-serif',
-};
+/* Re-brand the whole site here, see /docs/theming/ on the theme site.
+   Empty = the theme's default identity (marquee gold, sunglass black,
+   periwinkle). Example:
+   { primary: "#0f766e", surfaceWash: "#d7ece9", fontDisplay: "Quantico, Inter, sans-serif" } */
+export const BRAND: Record<string, string> = {};
 
 export const NAV: {
   label: string;
@@ -128,7 +123,7 @@ export const SOCIAL = [
 ];
 
 export const FOOTER = {
-  tagline: "Fish · Plants · Community, an Astro demo site for the Popular theme",
+  tagline: "Your community's motto goes here",
   credit: { label: 'Popular. An Astro theme by Mariatta.', url: 'https://mariatta.ca/hugo-theme-popular/' },
   columns: [
     { title: 'Community', links: [
@@ -153,54 +148,44 @@ export const SUPPORT = null;
 
 /** Section list-page headers. */
 export const SECTIONS = {
-  blog: { eyebrow: 'Blog', title: 'From our community', lead: "Recaps and spotlights from Rocky Cove Aquarium Club, example posts showing the theme's blog." },
-  events: { eyebrow: 'Events', title: 'Upcoming gatherings & announcements', lead: 'All events are free, and newcomers are always welcome.' },
-  organizers: { eyebrow: 'The team', title: 'Organizers', lead: "Rocky Cove Aquarium Club is run entirely by volunteers. Want to help? We'd love to have you." },
+  blog: { eyebrow: 'Blog', title: 'Blog', lead: 'Recaps and news from your community.' },
+  events: { eyebrow: 'Events', title: 'Events', lead: 'Upcoming gatherings. All events are free, and newcomers are always welcome.' },
+  organizers: { eyebrow: 'The team', title: 'Organizers', lead: 'Your community is run by volunteers. Want to help? Say hi.' },
 };
 
 export const HOME = {
   hero: {
-    eyebrow: "Fish · Plants · Community",
-    title: "For everyone who's ever lost an hour watching a tank",
-    lead: "Rocky Cove Aquarium Club is a friendly group of freshwater and saltwater keepers. Whether you run a nano shrimp bowl or a full reef system, or you're still dreaming about your first tank, you're welcome here.",
+    eyebrow: "Your · Community · Here",
+    title: "A warm welcome to your community",
+    lead: "Replace this with one friendly paragraph about who you are and who's welcome (hint: everyone).",
     image: '/images/hero.png',
     ctas: [
       { label: 'RSVP', url: 'https://example.com/rsvp', icon: 'fa-solid fa-calendar', variant: 'primary' },
       { label: 'About us', url: '/about/', variant: 'outline' },
     ],
   },
-  stats: [{ value: "2019", label: "club founded" }, { value: "All", label: "tanks welcome" }, { value: "Free", label: "to attend" }, { value: "Monthly", label: "meets in Rocky Cove" }],
-  featuresHead: { eyebrow: 'What we do', title: "What Rocky Cove Aquarium Club is all about", lead: 'No experience necessary, come as you are.' },
+  stats: [{ value: "2026", label: "founded" }, { value: "All", label: "welcome" }, { value: "Free", label: "to attend" }, { value: "Monthly", label: "gatherings" }],
+  featuresHead: { eyebrow: 'What we do', title: "What your community is all about", lead: 'Three cards, three reasons to show up.' },
   features: [
-    { icon: "fa-solid fa-fish", title: "Show & tell nights", body: "Bring photos (or a jar of shrimp) and share what's growing, spawning or misbehaving in your tank." },
-    { icon: "fa-solid fa-seedling", title: "Hands-on workshops", body: "Aquascaping, planted tanks and CO₂, water chemistry, learn by doing, with helpers at every table." },
-    { icon: "fa-solid fa-arrows-rotate", title: "Swap meets", body: "Trade plants, shrimp and frags with other keepers. One keeper's trimmings are another's new scape." },
+    { icon: "fa-solid fa-people-group", title: "Meet", body: "Describe your regular gathering." },
+    { icon: "fa-solid fa-hand-sparkles", title: "Make", body: "Describe your hands-on activity." },
+    { icon: "fa-solid fa-heart", title: "Belong", body: "Describe your community's spirit." },
   ],
+  /* Optional: quotes from members. Delete both keys to hide the section. */
   testimonialsHead: { eyebrow: 'Kind words', title: 'What members say' },
   testimonials: [
-    { quote: "I joined with one betta. I now run three tanks and have zero regrets.", name: "Priya", role: "Freshwater keeper" },
-    { quote: "The only place where 'my tank crashed' gets you sympathy and a rescue plan in the same breath.", name: "Marcus", role: "Reef keeper" },
-    { quote: "The swap meet furnished my entire aquascape. My wallet thanks this club.", name: "Elle", role: "Plant person" },
+    { quote: "A short quote from a happy member goes here.", name: "Member name", role: "A few words about them" },
+    { quote: "Another member quote goes here.", name: "Member name", role: "A few words about them" },
   ],
   getInvolved: {
     eyebrow: 'Community',
-    title: "There's a seat (and a tank) for everyone",
-    lead: "Host a session, offer a venue, or just come watch the fish with us.",
+    title: "There's a place for everyone here",
+    lead: "Host a session, offer a venue, or just show up.",
     ctas: [
       { label: 'Get involved', url: '/get-involved/', variant: 'primary' },
-      { label: 'Read the handbook', url: '/handbook/', variant: 'outline' },
     ],
   },
 };
 
-/** Demo-only switcher bar. Adopters: set to null (or delete the demo bar usage). */
-export const DEMO_BAR = {
-  current: "aquarium",
-  repo: 'https://github.com/Mariatta/astro-theme-popular',
-  links: [
-    { slug: 'aquarium', label: 'Aquarium', icon: 'fa-solid fa-fish' },
-    { slug: 'foodie', label: 'Foodie', icon: 'fa-solid fa-utensils' },
-    { slug: 'kdrama', label: 'KDrama', icon: 'fa-solid fa-tv' },
-    { slug: 'superfan', label: 'Superfan', icon: 'fa-solid fa-star' },
-  ],
-};
+/** Demo-only switcher bar; the starter never shows it. */
+export const DEMO_BAR = null;

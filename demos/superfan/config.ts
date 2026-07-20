@@ -83,6 +83,15 @@ export const STRINGS: Record<string, string> = {
 /* List pagination size. Mirrors Hugo's [pagination] pagerSize (see PARITY.md). */
 export const PAGINATION = { pageSize: 3 };
 
+/* Renameable content sections: point post-author bylines or the homepage
+   team grid at a differently-named collection (must exist in your
+   content.config.ts). Defaults are the theme's own section names.
+   Hugo parity: [params.sections] (see PARITY.md). */
+export const SECTIONS_MAP = {
+  authors: 'authors',
+  team: 'organizers',
+};
+
 /* Celestial gold on midnight: burnished gold with dark button text,
    silk-cream ink, deep cosmos surfaces. Uses the dark-palette brand keys. */
 export const BRAND: Record<string, string> = {

@@ -3,7 +3,7 @@ import { safeCollection } from '../lib/collections';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import OrganizerCard from '../components/OrganizerCard.astro';
-import { HOME, SITE, STRINGS } from '../config';
+import { HOME, SITE, STRINGS, SECTIONS_MAP } from '../config';
 
 const now = new Date();
 const events = (await safeCollection('events')).filter((e) => !e.data.draft);
@@ -17,7 +17,7 @@ const pastCount = events.filter((e) => e.data.date < now).length;
 const statValue = (v: string) =>
   v === '@pastEventCount' ? (pastCount >= 10 ? `${Math.floor(pastCount / 10) * 10}+` : String(pastCount)) : v;
 const nextVenue = next?.data.venueRef ? (await safeCollection('venues')).find((v) => v.id === next.data.venueRef)?.data.title : undefined;
-const organizers = (await safeCollection('organizers')).sort((a, b) => a.data.weight - b.data.weight);
+const organizers = (await safeCollection(SECTIONS_MAP.team)).sort((a, b) => a.data.weight - b.data.weight);
 
 const h = HOME;
 ---
@@ -130,7 +130,7 @@ const h = HOME;
           {organizers.slice(0, 3).map((o) => <OrganizerCard organizer={o} />)}
         </div>
         <div class="g-row" style="justify-content:center;margin-top:var(--space-4)">
-          <a class="g-btn g-btn--outline" href="/organizers/">All organizers</a>
+          <a class="g-btn g-btn--outline" href={`/${SECTIONS_MAP.team}/`}>All organizers</a>
         </div>
       </div>
     </section>

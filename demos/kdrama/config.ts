@@ -77,6 +77,15 @@ export const STRINGS: Record<string, string> = {
 /* List pagination size. Mirrors Hugo's [pagination] pagerSize (see PARITY.md). */
 export const PAGINATION = { pageSize: 3 };
 
+/* Renameable content sections: point post-author bylines or the homepage
+   team grid at a differently-named collection (must exist in your
+   content.config.ts). Defaults are the theme's own section names.
+   Hugo parity: [params.sections] (see PARITY.md). */
+export const SECTIONS_MAP = {
+  authors: 'authors',
+  team: 'organizers',
+};
+
 export const BRAND: Record<string, string> = {
   primary: "#4f46e5",
   primaryHover: "#4338ca",

@@ -144,6 +144,13 @@ of the deployed demo set.
 3. Both example sites build: `hugo server` / `npm run build`.
 4. Bump versions together; note cross-repo changes in both changelogs.
 
+## Renameable sections
+
+`[params.sections]` (Hugo) ⇄ `SECTIONS_MAP` (Astro) rename the sections the
+theme reads: `authors` (post-author byline resolution and link base) and
+`team` (homepage team grid and button). Defaults `authors` / `organizers`.
+On Astro the value names a collection that must exist in `content.config.ts`.
+
 ## Blog post ordering (the post-navigation contract)
 
 Older/newer navigation on blog singles orders posts by **date descending,
