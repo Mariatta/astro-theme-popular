@@ -66,3 +66,9 @@ jobs:
           test ! -d dist-optout/venues
           test ! -f dist-optout/rss.xml
           test -d dist-optout/events
+      - name: Renamed sections build
+        working-directory: smoke
+        run: |
+          npx astro build --config astro.sections.config.mjs
+          # byline resolves from the organizers collection, links there
+          grep -q '/organizers/sam/' dist-sections/blog/hello-world/index.html

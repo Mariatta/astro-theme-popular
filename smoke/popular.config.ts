@@ -80,6 +80,15 @@ export const STRINGS: Record<string, string> = {
    10 is Hugo's default. The flavored demos use 3 to show the pager. */
 export const PAGINATION = { pageSize: 10 };
 
+/* Renameable content sections: point post-author bylines or the homepage
+   team grid at a differently-named collection (must exist in your
+   content.config.ts). Defaults are the theme's own section names.
+   Hugo parity: [params.sections] (see PARITY.md). */
+export const SECTIONS_MAP = {
+  authors: 'authors',
+  team: 'organizers',
+};
+
 /* Re-brand the whole site here, see /docs/theming/ on the theme site.
    Empty = the theme's default identity (marquee gold, sunglass black,
    periwinkle). Example:

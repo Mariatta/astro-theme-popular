@@ -14,6 +14,20 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+### Added
+
+- Renameable content sections: `[params.sections]` (Hugo) / `SECTIONS_MAP`
+  (Astro) point post-author bylines (`authors`) and the homepage team grid
+  (`team`) at differently-named sections, for communities whose people are
+  not "organizers" or whose blog is not written by "authors". No template
+  overrides needed.
+
+### Fixed
+
+- Post cards on date-less pages no longer render "Jan 0001" or a stray
+  eyebrow separator (affects sections of static pages rendered through the
+  default list).
+
 ## [0.4.0] - 2026-07-14
 
 ### Added

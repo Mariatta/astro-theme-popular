@@ -1,6 +1,6 @@
 import rss from '@astrojs/rss';
 import { safeCollection } from '../lib/collections';
-import { SITE } from '../config';
+import { SITE, SECTIONS_MAP } from '../config';
 
 const escapeXml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -8,7 +8,7 @@ export async function GET(context) {
   const posts = (await safeCollection('blog'))
     .filter((p) => !p.data.draft)
     .sort((a, b) => +b.data.date - +a.data.date);
-  const allAuthors = await safeCollection('authors');
+  const allAuthors = await safeCollection(SECTIONS_MAP.authors);
   return rss({
     title: SITE.title,
     description: SITE.description,

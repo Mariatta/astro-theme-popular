@@ -3,7 +3,7 @@ import { render } from 'astro:content';
 import { safeCollection } from '../../lib/collections';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import AuthorBox from '../../components/AuthorBox.astro';
-import { SUPPORT, SITE, STRINGS } from 'popular:config';
+import { SUPPORT, SITE, STRINGS, SECTIONS_MAP } from 'popular:config';
 import { tagSlug } from '../../lib/slugs';
 
 export async function getStaticPaths() {
@@ -25,7 +25,7 @@ const d = post.data;
 const { Content } = await render(post);
 const dateStr = d.date.toLocaleDateString(SITE.locale, { month: 'short', day: 'numeric', year: 'numeric' });
 
-const allAuthors = await safeCollection('authors');
+const allAuthors = await safeCollection(SECTIONS_MAP.authors);
 const resolved = d.authors.map((slug) => allAuthors.find((a) => a.id === slug)).filter(Boolean);
 const bylineNames = [
   ...d.authors.map((slug) => allAuthors.find((a) => a.id === slug)?.data.title ?? slug),
@@ -84,7 +84,7 @@ const byline = bylineNames.length > 1
         <>
           <h2 style="font-size:var(--text-xl);margin:var(--space-5) 0 1rem">About the author{resolved.length + d.guestAuthors.length > 1 ? 's' : ''}</h2>
           <div class="g-stack" style="gap:var(--space-3)">
-            {resolved.map((a) => <AuthorBox entry={a} />)}
+            {resolved.map((a) => <AuthorBox entry={a} base={`/${SECTIONS_MAP.authors}/`} />)}
             {d.guestAuthors.map((g) => <AuthorBox guest={g} />)}
           </div>
         </>

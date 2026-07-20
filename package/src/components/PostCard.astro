@@ -1,5 +1,5 @@
 ---
-import { SITE } from 'popular:config';
+import { SITE, SECTIONS_MAP } from 'popular:config';
 import { tagSlug } from '../lib/slugs';
 import type { CollectionEntry } from 'astro:content';
 import { safeCollection } from '../lib/collections';
@@ -12,7 +12,7 @@ const href = `/blog/${post.id}/`;
 // content, so omit the date (and, below, the whole eyebrow) when absent.
 const hasDate = d.date instanceof Date && !Number.isNaN(+d.date) && d.date.getFullYear() > 1;
 const month = hasDate ? d.date.toLocaleDateString(SITE.locale, { month: 'short', year: 'numeric' }) : '';
-const allAuthors = await safeCollection('authors');
+const allAuthors = await safeCollection(SECTIONS_MAP.authors);
 const names = [
   ...d.authors.map((slug) => allAuthors.find((a) => a.id === slug)?.data.title ?? slug),
   ...d.guestAuthors.map((g) => g.name),
