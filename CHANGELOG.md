@@ -14,6 +14,8 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-07-21
+
 ### Added
 
 - Computed home-page stats: `@count:<section>` (and `@count:<section>:rounded`)
