@@ -68,6 +68,7 @@ jobs:
           test ! -d dist-optout/venues
           test ! -f dist-optout/rss.xml
           test -d dist-optout/events
+          test ! -d dist-optout/organizers
       - name: Renamed sections build
         working-directory: smoke
         run: |

@@ -68,6 +68,7 @@ export const STRINGS: Record<string, string> = {
   taggedCount: '{n} post(s) tagged {tag}',
   speakers: 'Speakers',
   eyebrowSpeaker: 'Speaker',
+  eyebrowOrganizer: 'Organizer',
   sessionsBy: 'Sessions by {name}',
   eyebrowVenue: 'Venue',
   venueEvents: 'Events held here',

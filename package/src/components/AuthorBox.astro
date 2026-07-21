@@ -10,13 +10,14 @@ interface Guest {
   social?: { label: string; icon: string; url: string }[];
 }
 interface Props {
-  entry?: CollectionEntry<'authors'> | CollectionEntry<'speakers'>;
+  entry?: CollectionEntry<'authors'> | CollectionEntry<'speakers'> | CollectionEntry<'organizers'>;
   guest?: Guest;
   /** Profile URL prefix; speakers pass '/speakers/'. */
   base?: string;
 }
 const { entry, guest, base = '/authors/' } = Astro.props;
 const d = entry?.data;
+const bio = d ? ((d as any).bio ?? (d as any).description) : undefined;
 ---
 
 <div class="g-persona g-persona--primary">
@@ -26,9 +27,9 @@ const d = entry?.data;
       <div>
         <div class="g-persona__name"><a href={`${base}${entry.id}/`} style="color:inherit">{d.title}</a></div>
         {d.role && <div class="g-persona__role">{d.role}</div>}
-        {d.bio && <p class="g-persona__bio">{d.bio}</p>}
+        {bio && <p class="g-persona__bio">{bio}</p>}
         <div class="g-persona__socials">
-          {d.website && <a href={d.website} aria-label={STRINGS.website} rel="noopener" target="_blank"><i class="fa-solid fa-globe" aria-hidden="true"></i></a>}
+          {(d as any).website && <a href={(d as any).website} aria-label={STRINGS.website} rel="noopener" target="_blank"><i class="fa-solid fa-globe" aria-hidden="true"></i></a>}
           {d.social.map((s) => <a href={s.url} aria-label={s.label} rel="noopener" target="_blank"><i class={s.icon} aria-hidden="true"></i></a>)}
         </div>
       </div>

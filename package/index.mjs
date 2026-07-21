@@ -31,7 +31,10 @@ const ROUTES = {
     ['/events/[...page]', 'events/[...page].astro'],
     ['/events/[...slug]', 'events/[slug].astro'],
   ],
-  organizers: [['/organizers/[...page]', 'organizers/[...page].astro']],
+  organizers: [
+    ['/organizers/[...page]', 'organizers/[...page].astro'],
+    ['/organizers/[...slug]', 'organizers/[slug].astro'],
+  ],
   speakers: [['/speakers/[...slug]', 'speakers/[slug].astro']],
   venues: [['/venues/[...slug]', 'venues/[slug].astro']],
   tags: [['/tags/[tag]/[...page]', 'tags/[tag]/[...page].astro']],

@@ -7,5 +7,5 @@ import popular from 'astro-theme-popular';
 export default defineConfig({
   site: 'https://example.com',
   outDir: './dist-optout',
-  integrations: [mdx(), popular({ routes: { speakers: false, venues: false, rss: false } })],
+  integrations: [mdx(), popular({ routes: { speakers: false, venues: false, rss: false, organizers: false } })],
 });

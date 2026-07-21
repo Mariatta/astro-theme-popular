@@ -16,6 +16,9 @@ Releases) or subscribe to the releases feed
 
 ### Added
 
+- Organizer profile pages: each organizer entry renders a bio-card profile
+  page (Hugo `organizers/single.html`, Astro `organizers/[slug]`), and
+  organizer cards link to it. New `eyebrowOrganizer` UI string.
 - Back link to the parent section on nested pages, labeled by the parent's
   optional `shortTitle` front-matter field or its title. Astro serves pages
   through a rest-param route to support nested page ids.

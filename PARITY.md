@@ -144,6 +144,14 @@ of the deployed demo set.
 3. Both example sites build: `hugo server` / `npm run build`.
 4. Bump versions together; note cross-repo changes in both changelogs.
 
+## Organizer profile pages
+
+Organizer entries render a profile page (bio card + page body), linked from
+their card, mirroring speakers. Hugo: `organizers/single.html`. Astro:
+`organizers/[slug].astro` (injected under the `organizers` opt-out key in the
+package). Eyebrow string `eyebrowOrganizer`. AuthorBox/author-box render the
+organizer's `description` as the bio.
+
 ## Nested-page back link
 
 A page nested in a section renders a back link to its parent, labeled by the
