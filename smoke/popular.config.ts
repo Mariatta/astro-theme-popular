@@ -165,7 +165,7 @@ export const HOME = {
       { label: 'About us', url: '/about/', variant: 'outline' },
     ],
   },
-  stats: [{ value: "2026", label: "founded" }, { value: "All", label: "welcome" }, { value: "Free", label: "to attend" }, { value: "Monthly", label: "gatherings" }],
+  stats: [{ value: "2026", label: "founded" }, { value: "All", label: "welcome" }, { value: "Free", label: "to attend" }, { value: "Monthly", label: "gatherings" }, { value: '@count:blog', label: 'posts' }],
   featuresHead: { eyebrow: 'What we do', title: "What your community is all about", lead: 'Three cards, three reasons to show up.' },
   features: [
     { icon: "fa-solid fa-people-group", title: "Meet", body: "Describe your regular gathering." },

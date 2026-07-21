@@ -1,5 +1,6 @@
 ---
 import { safeCollection } from '../lib/collections';
+import { formatStat, countSectionsIn } from '../lib/stats';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import OrganizerCard from '../components/OrganizerCard.astro';
@@ -11,11 +12,15 @@ const upcoming = events.filter((e) => e.data.date >= now).sort((a, b) => +a.data
 const next = upcoming[0];
 
 const posts = (await safeCollection('blog')).filter((p) => !p.data.draft).sort((a, b) => +b.data.date - +a.data.date).slice(0, 3);
-/* value = "@pastEventCount" renders the live number of past events,
-   rounded down to a "70+" style once there are ten or more (Hugo parity). */
+/* Stat values: @pastEventCount and @count:<section>[:rounded] resolve to
+   live numbers (Hugo parity, see lib/stats). Draft entries are excluded to
+   match Hugo's RegularPages. */
 const pastCount = events.filter((e) => e.data.date < now).length;
-const statValue = (v: string) =>
-  v === '@pastEventCount' ? (pastCount >= 10 ? `${Math.floor(pastCount / 10) * 10}+` : String(pastCount)) : v;
+const counts: Record<string, number> = {};
+for (const name of countSectionsIn(HOME.stats ?? [])) {
+  counts[name] = (await safeCollection(name)).filter((e) => !(e.data as any)?.draft).length;
+}
+const statValue = (v: string) => formatStat(v, { pastCount, counts });
 const nextVenue = next?.data.venueRef ? (await safeCollection('venues')).find((v) => v.id === next.data.venueRef)?.data.title : undefined;
 const organizers = (await safeCollection(SECTIONS_MAP.team)).sort((a, b) => a.data.weight - b.data.weight);
 

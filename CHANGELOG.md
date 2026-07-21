@@ -16,6 +16,10 @@ Releases) or subscribe to the releases feed
 
 ### Added
 
+- Computed home-page stats: `@count:<section>` (and `@count:<section>:rounded`)
+  render a live entry count for any section, generalizing `@pastEventCount`.
+  Factored into a reusable resolver (Hugo `partials/stat-value.html`, Astro
+  `src/lib/stats.ts`).
 - Organizer profile pages: each organizer entry renders a bio-card profile
   page (Hugo `organizers/single.html`, Astro `organizers/[slug]`), and
   organizer cards link to it. New `eyebrowOrganizer` UI string.
