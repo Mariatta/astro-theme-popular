@@ -11,6 +11,9 @@
     "lead": {
       "type": "string"
     },
+    "shortTitle": {
+      "type": "string"
+    },
     "$schema": {
       "type": "string"
     }

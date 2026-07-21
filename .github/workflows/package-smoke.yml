@@ -58,6 +58,8 @@ jobs:
           fi
           # rest params: a folder-organized content id must build
           test -f smoke/dist/speakers/2026-summit/nested-guest/index.html
+          # nested page renders a back-link labeled by the parent's shortTitle
+          grep -q 'fa-arrow-left.*</i> Policies' smoke/dist/policies/conduct/index.html
       - name: Route opt-outs build
         working-directory: smoke
         run: |
