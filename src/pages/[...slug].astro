@@ -10,13 +10,23 @@ import PageHero from '../components/PageHero.astro';
 export async function getStaticPaths() {
   const pages = await safeCollection('pages');
   const docs = await safeCollection('docs');
+  const byId = new Map(pages.map((p) => [p.id, p]));
   return [
-    ...pages.map((entry) => ({ params: { slug: entry.id }, props: { entry, kind: 'page' } })),
-    ...docs.map((entry) => ({ params: { slug: entry.id }, props: { entry, kind: 'doc' } })),
+    ...pages.map((entry) => {
+      // Nested page (policies/conduct) links back to its parent segment;
+      // root pages have no parent. Label prefers the parent's shortTitle.
+      const cut = entry.id.lastIndexOf('/');
+      const parentEntry = cut > 0 ? byId.get(entry.id.slice(0, cut)) : undefined;
+      const parent = parentEntry
+        ? { href: `/${parentEntry.id}/`, label: parentEntry.data.shortTitle ?? parentEntry.data.title }
+        : null;
+      return { params: { slug: entry.id }, props: { entry, kind: 'page', parent } };
+    }),
+    ...docs.map((entry) => ({ params: { slug: entry.id }, props: { entry, kind: 'doc', parent: null } })),
   ];
 }
 
-const { entry, kind } = Astro.props;
+const { entry, kind, parent } = Astro.props;
 const d = entry.data;
 const { Content, headings } = await render(entry);
 /* Current page's h2/h3 links nest under its sidebar entry, in document
@@ -54,8 +64,11 @@ const allDocs = (await safeCollection('docs')).sort(
   ) : (
     <section class="g-bg-white g-section">
       <div class="g-container">
-        <div class="g-article g-prose">
-          <Content />
+        <div class="g-article">
+          {parent && (
+            <a href={parent.href} style="display:inline-flex;gap:.4rem;align-items:center;font-size:var(--text-sm);font-weight:var(--weight-medium);margin-bottom:1rem"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> {parent.label}</a>
+          )}
+          <div class="g-prose"><Content /></div>
         </div>
       </div>
     </section>

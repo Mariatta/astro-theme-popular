@@ -131,6 +131,8 @@ const pages = defineCollection({
     title: z.string(),
     eyebrow: z.string().optional(),
     lead: z.string().optional(),
+    // Short label used by a child page's back link (Hugo parity: shortTitle).
+    shortTitle: z.string().optional(),
   }),
 });
 

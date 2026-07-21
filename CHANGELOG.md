@@ -16,6 +16,9 @@ Releases) or subscribe to the releases feed
 
 ### Added
 
+- Back link to the parent section on nested pages, labeled by the parent's
+  optional `shortTitle` front-matter field or its title. Astro serves pages
+  through a rest-param route to support nested page ids.
 - Renameable content sections: `[params.sections]` (Hugo) / `SECTIONS_MAP`
   (Astro) point post-author bylines (`authors`) and the homepage team grid
   (`team`) at differently-named sections, for communities whose people are

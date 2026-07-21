@@ -21,7 +21,7 @@ import { fileURLToPath } from 'node:url';
    folder-organized content ids (2019-pycon-us/cooper-lees) resolve. */
 const ROUTES = {
   home: [['/', 'index.astro']],
-  pages: [['/[...slug]', '[slug].astro']],
+  pages: [['/[...slug]', '[...slug].astro']],
   authors: [['/authors/[...slug]', 'authors/[slug].astro']],
   blog: [
     ['/blog/[...page]', 'blog/[...page].astro'],

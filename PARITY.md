@@ -144,6 +144,14 @@ of the deployed demo set.
 3. Both example sites build: `hugo server` / `npm run build`.
 4. Bump versions together; note cross-repo changes in both changelogs.
 
+## Nested-page back link
+
+A page nested in a section renders a back link to its parent, labeled by the
+parent's `shortTitle` (optional front-matter) or title. Hugo derives the
+parent via `.Parent`; Astro derives it from a slashed page id and serves
+pages through `[...slug]`. `shortTitle` is in the pages schema
+(`content.config.ts`) on the Astro side.
+
 ## Renameable sections
 
 `[params.sections]` (Hugo) ⇄ `SECTIONS_MAP` (Astro) rename the sections the
