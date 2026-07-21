@@ -144,6 +144,12 @@ of the deployed demo set.
 3. Both example sites build: `hugo server` / `npm run build`.
 4. Bump versions together; note cross-repo changes in both changelogs.
 
+## Computed stat values
+
+Home-page stat `value`s: `@pastEventCount` and `@count:<section>[:rounded]`
+resolve to live counts. Hugo: `partials/stat-value.html`. Astro: `formatStat`
+in `src/lib/stats.ts`. Drafts are excluded, matching Hugo's RegularPages.
+
 ## Organizer profile pages
 
 Organizer entries render a profile page (bio card + page body), linked from

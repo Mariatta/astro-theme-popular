@@ -60,6 +60,10 @@ jobs:
           test -f smoke/dist/speakers/2026-summit/nested-guest/index.html
           # nested page renders a back-link labeled by the parent's shortTitle
           grep -q 'fa-arrow-left.*</i> Policies' smoke/dist/policies/conduct/index.html
+          # organizer profile page renders the persona/bio card
+          grep -q 'g-persona' smoke/dist/organizers/sam/index.html
+          # @count:<section> stat resolves to a live number (starter has 1 post)
+          grep -qE 'g-stat__n">1</div><div class="g-stat__l">posts' smoke/dist/index.html
       - name: Route opt-outs build
         working-directory: smoke
         run: |
