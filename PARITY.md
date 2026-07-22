@@ -171,6 +171,14 @@ date (no time/offset) and the clock time in `time`. Fields: `cancelled`
 (OnlineEventAttendanceMode + VirtualLocation), `price`/`currency`/`cost`
 (paid-event offers). `scripts/check-jsonld.py` validates every built block.
 
+## Core Web Vitals (Tier 2)
+
+Markdown and card/list images carry `loading="lazy" decoding="async"` (Hugo
+render hook + card partials; Astro components + a dependency-free rehype
+plugin). The home hero and event lead image stay eager (above the fold).
+A `preconnect` to cdnjs is emitted only when the default Font Awesome URL is
+used.
+
 ## Organization & BlogPosting JSON-LD (Tier 2)
 
 Home pages emit `schema.org/Organization` (Hugo `jsonld-org.html`, Astro

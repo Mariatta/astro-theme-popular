@@ -22,7 +22,7 @@ if (!names.length && d.author) names.push(d.author);
 
 <article class="g-card" data-tags={d.tags.join(',')}>
   {d.image && (
-    <a href={href} class="g-card__media"><img src={d.image} alt={d.title} loading="lazy" /></a>
+    <a href={href} class="g-card__media"><img src={d.image} alt={d.title} loading="lazy" decoding="async" /></a>
   )}
   <div class="g-card__body">
     {(month || names.length > 0) && (

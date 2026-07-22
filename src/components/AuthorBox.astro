@@ -23,7 +23,7 @@ const bio = d ? ((d as any).bio ?? (d as any).description) : undefined;
 <div class="g-persona g-persona--primary">
   {d && (
     <>
-      {d.photo && <img class="g-persona__img" src={d.photo} alt={entry.data.title} />}
+      {d.photo && <img class="g-persona__img" src={d.photo} alt={entry.data.title} loading="lazy" decoding="async" />}
       <div>
         <div class="g-persona__name"><a href={`${base}${entry.id}/`} style="color:inherit">{d.title}</a></div>
         {d.role && <div class="g-persona__role">{d.role}</div>}
@@ -37,7 +37,7 @@ const bio = d ? ((d as any).bio ?? (d as any).description) : undefined;
   )}
   {guest && (
     <>
-      {guest.photo && <img class="g-persona__img" src={guest.photo} alt={guest.name} />}
+      {guest.photo && <img class="g-persona__img" src={guest.photo} alt={guest.name} loading="lazy" decoding="async" />}
       <div>
         <div class="g-persona__name">{guest.name} <span class="g-badge g-badge--soft" style="vertical-align:middle">{STRINGS.guest}</span></div>
         {guest.title && <div class="g-persona__role">{guest.title}</div>}
