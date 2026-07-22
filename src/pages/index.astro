@@ -4,7 +4,8 @@ import { formatStat, countSectionsIn } from '../lib/stats';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import OrganizerCard from '../components/OrganizerCard.astro';
-import { HOME, SITE, STRINGS, SECTIONS_MAP } from '../config';
+import { HOME, SITE, STRINGS, SECTIONS_MAP, SOCIAL } from '../config';
+import { buildOrgLd, jsonld } from '../lib/jsonld';
 
 const now = new Date();
 const events = (await safeCollection('events')).filter((e) => !e.data.draft);
@@ -25,9 +26,17 @@ const nextVenue = next?.data.venueRef ? (await safeCollection('venues')).find((v
 const organizers = (await safeCollection(SECTIONS_MAP.team)).sort((a, b) => a.data.weight - b.data.weight);
 
 const h = HOME;
+const orgLd = jsonld(buildOrgLd({
+  name: SITE.title,
+  url: new URL('/', Astro.site ?? Astro.url).href,
+  logo: SITE.logo ? new URL(SITE.logo, Astro.site ?? Astro.url).href : undefined,
+  description: SITE.description,
+  sameAs: SOCIAL.map((s) => s.url),
+}));
 ---
 
 <BaseLayout>
+  <script type="application/ld+json" slot="head" set:html={orgLd} />
   {h.hero && (
     <section class="g-hero">
       <div class="g-container g-hero__grid">

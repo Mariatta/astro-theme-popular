@@ -171,6 +171,15 @@ date (no time/offset) and the clock time in `time`. Fields: `cancelled`
 (OnlineEventAttendanceMode + VirtualLocation), `price`/`currency`/`cost`
 (paid-event offers). `scripts/check-jsonld.py` validates every built block.
 
+## Organization & BlogPosting JSON-LD (Tier 2)
+
+Home pages emit `schema.org/Organization` (Hugo `jsonld-org.html`, Astro
+`buildOrgLd`), with `sameAs` = the social config's URLs verbatim (so the RSS
+URL differs by framework by design). Blog singles emit `BlogPosting` (Hugo
+`jsonld-blogpost.html`, Astro `buildBlogPostingLd`): authors resolve through
+the renameable authors section, falling back to the Organization; dates are
+RFC3339 without milliseconds. Both use the shared key-sorted `jsonld()`.
+
 ## SEO: robots, sitemap, meta (Tier 2)
 
 Both emit `robots.txt` advertising the sitemap (Hugo `enableRobotsTXT` +

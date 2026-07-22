@@ -16,6 +16,8 @@ Releases) or subscribe to the releases feed
 
 ### Added
 
+- SEO: `schema.org/Organization` JSON-LD on home pages and `BlogPosting` on
+  blog posts, completing the structured-data family.
 - SEO: `schema.org/Event` JSON-LD on event pages (rich-result eligible), with
   best-effort `time` parsing (see PARITY.md for the contract), venue location,
   performers, and offers. New event fields `cancelled` (also a visible badge),
