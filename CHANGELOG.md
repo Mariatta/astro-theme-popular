@@ -16,6 +16,13 @@ Releases) or subscribe to the releases feed
 
 ### Added
 
+- FAQ block: `{{< faq >}}`/`{{< question >}}` shortcodes (Astro `<FAQ>`/
+  `<FAQItem>`), native `<details>` with zero JavaScript, answers in the DOM
+  for indexing and AI answer engines, and optional FAQPage JSON-LD
+  (`seo.faqJsonLd`, default true). New SEO and FAQ docs pages.
+
+### Added
+
 - Core Web Vitals: markdown and card/list images lazy-load with async
   decoding (hero and event lead stay eager); a `preconnect` to the Font
   Awesome CDN when the default URL is used.
