@@ -57,6 +57,11 @@ const events = defineCollection({
     venueNotes: z.string().optional(), // e.g. "Buzz 204 at the side door."; overrides the venue page's notes
     rsvp: z.string().optional(),
     meetupUrl: z.string().optional(), // metadata convention; the theme renders no external links on event rows
+    cancelled: z.boolean().default(false), // EventCancelled JSON-LD + visible badge
+    online: z.boolean().default(false), // OnlineEventAttendanceMode + VirtualLocation
+    price: z.union([z.number(), z.string()]).optional(), // machine price for Offer
+    currency: z.string().optional(), // ISO currency for price
+    cost: z.string().optional(), // free-text displayed cost (e.g. "15 CAD")
   }),
 });
 

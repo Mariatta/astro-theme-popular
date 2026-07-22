@@ -144,6 +144,33 @@ of the deployed demo set.
 3. Both example sites build: `hugo server` / `npm run build`.
 4. Bump versions together; note cross-repo changes in both changelogs.
 
+## Event JSON-LD (schema.org/Event)
+
+Event pages emit `schema.org/Event` JSON-LD (Hugo `partials/jsonld-event.html`,
+Astro `src/lib/eventld.ts`), keys sorted so the two are byte-identical. Only
+resolvable keys are emitted (no empty strings/arrays/null).
+
+**The `time` → `startDate` contract** (both implementations and
+`scripts/tests/test_event_time.py` must agree):
+
+| `time` value | startDate suffix |
+|---|---|
+| `6:00 PM` | `T18:00` |
+| `18:30` | `T18:30` |
+| `12:00 AM` | `T00:00` |
+| `12:00 PM` | `T12:00` |
+| `6:00 PM · doors 5:30` | `T18:00` |
+| `doors at 5:30` | date-only |
+| *(absent)* | date-only |
+| `25:00` / `9:99` (out of range) | date-only |
+
+Only a leading `HH:MM[am|pm]` token is parsed; put the true start time first.
+The date part is the `date` field's calendar day, so write `date` as a plain
+date (no time/offset) and the clock time in `time`. Fields: `cancelled`
+(EventCancelled + visible danger badge, i18n `eventCancelled`), `online`
+(OnlineEventAttendanceMode + VirtualLocation), `price`/`currency`/`cost`
+(paid-event offers). `scripts/check-jsonld.py` validates every built block.
+
 ## SEO: robots, sitemap, meta (Tier 2)
 
 Both emit `robots.txt` advertising the sitemap (Hugo `enableRobotsTXT` +

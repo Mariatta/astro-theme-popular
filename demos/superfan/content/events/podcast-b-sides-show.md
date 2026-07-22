@@ -1,6 +1,6 @@
 ---
 title: "Podcast guest: The B-Sides Show"
-date: 2026-04-10T19:00:00-07:00
+date: 2026-04-10
 description: "Ninety minutes defending my favourite b-sides on a fictional podcast, recorded live."
 image: "/images/mic.svg"
 tags: ["podcast"]

@@ -49,6 +49,8 @@
 .g-badge--success.g-badge--soft { background: #e6f3ec; color: #0f6e44; }
 .g-badge--warning { background: var(--amber-500); color: #142a36; }
 .g-badge--warning.g-badge--soft { background: #fff7e0; color: #946a00; }
+.g-badge--danger { background: #c8102e; color: #fff; }
+.g-badge--danger.g-badge--soft { background: #fde7ea; color: #a01023; }
 .g-badge--ink { background: var(--ink-800); }
 
 .g-tag {

@@ -65,7 +65,7 @@ const eventLd = jsonld(buildEventLd({
           </a>
         </div>
         <span class="g-eyebrow">{dateStr}{d.time && ` · ${d.time}`}</span>
-        <h1 style="margin:.5rem 0 0">{d.title}</h1>
+        <h1 style="margin:.5rem 0 0">{d.title}{d.cancelled && <> <span class="g-badge g-badge--danger" style="vertical-align:middle;font-size:var(--text-sm)">{STRINGS.eventCancelled}</span></>}</h1>
       </div>
     </header>
     <div class="g-container g-section--sm">

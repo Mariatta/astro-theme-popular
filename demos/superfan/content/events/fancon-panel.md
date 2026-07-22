@@ -1,10 +1,10 @@
 ---
 title: "FanCon panel: two decades of Affirmation"
-date: 2026-09-19T14:00:00-07:00
+date: 2026-09-19
 description: "A panel on the album that soundtracked a generation of mixtapes, with fellow superfans and at least one overhead projector."
 image: "/images/concert.svg"
 tags: ["panel"]
-time: "2:00 – 3:00 PM"
+time: "2:00 PM – 3:00 PM"
 venue: "FanCon (a fictional convention)"
 address: "Hall B, 500 Imaginary Blvd"
 speaker: "Panel, with Q&A and a singalong risk"

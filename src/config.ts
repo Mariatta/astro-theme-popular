@@ -24,6 +24,7 @@ export const STRINGS: Record<string, string> = {
   toggleMenu: 'Toggle menu',
   nextMeetup: 'Next meetup',
   venueTba: 'Venue to be announced',
+  eventCancelled: 'Cancelled',
   rsvp: 'RSVP',
   rsvpExternal: 'RSVP on Luma',
   allEvents: 'All events',
