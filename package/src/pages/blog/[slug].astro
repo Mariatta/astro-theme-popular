@@ -4,6 +4,7 @@ import { safeCollection } from '../../lib/collections';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import AuthorBox from '../../components/AuthorBox.astro';
 import { SUPPORT, SITE, STRINGS, SECTIONS_MAP } from 'popular:config';
+import { buildBlogPostingLd, jsonld } from '../../lib/jsonld';
 import { tagSlug } from '../../lib/slugs';
 
 export async function getStaticPaths() {
@@ -32,12 +33,25 @@ const bylineNames = [
   ...d.guestAuthors.map((g) => g.name),
 ];
 if (!bylineNames.length && d.author) bylineNames.push(d.author);
+const siteUrl = new URL('/', Astro.site ?? Astro.url).href;
+const postLd = jsonld(buildBlogPostingLd({
+  title: d.title,
+  datePublished: d.date.toISOString().replace(/\.\d{3}Z$/, 'Z'),
+  dateModified: d.date.toISOString().replace(/\.\d{3}Z$/, 'Z'),
+  authors: bylineNames,
+  image: d.image ? new URL(d.image, Astro.site ?? Astro.url).href : undefined,
+  url: new URL(`/blog/${post.id}/`, Astro.site ?? Astro.url).href,
+  description: d.description,
+  siteTitle: SITE.title,
+  siteUrl,
+}));
 const byline = bylineNames.length > 1
   ? bylineNames.slice(0, -1).join(STRINGS.listSeparator) + STRINGS.listSeparatorFinal + bylineNames[bylineNames.length - 1]
   : bylineNames.join('');
 ---
 
 <BaseLayout title={d.title} description={d.description} image={d.image} article={{ published: d.date, authors: bylineNames, tags: d.tags }}>
+  <script type="application/ld+json" slot="head" set:html={postLd} />
   <article>
     <header class="g-pagehero">
       <div class="g-container" style="padding-block:var(--space-6) var(--space-5)">
