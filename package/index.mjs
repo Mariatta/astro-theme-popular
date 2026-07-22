@@ -15,6 +15,20 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sitemap from '@astrojs/sitemap';
 
+/* loading="lazy" decoding="async" on markdown images (CWV parity with the
+   Hugo render hook). Dependency-free HAST walk. */
+function rehypeLazyImages() {
+  const walk = (node) => {
+    if (node.tagName === 'img') {
+      node.properties = node.properties || {};
+      if (!('loading' in node.properties)) node.properties.loading = 'lazy';
+      if (!('decoding' in node.properties)) node.properties.decoding = 'async';
+    }
+    (node.children || []).forEach(walk);
+  };
+  return (tree) => walk(tree);
+}
+
 /* Injected routes, grouped by opt-out key: popular({ routes: { speakers:
    false } }) skips a group. Disabling is also the durable answer when your
    site provides its own page at a theme path (`/`, `/rss.xml`): Astro is
@@ -54,6 +68,7 @@ export default function popular(options = {}) {
         addWatchFile(userConfig);
         updateConfig({
           integrations: [sitemap()],
+          markdown: { rehypePlugins: [rehypeLazyImages] },
           vite: {
             plugins: [
               {

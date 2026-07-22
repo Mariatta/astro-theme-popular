@@ -7,7 +7,7 @@ const d = organizer.data;
 ---
 
 <div class="g-org">
-  {d.photo && <a href={`/organizers/${organizer.id}/`}><img class="g-org__img" src={d.photo} alt={d.title} loading="lazy" /></a>}
+  {d.photo && <a href={`/organizers/${organizer.id}/`}><img class="g-org__img" src={d.photo} alt={d.title} loading="lazy" decoding="async" /></a>}
   <div class="g-org__name"><a href={`/organizers/${organizer.id}/`} style="color:inherit">{d.title}</a></div>
   {d.role && <div class="g-org__role">{d.role}</div>}
   {d.description && <p class="g-org__bio">{d.description}</p>}

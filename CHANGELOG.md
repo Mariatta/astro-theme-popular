@@ -16,6 +16,12 @@ Releases) or subscribe to the releases feed
 
 ### Added
 
+- Core Web Vitals: markdown and card/list images lazy-load with async
+  decoding (hero and event lead stay eager); a `preconnect` to the Font
+  Awesome CDN when the default URL is used.
+
+### Added
+
 - SEO: `schema.org/Organization` JSON-LD on home pages and `BlogPosting` on
   blog posts, completing the structured-data family.
 - SEO: `schema.org/Event` JSON-LD on event pages (rich-result eligible), with

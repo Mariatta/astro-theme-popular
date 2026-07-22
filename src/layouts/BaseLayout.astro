@@ -89,6 +89,7 @@ const brandCss = `html:root{${vars.join(';')}}`;
     <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
     <link rel="icon" href={SITE.favicon ?? SITE.logo} />
     <link rel="alternate" type="application/rss+xml" title={(SITE as Record<string, any>).rssTitle ?? SITE.title} href={new URL("rss.xml", Astro.site ?? Astro.url)} />
+    {SITE.fontAwesome.includes("font-awesome/6.5.2/css/all.min.css") && <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />}
     <link rel="stylesheet" href={SITE.fontAwesome} referrerpolicy="no-referrer"
       integrity={SITE.fontAwesome.includes("font-awesome/6.5.2/css/all.min.css") ? "sha384-PPIZEGYM1v8zp5Py7UjFb79S58UeqCL9pYVnVPURKEqvioPROaVAJKKLzvH2rDnI" : undefined}
       crossorigin={SITE.fontAwesome.includes("font-awesome/6.5.2/css/all.min.css") ? "anonymous" : undefined} />

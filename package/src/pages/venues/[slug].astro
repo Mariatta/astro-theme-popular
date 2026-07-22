@@ -24,7 +24,7 @@ const events = (await safeCollection('events'))
   <section class="g-bg-white g-section">
     <div class="g-container">
       <div class="g-article" style="margin-bottom:var(--space-5)">
-        {d.photo && <img src={d.photo} alt={d.title} style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:var(--radius-xl);box-shadow:var(--shadow-md);margin-bottom:var(--space-4)" />}
+        {d.photo && <img src={d.photo} alt={d.title} style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:var(--radius-xl);box-shadow:var(--shadow-md);margin-bottom:var(--space-4)" loading="lazy" decoding="async" />}
         <div class="g-meta-line" style="margin-bottom:var(--space-3)">
           {d.address && <span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> {d.address}</span>}
           {d.website && <span><i class="fa-solid fa-globe" aria-hidden="true"></i> <a href={d.website} rel="noopener" target="_blank">{STRINGS.website}</a></span>}
