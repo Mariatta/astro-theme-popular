@@ -14,6 +14,12 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+### Added
+
+- SEO: `robots.txt` advertising the sitemap, `og:locale`, `og:image:alt`
+  (optional `imageAlt` field), and an opt-in `noindex` on taxonomy pages
+  (`seo.noindexTaxonomies`). Astro gains `@astrojs/sitemap` (config-only).
+
 ## [0.5.0] - 2026-07-21
 
 ### Added

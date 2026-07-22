@@ -18,8 +18,11 @@ interface Props {
   image?: string;
   /** Set on blog posts: emits og:type=article plus article meta. */
   article?: { published?: Date; modified?: Date; authors?: string[]; tags?: string[] };
+  imageAlt?: string;
+  noindex?: boolean;
 }
-const { title, description, image, article } = Astro.props;
+const { title, description, image, article, imageAlt, noindex } = Astro.props;
+const ogLocale = SITE.locale.replace('-', '_');
 const pageTitle = title ? `${title} · ${SITE.title}` : `${SITE.title}, ${SITE.tagline}`;
 const desc = description ?? SITE.description;
 const ogImage = image ?? SITE.ogImage;
@@ -71,6 +74,7 @@ const brandCss = `html:root{${vars.join(';')}}`;
     <title>{pageTitle}</title>
     <meta name="description" content={desc} />
     <meta property="og:site_name" content={SITE.title} />
+    <meta property="og:locale" content={ogLocale} />
     <meta property="og:title" content={title ?? SITE.title} />
     <meta property="og:description" content={desc} />
     <meta property="og:url" content={canonical} />
@@ -81,6 +85,7 @@ const brandCss = `html:root{${vars.join(';')}}`;
     {article?.authors?.map((a) => <meta property="article:author" content={a} />)}
     {article?.tags?.map((t) => <meta property="article:tag" content={t} />)}
     {ogImage && <meta property="og:image" content={new URL(ogImage, Astro.site ?? Astro.url)} />}
+    {ogImage && <meta property="og:image:alt" content={imageAlt ?? title ?? SITE.title} />}
     <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
     <link rel="icon" href={SITE.favicon ?? SITE.logo} />
     <link rel="alternate" type="application/rss+xml" title={(SITE as Record<string, any>).rssTitle ?? SITE.title} href={new URL("rss.xml", Astro.site ?? Astro.url)} />
@@ -88,7 +93,9 @@ const brandCss = `html:root{${vars.join(';')}}`;
       integrity={SITE.fontAwesome.includes("font-awesome/6.5.2/css/all.min.css") ? "sha384-PPIZEGYM1v8zp5Py7UjFb79S58UeqCL9pYVnVPURKEqvioPROaVAJKKLzvH2rDnI" : undefined}
       crossorigin={SITE.fontAwesome.includes("font-awesome/6.5.2/css/all.min.css") ? "anonymous" : undefined} />
     {(SITE as Record<string, any>).customCSS?.map((href: string) => <link rel="stylesheet" href={href} />)}
+    {noindex && <meta name="robots" content="noindex,follow" />}
     <style is:inline id="popular-brand" set:html={brandCss}></style>
+    <slot name="head" />
   </head>
   <body data-copy-label={STRINGS.copyCode} data-checklist-done={STRINGS.checklistDone}>
     <a class="g-skip" href="#main">{STRINGS.skipToContent}</a>

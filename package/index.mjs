@@ -13,6 +13,7 @@
  */
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import sitemap from '@astrojs/sitemap';
 
 /* Injected routes, grouped by opt-out key: popular({ routes: { speakers:
    false } }) skips a group. Disabling is also the durable answer when your
@@ -39,6 +40,7 @@ const ROUTES = {
   venues: [['/venues/[...slug]', 'venues/[slug].astro']],
   tags: [['/tags/[tag]/[...page]', 'tags/[tag]/[...page].astro']],
   rss: [['/rss.xml', 'rss.xml.js']],
+  robots: [['/robots.txt', 'robots.txt.ts']],
 };
 
 export default function popular(options = {}) {
@@ -51,6 +53,7 @@ export default function popular(options = {}) {
         const userConfig = path.resolve(root, configFile);
         addWatchFile(userConfig);
         updateConfig({
+          integrations: [sitemap()],
           vite: {
             plugins: [
               {

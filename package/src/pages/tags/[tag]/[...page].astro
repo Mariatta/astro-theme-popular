@@ -1,5 +1,5 @@
 ---
-import { STRINGS, PAGINATION } from 'popular:config';
+import { SITE, STRINGS, PAGINATION } from 'popular:config';
 import { tagSlug } from '../../../lib/slugs';
 import { safeCollection } from '../../../lib/collections';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
@@ -34,7 +34,7 @@ const { tag } = Astro.params;
 const { label, current, total, count, posts } = Astro.props;
 ---
 
-<BaseLayout title={`#${label}`}>
+<BaseLayout title={`#${label}`} noindex={(SITE as Record<string, any>).seo?.noindexTaxonomies ?? false}>
   <PageHero eyebrow={STRINGS.eyebrowTag} title={`#${label}`} lead={STRINGS.taggedCount.replace('{n}', String(count)).replace('{tag}', label)} />
   <section class="g-bg-white g-section">
     <div class="g-container">
