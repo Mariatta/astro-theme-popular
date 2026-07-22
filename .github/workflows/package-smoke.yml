@@ -68,6 +68,14 @@ jobs:
           grep -q 'Sitemap:' smoke/dist/robots.txt
           test -f smoke/dist/sitemap-index.xml
           grep -q 'og:locale' smoke/dist/index.html
+          # JSON-LD valid across the built output (events, org, blog, faq)
+          python3 scripts/check-jsonld.py smoke/dist
+          # event time-parsing vectors end to end
+          grep -q '2026-09-19T18:00' smoke/dist/events/v1/index.html
+          grep -q '"startDate":"2026-09-19"' smoke/dist/events/v6/index.html
+          # FAQ: native details + FAQPage JSON-LD collected from slots
+          grep -q 'g-faq__item' smoke/dist/faq-test/index.html
+          grep -q 'FAQPage' smoke/dist/faq-test/index.html
       - name: Route opt-outs build
         working-directory: smoke
         run: |

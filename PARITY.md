@@ -171,6 +171,14 @@ date (no time/offset) and the clock time in `time`. Fields: `cancelled`
 (OnlineEventAttendanceMode + VirtualLocation), `price`/`currency`/`cost`
 (paid-event offers). `scripts/check-jsonld.py` validates every built block.
 
+## FAQ block (Tier 2)
+
+`{{< faq >}}`/`{{< question >}}` (Hugo shortcodes) ⇄ `<FAQ>`/`<FAQItem>`
+(Astro components). Native `<details>`, zero JS, answers in the DOM. Both emit
+FAQPage JSON-LD (gated on `seo.faqJsonLd`, default true), byte-identical.
+Divergence: Hugo auto-collects Q&A via nested-shortcode scratch; Astro parses
+its own rendered slot (`Astro.slots.render`). No FAQ rich results expected.
+
 ## Core Web Vitals (Tier 2)
 
 Markdown and card/list images carry `loading="lazy" decoding="async"` (Hugo
