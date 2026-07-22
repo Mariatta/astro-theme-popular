@@ -1,5 +1,6 @@
 ---
 import { SITE, STRINGS } from '../../config';
+import { buildEventLd, jsonld } from '../../lib/eventld';
 import { render } from 'astro:content';
 import { safeCollection } from '../../lib/collections';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -28,9 +29,33 @@ const speakerEntries = d.speakers.map((slug) => {
   if (!entry) throw new Error(`events/${event.id}: speaker "${slug}" matches no speaker page`);
   return entry;
 });
+
+/* schema.org/Event JSON-LD (see lib/eventld; contract in PARITY.md). */
+const siteUrl = new URL('/', Astro.site ?? Astro.url).href;
+const permalink = new URL(`/events/${event.id}/`, Astro.site ?? Astro.url).href;
+const eventLd = jsonld(buildEventLd({
+  title: d.title,
+  date: d.date,
+  time: d.time,
+  description: d.description,
+  cancelled: (d as any).cancelled,
+  online: (d as any).online,
+  price: (d as any).price,
+  currency: (d as any).currency,
+  cost: (d as any).cost,
+  image: d.image ? new URL(d.image, Astro.site ?? Astro.url).href : undefined,
+  rsvp: d.rsvp,
+  permalink,
+  siteUrl,
+  siteTitle: SITE.title,
+  defaultCurrency: (SITE as Record<string, any>).seo?.currency ?? 'USD',
+  venue: venuePage ? { name: venuePage.data.title, address: venuePage.data.address } : undefined,
+  performers: speakerEntries.map((s) => s.data.title),
+}));
 ---
 
 <BaseLayout title={d.title} description={d.description} image={d.image}>
+  <script type="application/ld+json" slot="head" set:html={eventLd} />
   <article>
     <header class="g-pagehero">
       <div class="g-container" style="padding-block:var(--space-6) var(--space-5)">
@@ -40,7 +65,7 @@ const speakerEntries = d.speakers.map((slug) => {
           </a>
         </div>
         <span class="g-eyebrow">{dateStr}{d.time && ` · ${d.time}`}</span>
-        <h1 style="margin:.5rem 0 0">{d.title}</h1>
+        <h1 style="margin:.5rem 0 0">{d.title}{d.cancelled && <> <span class="g-badge g-badge--danger" style="vertical-align:middle;font-size:var(--text-sm)">{STRINGS.eventCancelled}</span></>}</h1>
       </div>
     </header>
     <div class="g-container g-section--sm">

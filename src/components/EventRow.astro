@@ -49,7 +49,9 @@ const day = d.date.toLocaleDateString(SITE.locale, { month: 'short', day: 'numer
     )}
   </div>
   <div class="g-event__aside">
-    {tbd
+    {d.cancelled
+      ? <span class="g-badge g-badge--danger g-badge--soft">{STRINGS.eventCancelled}</span>
+      : tbd
       ? <span class="g-badge g-badge--warning g-badge--soft">{STRINGS.venueWanted}</span>
       : <span class="g-badge g-badge--success g-badge--soft">{STRINGS.confirmed}</span>}
     {d.rsvp && (

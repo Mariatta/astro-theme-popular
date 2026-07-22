@@ -16,6 +16,11 @@ Releases) or subscribe to the releases feed
 
 ### Added
 
+- SEO: `schema.org/Event` JSON-LD on event pages (rich-result eligible), with
+  best-effort `time` parsing (see PARITY.md for the contract), venue location,
+  performers, and offers. New event fields `cancelled` (also a visible badge),
+  `online`, `price`/`currency`/`cost`. `scripts/check-jsonld.py` validates
+  every built JSON-LD block in CI.
 - SEO: `robots.txt` advertising the sitemap, `og:locale`, `og:image:alt`
   (optional `imageAlt` field), and an opt-in `noindex` on taxonomy pages
   (`seo.noindexTaxonomies`). Astro gains `@astrojs/sitemap` (config-only).

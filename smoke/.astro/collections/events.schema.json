@@ -64,6 +64,30 @@
     "meetupUrl": {
       "type": "string"
     },
+    "cancelled": {
+      "default": false,
+      "type": "boolean"
+    },
+    "online": {
+      "default": false,
+      "type": "boolean"
+    },
+    "price": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "currency": {
+      "type": "string"
+    },
+    "cost": {
+      "type": "string"
+    },
     "$schema": {
       "type": "string"
     }
