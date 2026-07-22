@@ -64,6 +64,10 @@ jobs:
           grep -q 'g-persona' smoke/dist/organizers/sam/index.html
           # @count:<section> stat resolves to a live number (starter has 1 post)
           grep -qE 'g-stat__n">1</div><div class="g-stat__l">posts' smoke/dist/index.html
+          # SEO: robots.txt + sitemap emitted, og:locale present
+          grep -q 'Sitemap:' smoke/dist/robots.txt
+          test -f smoke/dist/sitemap-index.xml
+          grep -q 'og:locale' smoke/dist/index.html
       - name: Route opt-outs build
         working-directory: smoke
         run: |

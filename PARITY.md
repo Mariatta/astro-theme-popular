@@ -144,6 +144,15 @@ of the deployed demo set.
 3. Both example sites build: `hugo server` / `npm run build`.
 4. Bump versions together; note cross-repo changes in both changelogs.
 
+## SEO: robots, sitemap, meta (Tier 2)
+
+Both emit `robots.txt` advertising the sitemap (Hugo `enableRobotsTXT` +
+`layouts/robots.txt`; Astro `robots.txt.ts` endpoint + `@astrojs/sitemap`),
+plus `og:locale`, `og:image:alt` (from optional `imageAlt`), and a
+`noindex,follow` on taxonomy pages when `seo.noindexTaxonomies` is set.
+Sitemap URLs are absolute and subpath-safe. Astro-only dependency:
+`@astrojs/sitemap` (config-only, no client JS).
+
 ## Computed stat values
 
 Home-page stat `value`s: `@pastEventCount` and `@count:<section>[:rounded]`
