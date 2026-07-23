@@ -14,32 +14,38 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
-## [0.6.0] - 2026-07-23
+### Added
 
-Search-engine optimisation: structured data, crawl plumbing, Core Web Vitals,
-and an FAQ block. Zero client JavaScript added.
+- Astro package: component overrides. `popular({ overrides: { Header:
+  './src/overrides/Header.astro' } })` replaces any of Header, Footer, Hero,
+  EventRow, PostCard, OrganizerCard, AuthorBox, PageHero without forking the
+  theme. (Hugo adopters already override via native template lookup.)
 
 ### Added
 
-- Structured data (JSON-LD, byte-identical across both frameworks):
-  `schema.org/Event` on event pages (rich-result eligible, with best-effort
-  `time` parsing; see PARITY.md for the contract), `Organization` on home
-  pages, `BlogPosting` on blog posts, and `FAQPage` from FAQ blocks.
-- New event fields: `cancelled` (a visible danger badge **and** the structured
-  status, so they never disagree), `online` (virtual location), and
-  `price`/`currency`/`cost` (paid-event offers).
 - FAQ block: `{{< faq >}}`/`{{< question >}}` shortcodes (Astro `<FAQ>`/
   `<FAQItem>`), native `<details>` with zero JavaScript, answers in the DOM
-  for indexing and AI answer engines. Gated FAQPage JSON-LD via
-  `seo.faqJsonLd` (default true).
-- Crawl plumbing: `robots.txt` advertising the sitemap, `og:locale`,
-  `og:image:alt` (optional `imageAlt` field), and an opt-in `noindex` on
-  taxonomy pages (`seo.noindexTaxonomies`). Astro adds `@astrojs/sitemap`.
+  for indexing and AI answer engines, and optional FAQPage JSON-LD
+  (`seo.faqJsonLd`, default true). New SEO and FAQ docs pages.
+
+### Added
+
 - Core Web Vitals: markdown and card/list images lazy-load with async
   decoding (hero and event lead stay eager); a `preconnect` to the Font
   Awesome CDN when the default URL is used.
-- New SEO and FAQ documentation pages; `scripts/check-jsonld.py` validates
+
+### Added
+
+- SEO: `schema.org/Organization` JSON-LD on home pages and `BlogPosting` on
+  blog posts, completing the structured-data family.
+- SEO: `schema.org/Event` JSON-LD on event pages (rich-result eligible), with
+  best-effort `time` parsing (see PARITY.md for the contract), venue location,
+  performers, and offers. New event fields `cancelled` (also a visible badge),
+  `online`, `price`/`currency`/`cost`. `scripts/check-jsonld.py` validates
   every built JSON-LD block in CI.
+- SEO: `robots.txt` advertising the sitemap, `og:locale`, `og:image:alt`
+  (optional `imageAlt` field), and an opt-in `noindex` on taxonomy pages
+  (`seo.noindexTaxonomies`). Astro gains `@astrojs/sitemap` (config-only).
 
 ## [0.5.0] - 2026-07-21
 

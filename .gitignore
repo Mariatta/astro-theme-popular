@@ -2,6 +2,7 @@
 dist/
 dist-optout/
 dist-sections/
+dist-overrides/
 .astro/
 node_modules/
 

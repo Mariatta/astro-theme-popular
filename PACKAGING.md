@@ -107,7 +107,10 @@ export default defineConfig({
      content ids (`2019-pycon-us/cooper-lees`) work. [shipped]
    - Injected routes no-op quietly when their collection is undefined or
      empty. [shipped]
-   Remaining for phase 2: the component override map and its docs.
+   The component override map shipped in phase 2b: `popular({ overrides:
+   { Header, Footer, Hero, EventRow, PostCard, OrganizerCard, AuthorBox,
+   PageHero } })` via `popular:component/*` virtual resolution. Phase 2
+   complete.
 3. **Demos become consumers; scaffolder; CI reshaped** (image-alt and the
    base-path scan run per demo workspace; parity paths update).
 4. **Cutover**: old `src/` activation model removed, docs + updating guide

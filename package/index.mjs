@@ -6,6 +6,11 @@
  *     integrations: [mdx(), popular()],
  *   });
  *
+ * Override components without forking: popular({ overrides: { Header:
+ *   './src/overrides/Header.astro' } }). Theme code imports overridable
+ * components from popular:component/<Name>; the integration resolves each
+ * to the adopter's file or the theme default.
+ *
  * Theme config (SITE, STRINGS, BRAND, NAV, ...) lives in the adopter's
  * `popular.config.ts` (same named exports as the classic src/config.ts;
  * the shape is the parity contract, see PARITY.md). Theme code reads it
@@ -57,8 +62,11 @@ const ROUTES = {
   robots: [['/robots.txt', 'robots.txt.ts']],
 };
 
+const OVERRIDABLE = ['Header', 'Footer', 'Hero', 'EventRow', 'PostCard', 'OrganizerCard', 'AuthorBox', 'PageHero'];
+
 export default function popular(options = {}) {
   const configFile = options.configFile ?? './popular.config.ts';
+  const overrides = options.overrides ?? {};
   return {
     name: 'astro-theme-popular',
     hooks: {
@@ -80,6 +88,20 @@ export default function popular(options = {}) {
                   if (id === '\0popular:config') {
                     return `export * from ${JSON.stringify(userConfig)};`;
                   }
+                },
+              },
+              {
+                name: 'popular:component',
+                resolveId(id) {
+                  if (id.startsWith('popular:component/')) return '\0' + id;
+                },
+                load(id) {
+                  if (!id.startsWith('\0popular:component/')) return;
+                  const name = id.slice('\0popular:component/'.length);
+                  const target = overrides[name]
+                    ? path.resolve(root, overrides[name])
+                    : `astro-theme-popular/components/${name}.astro`;
+                  return `export { default } from ${JSON.stringify(target)};`;
                 },
               },
             ],

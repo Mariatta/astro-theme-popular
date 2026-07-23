@@ -2,7 +2,7 @@
 import { render } from 'astro:content';
 import { safeCollection } from '../../lib/collections';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import AuthorBox from '../../components/AuthorBox.astro';
+import AuthorBox from 'popular:component/AuthorBox';
 import { SUPPORT, SITE, STRINGS, SECTIONS_MAP } from 'popular:config';
 import { buildBlogPostingLd, jsonld } from '../../lib/jsonld';
 import { tagSlug } from '../../lib/slugs';

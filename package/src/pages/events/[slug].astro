@@ -4,7 +4,7 @@ import { buildEventLd, jsonld } from '../../lib/eventld';
 import { render } from 'astro:content';
 import { safeCollection } from '../../lib/collections';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import AuthorBox from '../../components/AuthorBox.astro';
+import AuthorBox from 'popular:component/AuthorBox';
 
 export async function getStaticPaths() {
   const events = (await safeCollection('events')).filter((e) => !e.data.draft);

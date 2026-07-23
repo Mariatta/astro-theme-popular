@@ -171,6 +171,15 @@ date (no time/offset) and the clock time in `time`. Fields: `cancelled`
 (OnlineEventAttendanceMode + VirtualLocation), `price`/`currency`/`cost`
 (paid-event offers). `scripts/check-jsonld.py` validates every built block.
 
+## Component overrides (Astro package only)
+
+The Astro package lets adopters override theme components via
+`popular({ overrides: { Header: './...' } })`, resolved through
+`popular:component/<Name>` virtual imports. Overridable: Header, Footer, Hero,
+EventRow, PostCard, OrganizerCard, AuthorBox, PageHero. The Hugo equivalent is
+Hugo's native template lookup (drop a matching file in your site's `layouts/`)
+plus the `head-extra.html` hook; no config needed.
+
 ## FAQ block (Tier 2)
 
 `{{< faq >}}`/`{{< question >}}` (Hugo shortcodes) ⇄ `<FAQ>`/`<FAQItem>`

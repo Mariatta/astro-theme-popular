@@ -21,6 +21,16 @@ export default defineConfig({
 });
 ```
 
+Override any theme component with your own, without forking:
+
+```js
+popular({ overrides: { Header: './src/overrides/Header.astro' } })
+```
+
+Overridable: `Header`, `Footer`, `Hero`, `EventRow`, `PostCard`,
+`OrganizerCard`, `AuthorBox`, `PageHero`. Your file receives the same props
+the theme component does.
+
 Disable any injected route group when your site replaces it (also the
 answer when you provide your own `/` or `/rss.xml`):
 
