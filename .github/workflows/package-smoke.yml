@@ -30,7 +30,7 @@ jobs:
             mkdir -p "/tmp/norm/$2"
             (cd "$1" && find . -type f | while read -r f; do
               mkdir -p "/tmp/norm/$2/$(dirname "$f")"
-              sed -E "s#from '(\.\./)+config'#from 'THEME_CONFIG'#; s#from 'popular:config'#from 'THEME_CONFIG'#" "$f" > "/tmp/norm/$2/$f"
+              sed -E "s#from '(\.\./)+config'#from 'THEME_CONFIG'#; s#from 'popular:config'#from 'THEME_CONFIG'#; s#from '(\.\./)+components/([A-Za-z]+)\.astro'#from 'THEME_COMPONENT/\2'#; s#from 'popular:component/([A-Za-z]+)'#from 'THEME_COMPONENT/\1'#" "$f" > "/tmp/norm/$2/$f"
             done)
           }
           # BaseLayout.astro is the one designed divergence: the package
@@ -91,3 +91,10 @@ jobs:
           npx astro build --config astro.sections.config.mjs
           # byline resolves from the organizers collection, links there
           grep -q '/organizers/sam/' dist-sections/blog/hello-world/index.html
+      - name: Component override build
+        working-directory: smoke
+        run: |
+          npx astro build --config astro.overrides.config.mjs
+          # the custom Header replaces the theme default
+          grep -q 'OVERRIDDEN HEADER' dist-overrides/index.html
+          ! grep -q 'g-navlinks' dist-overrides/index.html

@@ -3,9 +3,9 @@ import { STRINGS } from 'popular:config';
 import { render } from 'astro:content';
 import { safeCollection } from '../../lib/collections';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import PageHero from '../../components/PageHero.astro';
-import AuthorBox from '../../components/AuthorBox.astro';
-import EventRow from '../../components/EventRow.astro';
+import PageHero from 'popular:component/PageHero';
+import AuthorBox from 'popular:component/AuthorBox';
+import EventRow from 'popular:component/EventRow';
 
 export async function getStaticPaths() {
   const speakers = await safeCollection('speakers');

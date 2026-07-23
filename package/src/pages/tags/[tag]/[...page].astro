@@ -3,8 +3,8 @@ import { SITE, STRINGS, PAGINATION } from 'popular:config';
 import { tagSlug } from '../../../lib/slugs';
 import { safeCollection } from '../../../lib/collections';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import PageHero from '../../../components/PageHero.astro';
-import PostCard from '../../../components/PostCard.astro';
+import PageHero from 'popular:component/PageHero';
+import PostCard from 'popular:component/PostCard';
 import Pagination from '../../../components/Pagination.astro';
 
 /* One route serves /tags/<tag>/ and /tags/<tag>/page/N/, matching the Hugo

@@ -5,7 +5,7 @@ import { STRINGS } from 'popular:config';
 import { render } from 'astro:content';
 import { safeCollection } from '../lib/collections';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PageHero from '../components/PageHero.astro';
+import PageHero from 'popular:component/PageHero';
 
 export async function getStaticPaths() {
   const pages = await safeCollection('pages');

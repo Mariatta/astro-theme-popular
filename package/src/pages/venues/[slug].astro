@@ -3,8 +3,8 @@ import { STRINGS } from 'popular:config';
 import { render } from 'astro:content';
 import { safeCollection } from '../../lib/collections';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import PageHero from '../../components/PageHero.astro';
-import EventRow from '../../components/EventRow.astro';
+import PageHero from 'popular:component/PageHero';
+import EventRow from 'popular:component/EventRow';
 
 export async function getStaticPaths() {
   const venues = await safeCollection('venues');

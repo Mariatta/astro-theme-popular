@@ -2,8 +2,8 @@
 import { safeCollection } from '../lib/collections';
 import { formatStat, countSectionsIn } from '../lib/stats';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PostCard from '../components/PostCard.astro';
-import OrganizerCard from '../components/OrganizerCard.astro';
+import PostCard from 'popular:component/PostCard';
+import OrganizerCard from 'popular:component/OrganizerCard';
 import { HOME, SITE, STRINGS, SECTIONS_MAP, SOCIAL } from 'popular:config';
 import { buildOrgLd, jsonld } from '../lib/jsonld';
 
