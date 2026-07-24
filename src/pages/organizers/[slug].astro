@@ -1,5 +1,5 @@
 ---
-import { STRINGS } from '../../config';
+import { STRINGS, SECTIONS_MAP } from '../../config';
 import { render } from 'astro:content';
 import { safeCollection } from '../../lib/collections';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -17,7 +17,7 @@ const { Content } = await render(entry);
 ---
 
 <BaseLayout title={d.title} description={d.description}>
-  <PageHero eyebrow={d.role ?? STRINGS.eyebrowOrganizer} title={d.title} lead={d.description} />
+  <PageHero eyebrow={d.role ?? STRINGS.eyebrowOrganizer} backHref={`/${SECTIONS_MAP.team}/`} backLabel={STRINGS.allOrganizers} title={d.title} lead={d.description} />
   <section class="g-bg-white g-section">
     <div class="g-container">
       <div class="g-article">

@@ -14,6 +14,13 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+### Fixed
+
+- Speaker, venue and organizer profile pages now show a back link to their
+  list (matching blog posts and events); the organizer link follows the
+  renamed team section. New UI strings `allSpeakers`, `allVenues`,
+  `allOrganizers`.
+
 ### Added
 
 - Astro package: component overrides. `popular({ overrides: { Header:

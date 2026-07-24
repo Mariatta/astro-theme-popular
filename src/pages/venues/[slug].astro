@@ -20,7 +20,7 @@ const events = (await safeCollection('events'))
 ---
 
 <BaseLayout title={d.title} description={d.address}>
-  <PageHero eyebrow={STRINGS.eyebrowVenue} title={d.title} lead={d.address} />
+  <PageHero eyebrow={STRINGS.eyebrowVenue} backHref="/venues/" backLabel={STRINGS.allVenues} title={d.title} lead={d.address} />
   <section class="g-bg-white g-section">
     <div class="g-container">
       <div class="g-article" style="margin-bottom:var(--space-5)">
