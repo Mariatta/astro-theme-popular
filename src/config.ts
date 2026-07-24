@@ -28,6 +28,7 @@ export const STRINGS: Record<string, string> = {
   rsvp: 'RSVP',
   rsvpExternal: 'RSVP on Luma',
   allEvents: 'All events',
+  allVenues: 'All venues',
   comingUp: 'Coming up',
   upcomingEvents: 'Upcoming events',
   upcomingLead: 'Save your seat early, space is limited and our rooms fill up.',

@@ -23,6 +23,11 @@ const events = (await safeCollection('events'))
   <PageHero eyebrow={STRINGS.eyebrowVenue} title={d.title} lead={d.address} />
   <section class="g-bg-white g-section">
     <div class="g-container">
+      <div style="margin-bottom:var(--space-4)">
+        <a href="/venues/" style="display:inline-flex;gap:.4rem;align-items:center;font-size:var(--text-sm);font-weight:var(--weight-medium)">
+          <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> {STRINGS.allVenues}
+        </a>
+      </div>
       <div class="g-article" style="margin-bottom:var(--space-5)">
         {d.photo && <img src={d.photo} alt={d.title} style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:var(--radius-xl);box-shadow:var(--shadow-md);margin-bottom:var(--space-4)" loading="lazy" decoding="async" />}
         <div class="g-meta-line" style="margin-bottom:var(--space-3)">

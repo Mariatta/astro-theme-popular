@@ -20,6 +20,8 @@ Releases) or subscribe to the releases feed
   './src/overrides/Header.astro' } })` replaces any of Header, Footer, Hero,
   EventRow, PostCard, OrganizerCard, AuthorBox, PageHero without forking the
   theme. (Hugo adopters already override via native template lookup.)
+- Venues: an "All venues" backlink at the top of each venue page, linking to
+  the venues list, for parity with the "All events" link on event pages.
 
 ## [0.6.0] - 2026-07-23
 
