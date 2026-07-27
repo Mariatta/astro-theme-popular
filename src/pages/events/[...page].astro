@@ -52,6 +52,7 @@ const groupByYear = (events: EventEntry[]) => {
         <span class="g-eyebrow">{STRINGS.comingUp}</span>
         <h2>{STRINGS.upcomingEvents}</h2>
         <p class="g-lead">{STRINGS.upcomingLead}</p>
+        <div class="g-row" style="margin-top:var(--space-3)"><a class="g-btn g-btn--outline g-btn--sm" href="/events/calendar.ics"><i class="fa-solid fa-calendar-plus" aria-hidden="true"></i> {STRINGS.subscribeCalendar}</a></div>
       </div>
       <div class="g-stack" style="margin-top:var(--space-4);gap:var(--space-3)">
         {groupByYear(upcoming).map((group) => (
