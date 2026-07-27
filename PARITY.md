@@ -144,6 +144,16 @@ of the deployed demo set.
 3. Both example sites build: `hugo server` / `npm run build`.
 4. Bump versions together; note cross-repo changes in both changelogs.
 
+## iCalendar feed (Tier 2)
+
+`/events/calendar.ics` (Hugo `events/list.calendar.ics` + a `Calendar` output
+format; Astro `events/calendar.ics.ts`). Upcoming events plus the last 90
+days, CRLF, 75-octet folded, escaped; UID = permalink; DTSTART reuses the
+`time` parse (`parse-time.html` / `parseEventTime`) so it agrees with the
+Event JSON-LD; `cancelled` -> `STATUS:CANCELLED`. `scripts/check-ics.py`
+validates built feeds. Hugo folds rune-based (octet-exact for ASCII); Astro
+folds byte-exact. Hugo requires the section opt-in; Astro emits it always.
+
 ## Event JSON-LD (schema.org/Event)
 
 Event pages emit `schema.org/Event` JSON-LD (Hugo `partials/jsonld-event.html`,

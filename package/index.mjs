@@ -60,6 +60,7 @@ const ROUTES = {
   tags: [['/tags/[tag]/[...page]', 'tags/[tag]/[...page].astro']],
   rss: [['/rss.xml', 'rss.xml.js']],
   robots: [['/robots.txt', 'robots.txt.ts']],
+  calendar: [['/events/calendar.ics', 'events/calendar.ics.ts']],
 };
 
 const OVERRIDABLE = ['Header', 'Footer', 'Hero', 'EventRow', 'PostCard', 'OrganizerCard', 'AuthorBox', 'PageHero'];

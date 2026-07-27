@@ -46,6 +46,7 @@ export const STRINGS: Record<string, string> = {
   filterLabel: 'Filter:',
   filterAll: 'All',
   subscribeRss: 'Subscribe via RSS',
+  subscribeCalendar: 'Subscribe to calendar',
   subscribeRssTitle: 'Follow new posts in any feed reader',
   noPosts: 'No posts yet, check back soon.',
   ourSpeaker: 'Our speaker',

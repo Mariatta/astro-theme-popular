@@ -76,6 +76,9 @@ jobs:
           # FAQ: native details + FAQPage JSON-LD collected from slots
           grep -q 'g-faq__item' smoke/dist/faq-test/index.html
           grep -q 'FAQPage' smoke/dist/faq-test/index.html
+          # iCal feed: valid, UID absolute, floating DTSTART
+          python3 scripts/check-ics.py smoke/dist
+          grep -q 'BEGIN:VCALENDAR' smoke/dist/events/calendar.ics
       - name: Route opt-outs build
         working-directory: smoke
         run: |

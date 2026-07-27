@@ -14,6 +14,15 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+### Added
+
+- Calendar feed: an iCalendar (`.ics`) feed of events at
+  `/events/calendar.ics`, so members subscribe once and every future meetup
+  appears in their calendar app. Reuses the event `time` parsing (so the feed
+  and the Event structured data agree), marks cancelled events, and adds a
+  "Subscribe to calendar" link to the events list. `scripts/check-ics.py`
+  validates it in CI. Hugo: add `Calendar` to the events section outputs.
+
 ### Fixed
 
 - Speaker, venue and organizer profile pages now show a back link to their
