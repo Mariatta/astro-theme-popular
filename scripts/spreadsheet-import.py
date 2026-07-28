@@ -50,8 +50,8 @@ SAMPLE = {
         ["Sasha Chen", "First-time speaker, long-time lurker", "Sasha runs the door table and tells everyone it is the best job.", "", "", "", "https://example.com/in/sasha", ""],
     ],
     "Venues": [
-        ["Name", "Address", "Notes", "Accessibility", "Website", "Photo"],
-        ["Community Hall", "123 Your Street", "Buzz 204 at the side door; elevator to level 2.", "Step-free access via the main entrance; accessible washroom on site.", "https://example.com", ""],
+        ["Name", "Address", "Notes", "Accessibility", "Wheelchair", "Transit", "Parking", "Access", "Website", "Photo"],
+        ["Community Hall", "123 Your Street", "Buzz 204 at the side door; elevator to level 2.", "Step-free access via the main entrance; accessible washroom on site.", "Yes", "Two blocks from Central station.", "Free street parking after 6pm.", "Gender-neutral washrooms on level 2; quiet room on request.", "https://example.com", ""],
     ],
     "Sponsors": [
         ["Name", "Level", "Description", "Logo", "Website"],
@@ -209,7 +209,7 @@ def excel_serial_to_iso(value):
 def fm(fmt, pairs, socials=(), arrays=()):
     """pairs: [(key, value)]; arrays: [(key, [items])]; socials: [(label, icon, url)]."""
     if fmt == "hugo":
-        lines = ["+++"] + [f"{k} = {v if k in ('date', 'weight') else q(v)}" for k, v in pairs if v]
+        lines = ["+++"] + [f"{k} = {v if k in ('date', 'weight', 'wheelchair') else q(v)}" for k, v in pairs if v]
         for k, items in arrays:
             if items:
                 lines.append(f"{k} = {json.dumps(items)}")
@@ -217,7 +217,7 @@ def fm(fmt, pairs, socials=(), arrays=()):
             lines += ["[[social]]", f"  label = {q(label)}", f"  icon = {q(icon)}", f"  url = {q(url)}"]
         lines.append("+++")
     else:
-        lines = ["---"] + [f"{k}: {v if k in ('date', 'weight') else q(v)}" for k, v in pairs if v]
+        lines = ["---"] + [f"{k}: {v if k in ('date', 'weight', 'wheelchair') else q(v)}" for k, v in pairs if v]
         for k, items in arrays:
             if items:
                 lines.append(f"{k}: {json.dumps(items)}")
@@ -298,7 +298,9 @@ def main():
         emit(content / "venues" / f"{venue_slugs[r['name']]}.md",
              fm(fmt, [("title", r.get("name")), ("address", r.get("address")), ("photo", r.get("photo")),
                       ("notes", r.get("notes")), ("accessibility", r.get("accessibility")),
-                      ("website", r.get("website"))]))
+                      ("wheelchair", "true" if str(r.get("wheelchair", "")).strip().lower() in ("yes", "true", "1") else None),
+                      ("transit", r.get("transit")), ("parking", r.get("parking")),
+                      ("access", r.get("access")), ("website", r.get("website"))]))
 
     if tabs["sponsors"] and fmt == "astro":
         print("note: skipping Sponsors tab for Astro (sponsors are a Hugo directory-trick "
