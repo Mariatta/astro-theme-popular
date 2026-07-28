@@ -17,6 +17,19 @@
     "accessibility": {
       "type": "string"
     },
+    "wheelchair": {
+      "default": false,
+      "type": "boolean"
+    },
+    "transit": {
+      "type": "string"
+    },
+    "parking": {
+      "type": "string"
+    },
+    "access": {
+      "type": "string"
+    },
     "website": {
       "type": "string"
     },
