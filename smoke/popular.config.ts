@@ -14,6 +14,10 @@ export const SITE = {
   locale: 'en-US',
   fontAwesome: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css',
   landAcknowledgement: "Add your community's land acknowledgement or welcome statement here, this starter keeps it as a placeholder.",
+  notice: {
+    text: 'Our next season is being planned. **Stay tuned** and [say hello](https://example.com/hello).',
+    url: 'https://example.com/news',
+  },
 };
 
 /* UI strings. Translate your site by editing these values; keys map 1:1 to
@@ -47,6 +51,8 @@ export const STRINGS: Record<string, string> = {
   filterAll: 'All',
   subscribeRss: 'Subscribe via RSS',
   subscribeCalendar: 'Subscribe to calendar',
+  learnMore: 'Learn more',
+  joinChat: 'Join the chat',
   subscribeRssTitle: 'Follow new posts in any feed reader',
   noPosts: 'No posts yet, check back soon.',
   ourSpeaker: 'Our speaker',

@@ -16,6 +16,15 @@ Releases) or subscribe to the releases feed
 
 ### Added
 
+- Notice banner and designed empty states. `params.notice = { text, url? }`
+  renders a static, non-dismissible banner above the header (inline-markdown
+  text, an optional link, no JavaScript). When there are no upcoming events,
+  the home page and the events list now render a designed empty state (a
+  message, the community chat CTA if configured, and the calendar-subscribe
+  link) instead of a blank section. New UI strings `learnMore`, `joinChat`.
+
+### Added
+
 - Venue access & logistics fields: `wheelchair` (a badge on the venue and on
   events held there), `transit`, `parking`, and a freeform `access` note,
   shown as a "Getting there & access" section. Inclusion as a data-model

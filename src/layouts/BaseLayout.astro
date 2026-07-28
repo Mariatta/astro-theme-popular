@@ -10,6 +10,7 @@ import '../styles/components.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import DemoBar from '../components/DemoBar.astro';
+import Notice from '../components/Notice.astro';
 import { SITE, BRAND, STRINGS } from '../config';
 
 interface Props {
@@ -100,6 +101,7 @@ const brandCss = `html:root{${vars.join(';')}}`;
   </head>
   <body data-copy-label={STRINGS.copyCode} data-checklist-done={STRINGS.checklistDone}>
     <a class="g-skip" href="#main">{STRINGS.skipToContent}</a>
+    <Notice />
     <Header />
     <main id="main">
       <slot />
