@@ -79,6 +79,11 @@ jobs:
           # iCal feed: valid, UID absolute, floating DTSTART
           python3 scripts/check-ics.py smoke/dist
           grep -q 'BEGIN:VCALENDAR' smoke/dist/events/calendar.ics
+          # Notice banner (§5): rendered above header, inline markdown applied,
+          # optional link present
+          grep -q 'class="g-notice" role="status"' smoke/dist/index.html
+          grep -q '<strong>Stay tuned</strong>' smoke/dist/index.html
+          grep -q '>Learn more</a>' smoke/dist/index.html
       - name: Route opt-outs build
         working-directory: smoke
         run: |

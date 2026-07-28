@@ -51,6 +51,8 @@ Same behaviour, different language. When you change one, port the other.
 | Base shell         | `layouts/_default/baseof.html`         | `src/layouts/BaseLayout.astro`          |
 | Brand token overrides | `partials/brand-vars.html`          | brand block in `BaseLayout.astro`       |
 | Header / footer    | `partials/header.html`, `footer.html`  | `components/Header.astro`, `Footer.astro` |
+| Notice banner      | `partials/notice.html`                 | `components/Notice.astro`               |
+| Empty state (no upcoming events) | `partials/events-empty.html` | `components/EventsEmpty.astro`        |
 | Home               | `layouts/index.html`                   | `pages/index.astro`                     |
 | Blog list / post   | `layouts/blog/*`                       | `pages/blog/*`                          |
 | Events list / page | `layouts/events/*`                     | `pages/events/*`                        |
@@ -74,6 +76,14 @@ Same behaviour, different language. When you change one, port the other.
 `surfaceTertiary`, `textBody`, `textMuted`, `textOnBrand`, `borderSubtle`). `params.favicon` ⇄
 `SITE.favicon`, falling back to the logo on both sides. `params.customCSS` ⇄
 `SITE.customCSS` (extra stylesheet URLs, e.g. web fonts).
+
+**Notice banner invariant:** `params.notice = { text, url? }` (Hugo) ⇄
+`SITE.notice = { text, url? }` (Astro). `text` is inline-markdown rendered:
+Hugo uses `.RenderString` (inline), Astro uses `src/lib/inline-md.ts`
+(`inlineMarkdown`), which supports links, bold, emphasis, and inline code and
+HTML-escapes the rest. Both are unset by default (no banner). The empty state
+for zero upcoming events reads the same `params.community.chat = { url, label }`
+⇄ `SITE.community.chat` as §4 and the `/events/calendar.ics` feed from §1.
 
 **Pagination invariant:** list pages paginate with `/…/page/N/` URLs on both
 sides (page 1 is the section root). Page size comes from Hugo's standard

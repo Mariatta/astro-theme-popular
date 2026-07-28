@@ -4,6 +4,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/PageHero.astro';
 import EventRow from '../../components/EventRow.astro';
 import Pagination from '../../components/Pagination.astro';
+import EventsEmpty from '../../components/EventsEmpty.astro';
 import { SECTIONS, STRINGS, PAGINATION } from '../../config';
 
 /* One route serves /events/ and /events/page/N/, matching the Hugo theme's
@@ -61,9 +62,7 @@ const groupByYear = (events: EventEntry[]) => {
             {group.events.map((e) => <EventRow event={e} />)}
           </>
         ))}
-        {upcoming.length === 0 && (
-          <p class="g-lead">{STRINGS.noUpcomingEvents}</p>
-        )}
+        {upcoming.length === 0 && <EventsEmpty />}
       </div>
     </div>
   </section>

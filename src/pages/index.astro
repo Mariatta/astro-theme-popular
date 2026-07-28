@@ -4,6 +4,7 @@ import { formatStat, countSectionsIn } from '../lib/stats';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import OrganizerCard from '../components/OrganizerCard.astro';
+import EventsEmpty from '../components/EventsEmpty.astro';
 import { HOME, SITE, STRINGS, SECTIONS_MAP, SOCIAL } from '../config';
 import { buildOrgLd, jsonld } from '../lib/jsonld';
 
@@ -112,6 +113,12 @@ const orgLd = jsonld(buildOrgLd({
           </div>
         </div>
       </div>
+    </section>
+  )}
+
+  {!next && (
+    <section class="g-bg-wash-soft g-section">
+      <div class="g-container"><EventsEmpty /></div>
     </section>
   )}
 
