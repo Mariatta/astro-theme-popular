@@ -36,6 +36,17 @@ const events = (await safeCollection('events'))
             {d.accessibility && <div class="g-callout__body"><i class="fa-solid fa-universal-access" aria-hidden="true"></i> {d.accessibility}</div>}
           </div>
         )}
+        {(d.wheelchair || d.transit || d.parking || d.access) && (
+          <>
+            <div class="g-section-head" style="margin-top:var(--space-4)"><span class="g-eyebrow">{STRINGS.eyebrowVenue}</span><h2 style="font-size:var(--text-xl)">{STRINGS.gettingThere}</h2></div>
+            {d.wheelchair && <p><span class="g-badge g-badge--success g-badge--soft"><i class="fa-solid fa-wheelchair" aria-hidden="true"></i> {STRINGS.wheelchairAccessible}</span></p>}
+            <div class="g-meta-line" style="flex-direction:column;align-items:flex-start;gap:.4rem">
+              {d.transit && <span><i class="fa-solid fa-train-subway" aria-hidden="true"></i> <strong>{STRINGS.transit}:</strong> {d.transit}</span>}
+              {d.parking && <span><i class="fa-solid fa-square-parking" aria-hidden="true"></i> <strong>{STRINGS.parking}:</strong> {d.parking}</span>}
+            </div>
+            {d.access && <div class="g-prose" style="margin-top:var(--space-3)"><p>{d.access}</p></div>}
+          </>
+        )}
         <div class="g-prose" style="margin-top:var(--space-4)"><Content /></div>
       </div>
       {events.length > 0 && (

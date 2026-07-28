@@ -114,6 +114,10 @@ const venues = defineCollection({
     photo: z.string().optional(),
     notes: z.string().optional(), // arrival notes inherited by events held here
     accessibility: z.string().optional(),
+    wheelchair: z.boolean().default(false), // step-free access badge
+    transit: z.string().optional(),
+    parking: z.string().optional(),
+    access: z.string().optional(), // freeform markdown: washrooms, quiet space, childcare, scent policy
     website: z.string().optional(),
   }),
 });

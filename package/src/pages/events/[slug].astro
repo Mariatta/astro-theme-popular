@@ -74,6 +74,8 @@ const eventLd = jsonld(buildEventLd({
         <span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> {venuePage
           ? <><a href={`/venues/${venuePage.id}/`}>{venuePage.data.title}</a>{venuePage.data.address && ` · ${venuePage.data.address}`}</>
           : <>{d.venue ?? STRINGS.venueTba}{d.address && ` · ${d.address}`}</>}</span>
+        {venuePage?.data.wheelchair && <span><span class="g-badge g-badge--success g-badge--soft"><i class="fa-solid fa-wheelchair" aria-hidden="true"></i> {STRINGS.wheelchairAccessible}</span></span>}
+        {venuePage && (venuePage.data.transit || venuePage.data.parking || venuePage.data.access) && <span><a href={`/venues/${venuePage.id}/`}>{STRINGS.gettingThere}</a></span>}
         {d.speaker && <span><i class="fa-solid fa-microphone-lines" aria-hidden="true"></i> {d.speaker}</span>}
       </div>
 

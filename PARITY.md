@@ -144,6 +144,14 @@ of the deployed demo set.
 3. Both example sites build: `hugo server` / `npm run build`.
 4. Bump versions together; note cross-repo changes in both changelogs.
 
+## Venue access fields (Tier 2)
+
+Venue front matter `wheelchair` (bool), `transit`, `parking`, `access` render
+a "Getting there & access" section (omitted when empty) and put a wheelchair
+badge + access link on referencing event pages. Astro schema in
+`content.config.ts`; spreadsheet importer has matching columns (Tier 1).
+`access` renders as markdown on Hugo, plain text on Astro.
+
 ## iCalendar feed (Tier 2)
 
 `/events/calendar.ics` (Hugo `events/list.calendar.ics` + a `Calendar` output

@@ -16,6 +16,14 @@ Releases) or subscribe to the releases feed
 
 ### Added
 
+- Venue access & logistics fields: `wheelchair` (a badge on the venue and on
+  events held there), `transit`, `parking`, and a freeform `access` note,
+  shown as a "Getting there & access" section. Inclusion as a data-model
+  concern. Matching spreadsheet-importer columns. New UI strings
+  `gettingThere`, `wheelchairAccessible`, `transit`, `parking`.
+
+### Added
+
 - Calendar feed: an iCalendar (`.ics`) feed of events at
   `/events/calendar.ics`, so members subscribe once and every future meetup
   appears in their calendar app. Reuses the event `time` parsing (so the feed
