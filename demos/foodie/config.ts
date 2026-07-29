@@ -47,6 +47,8 @@ export const STRINGS: Record<string, string> = {
   subscribeCalendar: 'Subscribe to calendar',
   learnMore: 'Learn more',
   joinChat: 'Join the chat',
+  speakerInviteTitle: 'Your name here?',
+  speakerInviteBody: 'We are always looking for new voices. Lightning talks welcome, and we will help you prepare.',
   subscribeRssTitle: 'Follow new posts in any feed reader',
   noPosts: 'No posts yet, check back soon.',
   ourSpeaker: 'Our speaker',
@@ -168,6 +170,8 @@ export const SECTIONS = {
   blog: { eyebrow: 'Blog', title: 'From our community', lead: "Recaps and spotlights from Lucky Town Foodie Club, example posts showing the theme's blog." },
   events: { eyebrow: 'Events', title: 'Upcoming gatherings & announcements', lead: 'All events are free, and newcomers are always welcome.' },
   organizers: { eyebrow: 'The team', title: 'Organizers', lead: "Lucky Town Foodie Club is run entirely by volunteers. Want to help? We'd love to have you." },
+  speakers: { eyebrow: 'Speakers', title: 'Speakers', lead: 'Everyone who has taken the mic at one of our gatherings.' },
+  venues: { eyebrow: 'Venues', title: 'Venues', lead: 'The rooms that host us.' },
 };
 
 export const HOME = {

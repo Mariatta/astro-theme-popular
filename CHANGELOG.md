@@ -16,6 +16,22 @@ Releases) or subscribe to the releases feed
 
 ### Added
 
+- Community chat bridge and speaker pipeline. `params.community.chat =
+  { url, label }` adds a "Join the chat" CTA to the home hero, the footer, and
+  the no-events empty state (platform-agnostic: Discord, Slack, Matrix, Zulip).
+  The starter ships a "Start here" first-timer page (`/start/`) and a "Speak
+  with us" call-for-speakers page (`/speak/`). `params.speakers.invite = true`
+  appends a "Your name here?" card to the speakers list (new strings
+  `speakerInviteTitle`, `speakerInviteBody`), off by default.
+
+### Fixed
+
+- Astro: the speakers and venues list pages (`/speakers/`, `/venues/`) were
+  missing, so the "All speakers" / "All venues" back links on detail pages led
+  to 404s. Both list pages now exist, mirroring the Hugo templates.
+
+### Added
+
 - Notice banner and designed empty states. `params.notice = { text, url? }`
   renders a static, non-dismissible banner above the header (inline-markdown
   text, an optional link, no JavaScript). When there are no upcoming events,

@@ -63,8 +63,9 @@ Same behaviour, different language. When you change one, port the other.
 | Cards / rows       | `partials/post-card.html`, `event-row.html`, `organizer-card.html` | `components/PostCard.astro`, `EventRow.astro`, `OrganizerCard.astro` |
 | Callout            | `shortcodes/callout.html`              | `components/Callout.astro`              |
 | Author box / pages | `partials/author-box.html`, `author-line.html`, `layouts/authors/*` | `components/AuthorBox.astro`, `pages/authors/[slug].astro` |
-| Speaker pages      | `layouts/speakers/*` (reuses author-box) | `pages/speakers/[slug].astro` (AuthorBox with `base`) |
-| Venue pages        | `layouts/venues/*`                     | `pages/venues/[slug].astro`             |
+| Speaker list / pages | `layouts/speakers/{list,single}.html` | `pages/speakers/{index,[slug]}.astro` (AuthorBox with `base`) |
+| Venue list / pages | `layouts/venues/{list,single}.html`    | `pages/venues/{index,[slug]}.astro`     |
+| Speaker invite card | `partials/speaker-invite.html`        | `components/SpeakerInvite.astro`        |
 | Checklist          | `shortcodes/checklist.html`            | `components/Checklist.astro`            |
 | Site configuration | `exampleSite/hugo.toml` `[params]`     | `src/config.ts`                         |
 
@@ -84,6 +85,21 @@ Hugo uses `.RenderString` (inline), Astro uses `src/lib/inline-md.ts`
 HTML-escapes the rest. Both are unset by default (no banner). The empty state
 for zero upcoming events reads the same `params.community.chat = { url, label }`
 ⇄ `SITE.community.chat` as §4 and the `/events/calendar.ics` feed from §1.
+
+**Community chat invariant:** `params.community.chat = { url, label }` (Hugo) ⇄
+`SITE.community.chat` (Astro). When set, a "Join the chat" CTA appears in the
+home hero and a link in the footer (plus the empty-state CTA above); `rel-href`
+rules apply, external URLs get `rel="noopener" target="_blank"`. Unset by
+default. The starter/exampleSite ship a `/start/` ("Start here") first-timer
+page and a `/speak/` ("Speak with us") CFP page.
+
+**Speaker invite invariant:** `params.speakers.invite = true` (Hugo) ⇄
+`SITE.speakers.invite === true` (Astro) appends a "Your name here?" card
+(strings `speakerInviteTitle`, `speakerInviteBody`) to the speakers list,
+linking to `/speak/`. Off by default. The speakers and venues **list** pages
+(`/speakers/`, `/venues/`) exist on both sides; on Astro they are static
+`index.astro` routes whose section header text comes from `SECTIONS.speakers`
+/ `SECTIONS.venues` (mirroring the Hugo sections' `_index.md`).
 
 **Pagination invariant:** list pages paginate with `/…/page/N/` URLs on both
 sides (page 1 is the section root). Page size comes from Hugo's standard

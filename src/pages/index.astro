@@ -27,6 +27,7 @@ const nextVenue = next?.data.venueRef ? (await safeCollection('venues')).find((v
 const organizers = (await safeCollection(SECTIONS_MAP.team)).sort((a, b) => a.data.weight - b.data.weight);
 
 const h = HOME;
+const chat = (SITE as Record<string, any>).community?.chat;
 const orgLd = jsonld(buildOrgLd({
   name: SITE.title,
   url: new URL('/', Astro.site ?? Astro.url).href,
@@ -45,13 +46,18 @@ const orgLd = jsonld(buildOrgLd({
           {h.hero.eyebrow && <span class="g-eyebrow">{h.hero.eyebrow}</span>}
           <h1>{h.hero.title}</h1>
           {h.hero.lead && <p class="g-hero__lead">{h.hero.lead}</p>}
-          {h.hero.ctas && (
+          {(h.hero.ctas || chat) && (
             <div class="g-row">
-              {h.hero.ctas.map((c) => (
+              {(h.hero.ctas ?? []).map((c) => (
                 <a class={`g-btn g-btn--lg g-btn--${c.variant ?? 'primary'}`} href={c.url}>
                   {'icon' in c && c.icon && <i class={c.icon} aria-hidden="true"></i>}{c.label}
                 </a>
               ))}
+              {chat && (
+                <a class="g-btn g-btn--lg g-btn--secondary" href={chat.url} {...(chat.url.startsWith('/') ? {} : { rel: 'noopener', target: '_blank' })}>
+                  <i class="fa-solid fa-comments" aria-hidden="true"></i> {chat.label ?? STRINGS.joinChat}
+                </a>
+              )}
             </div>
           )}
         </div>

@@ -18,6 +18,8 @@ export const SITE = {
     text: 'Our next season is being planned. **Stay tuned** and [say hello](https://example.com/hello).',
     url: 'https://example.com/news',
   },
+  community: { chat: { url: 'https://example.com/chat', label: 'Join the chat' } },
+  speakers: { invite: true },
 };
 
 /* UI strings. Translate your site by editing these values; keys map 1:1 to
@@ -53,6 +55,8 @@ export const STRINGS: Record<string, string> = {
   subscribeCalendar: 'Subscribe to calendar',
   learnMore: 'Learn more',
   joinChat: 'Join the chat',
+  speakerInviteTitle: 'Your name here?',
+  speakerInviteBody: 'We are always looking for new voices. Lightning talks welcome, and we will help you prepare.',
   subscribeRssTitle: 'Follow new posts in any feed reader',
   noPosts: 'No posts yet, check back soon.',
   ourSpeaker: 'Our speaker',
@@ -167,6 +171,8 @@ export const SECTIONS = {
   blog: { eyebrow: 'Blog', title: 'Blog', lead: 'Recaps and news from your community.' },
   events: { eyebrow: 'Events', title: 'Events', lead: 'Upcoming gatherings. All events are free, and newcomers are always welcome.' },
   organizers: { eyebrow: 'The team', title: 'Organizers', lead: 'Your community is run by volunteers. Want to help? Say hi.' },
+  speakers: { eyebrow: 'Speakers', title: 'Speakers', lead: 'Everyone who has taken the mic at one of our gatherings.' },
+  venues: { eyebrow: 'Venues', title: 'Venues', lead: 'The rooms that host us.' },
 };
 
 export const HOME = {
