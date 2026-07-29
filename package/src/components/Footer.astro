@@ -1,7 +1,8 @@
 ---
-import { SITE, FOOTER, SOCIAL } from 'popular:config';
+import { SITE, FOOTER, SOCIAL, STRINGS } from 'popular:config';
 const year = new Date().getFullYear();
 const credit = (FOOTER as { credit?: { label: string; url: string } }).credit;
+const chat = (SITE as Record<string, any>).community?.chat;
 ---
 
 <footer class="g-footer">
@@ -35,6 +36,9 @@ const credit = (FOOTER as { credit?: { label: string; url: string } }).credit;
   <div class="g-footer__bottom">
     <div class="g-container">
       <span>© {year} {SITE.title}</span>
+      {chat && (
+        <span><a href={chat.url} {...(chat.url.startsWith('/') ? {} : { rel: 'noopener', target: '_blank' })}><i class="fa-solid fa-comments" aria-hidden="true"></i> {chat.label ?? STRINGS.joinChat}</a></span>
+      )}
       {credit && <span><a href={credit.url} rel="noopener">{credit.label}</a></span>}
       {FOOTER.tagline && <span>{FOOTER.tagline}</span>}
     </div>

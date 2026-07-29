@@ -14,6 +14,13 @@ export const SITE = {
   locale: 'en-US',
   fontAwesome: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css',
   landAcknowledgement: "Add your community's land acknowledgement or welcome statement here, this starter keeps it as a placeholder.",
+  // The community lives in chat between events. Set this and a "Join the chat"
+  // button appears in the home hero and footer, and in the no-events empty
+  // state. Platform-agnostic: Discord, Slack, Matrix, Zulip all fit.
+  community: { chat: { url: 'https://example.com/chat', label: 'Join the chat' } },
+  // Turn on the "Your name here?" invite card at the end of the speakers list,
+  // pointing to /speak/. Off by default.
+  speakers: { invite: true },
 };
 
 /* UI strings. Translate your site by editing these values; keys map 1:1 to
@@ -49,6 +56,8 @@ export const STRINGS: Record<string, string> = {
   subscribeCalendar: 'Subscribe to calendar',
   learnMore: 'Learn more',
   joinChat: 'Join the chat',
+  speakerInviteTitle: 'Your name here?',
+  speakerInviteBody: 'We are always looking for new voices. Lightning talks welcome, and we will help you prepare.',
   subscribeRssTitle: 'Follow new posts in any feed reader',
   noPosts: 'No posts yet, check back soon.',
   ourSpeaker: 'Our speaker',
@@ -112,6 +121,7 @@ export const NAV: {
   href: string;
   children?: { label: string; href: string }[];
 }[] = [
+  { label: 'Start here', href: '/start/' },
   {
     label: 'About',
     href: '/about/',
@@ -163,6 +173,8 @@ export const SECTIONS = {
   blog: { eyebrow: 'Blog', title: 'Blog', lead: 'Recaps and news from your community.' },
   events: { eyebrow: 'Events', title: 'Events', lead: 'Upcoming gatherings. All events are free, and newcomers are always welcome.' },
   organizers: { eyebrow: 'The team', title: 'Organizers', lead: 'Your community is run by volunteers. Want to help? Say hi.' },
+  speakers: { eyebrow: 'Speakers', title: 'Speakers', lead: 'Everyone who has taken the mic at one of our gatherings.' },
+  venues: { eyebrow: 'Venues', title: 'Venues', lead: 'The rooms that host us.' },
 };
 
 export const HOME = {

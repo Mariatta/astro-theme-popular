@@ -53,6 +53,8 @@ export const STRINGS: Record<string, string> = {
   subscribeCalendar: 'Subscribe to calendar',
   learnMore: 'Learn more',
   joinChat: 'Join the chat',
+  speakerInviteTitle: 'Your name here?',
+  speakerInviteBody: 'We are always looking for new voices. Lightning talks welcome, and we will help you prepare.',
   subscribeRssTitle: 'Follow new posts in any feed reader',
   noPosts: 'No posts yet, check back soon.',
   ourSpeaker: 'Our speaker',
@@ -184,6 +186,8 @@ export const SECTIONS = {
   blog: { eyebrow: 'News', title: 'News & obsessions', lead: 'Site news, vinyl arrivals, concert diaries and essays nobody asked for.' },
   events: { eyebrow: 'Appearances', title: 'Appearances & collabs', lead: "Fandom, pop history and why Affirmation still slaps: I'll talk about it anywhere with a microphone." },
   organizers: { eyebrow: 'The team', title: 'Organizers', lead: 'It is just me here.' },
+  speakers: { eyebrow: 'Speakers', title: 'Speakers', lead: 'Everyone who has taken the mic at one of our gatherings.' },
+  venues: { eyebrow: 'Venues', title: 'Venues', lead: 'The rooms that host us.' },
 };
 
 export const HOME = {

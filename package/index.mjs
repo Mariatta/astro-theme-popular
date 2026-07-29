@@ -55,8 +55,14 @@ const ROUTES = {
     ['/organizers/[...page]', 'organizers/[...page].astro'],
     ['/organizers/[...slug]', 'organizers/[slug].astro'],
   ],
-  speakers: [['/speakers/[...slug]', 'speakers/[slug].astro']],
-  venues: [['/venues/[...slug]', 'venues/[slug].astro']],
+  speakers: [
+    ['/speakers', 'speakers/index.astro'],
+    ['/speakers/[...slug]', 'speakers/[slug].astro'],
+  ],
+  venues: [
+    ['/venues', 'venues/index.astro'],
+    ['/venues/[...slug]', 'venues/[slug].astro'],
+  ],
   tags: [['/tags/[tag]/[...page]', 'tags/[tag]/[...page].astro']],
   rss: [['/rss.xml', 'rss.xml.js']],
   robots: [['/robots.txt', 'robots.txt.ts']],
