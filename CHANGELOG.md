@@ -14,6 +14,12 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+### Changed
+
+- Speaker, organizer, and author profile pages no longer repeat the bio: the
+  page hero is now a compact banner (eyebrow, name, back link) and the bio
+  lives only in the persona card below it.
+
 ### Added
 
 - Community chat bridge and speaker pipeline. `params.community.chat =

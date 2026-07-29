@@ -20,7 +20,7 @@ const events = (await safeCollection('events'))
 ---
 
 <BaseLayout title={entry.data.title} description={entry.data.bio}>
-  <PageHero eyebrow={STRINGS.eyebrowSpeaker} backHref="/speakers/" backLabel={STRINGS.allSpeakers} title={entry.data.title} lead={entry.data.bio} />
+  <PageHero eyebrow={STRINGS.eyebrowSpeaker} backHref="/speakers/" backLabel={STRINGS.allSpeakers} title={entry.data.title} />
   <section class="g-bg-white g-section">
     <div class="g-container">
       <div class="g-article" style="margin-bottom:var(--space-5)">
