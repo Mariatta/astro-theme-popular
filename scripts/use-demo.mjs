@@ -21,6 +21,15 @@ if (!slug || !existsSync(demo)) {
 
 rmSync(join(root, 'src/content'), { recursive: true, force: true });
 rmSync(join(root, 'public/images'), { recursive: true, force: true });
+// Astro's content layer persists collection entries in a data store under
+// node_modules/.astro (with generated types mirrored in ./.astro). The store
+// is keyed by build state, not by which demo is active, so without clearing it
+// the previous demo's entries (e.g. starter's organizers, whose photos do not
+// exist in the next demo) leak into the build as broken content. This matters
+// most in the deploy workflow, which builds every demo back-to-back in one
+// job. Drop both caches so each activation loads only this demo.
+rmSync(join(root, 'node_modules/.astro'), { recursive: true, force: true });
+rmSync(join(root, '.astro'), { recursive: true, force: true });
 cpSync(join(demo, 'content'), join(root, 'src/content'), { recursive: true });
 cpSync(join(demo, 'images'), join(root, 'public/images'), { recursive: true });
 cpSync(join(demo, 'config.ts'), join(root, 'src/config.ts'));
