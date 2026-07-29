@@ -151,6 +151,8 @@ export const SECTIONS = {
   blog: { eyebrow: 'Blog', title: 'Blog', lead: 'Recaps and news from your community.' },
   events: { eyebrow: 'Events', title: 'Events', lead: 'Upcoming gatherings. All events are free, and newcomers are always welcome.' },
   organizers: { eyebrow: 'The team', title: 'Organizers', lead: 'Your community is run by volunteers. Want to help? Say hi.' },
+  speakers: { eyebrow: 'Speakers', title: 'Speakers', lead: 'Everyone who has taken the mic at one of our gatherings.' },
+  venues: { eyebrow: 'Venues', title: 'Venues', lead: 'The rooms that host us.' },
 };
 
 export const HOME = {
