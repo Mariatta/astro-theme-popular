@@ -8,9 +8,11 @@ file ships identically in both (PARITY.md Tier 1).
 ## The release ritual
 
 1. **Write the changelog in a PR.** Move the `## [Unreleased]` entries under
-   a new `## [X.Y.Z] - date` heading (blank line after every heading). On
-   the Astro side, bump `"version"` in **both** `package.json` and
-   `package/package.json`. Use the same branch name in both repos so the
+   a new `## [X.Y.Z] - date` heading (blank line after every heading). Bump
+   the version shown in the footer: on Hugo, `popularVersion` in the theme's
+   `hugo.toml`; on Astro,
+   `"version"` in **both** `package.json` and `package/package.json` (keep the
+   two repos' versions equal). Use the same branch name in both repos so the
    parity CI pairs them; cut both branches from freshly pulled mains.
 2. **Merge the pair together.**
 3. **Dispatch the release in both repos:**
