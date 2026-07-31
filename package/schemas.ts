@@ -62,6 +62,17 @@ const events = defineCollection({
     price: z.union([z.number(), z.string()]).optional(), // machine price for Offer
     currency: z.string().optional(), // ISO currency for price
     cost: z.string().optional(), // free-text displayed cost (e.g. "15 CAD")
+    // §3 talk archive (all optional). Simple case: event-level recording/slides
+    // (single-talk meetups). Multi-talk case: a talks[] array, which wins over
+    // the event-level recording/slides when present.
+    recording: z.string().optional(),
+    slides: z.string().optional(),
+    talks: z.array(z.object({
+      title: z.string(),
+      speaker: z.string().optional(), // speaker-collection slug, same resolution as `speakers`
+      recording: z.string().optional(),
+      slides: z.string().optional(),
+    })).optional(),
   }),
 });
 

@@ -5,6 +5,7 @@ import { render } from 'astro:content';
 import { safeCollection } from '../../lib/collections';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import AuthorBox from 'popular:component/AuthorBox';
+import { eventTalks } from '../../lib/talks';
 
 export async function getStaticPaths() {
   const events = (await safeCollection('events')).filter((e) => !e.data.draft);
@@ -29,6 +30,11 @@ const speakerEntries = d.speakers.map((slug) => {
   if (!entry) throw new Error(`events/${event.id}: speaker "${slug}" matches no speaker page`);
   return entry;
 });
+
+/* §3 talks: multi-talk events render a Talks section; single-talk events
+   render recording/slides links inline in the meta block. */
+const talks = eventTalks(d, allSpeakers, event.id);
+const hasTalksArray = !!(d.talks && d.talks.length > 0);
 
 /* schema.org/Event JSON-LD (see lib/eventld; contract in PARITY.md). */
 const siteUrl = new URL('/', Astro.site ?? Astro.url).href;
@@ -77,6 +83,8 @@ const eventLd = jsonld(buildEventLd({
         {venuePage?.data.wheelchair && <span><span class="g-badge g-badge--success g-badge--soft"><i class="fa-solid fa-wheelchair" aria-hidden="true"></i> {STRINGS.wheelchairAccessible}</span></span>}
         {venuePage && (venuePage.data.transit || venuePage.data.parking || venuePage.data.access) && <span><a href={`/venues/${venuePage.id}/`}>{STRINGS.gettingThere}</a></span>}
         {d.speaker && <span><i class="fa-solid fa-microphone-lines" aria-hidden="true"></i> {d.speaker}</span>}
+        {!hasTalksArray && d.recording && <span><a href={d.recording} rel="noopener" target="_blank"><i class="fa-solid fa-circle-play" aria-hidden="true"></i> {STRINGS.watchRecording}</a></span>}
+        {!hasTalksArray && d.slides && <span><a href={d.slides} rel="noopener" target="_blank"><i class="fa-solid fa-file-lines" aria-hidden="true"></i> {STRINGS.viewSlides}</a></span>}
       </div>
 
       {(d.checkin || venueNotes) && (
@@ -94,6 +102,28 @@ const eventLd = jsonld(buildEventLd({
           <h2 style="font-size:var(--text-xl);margin:var(--space-5) 0 1rem">{STRINGS.speakers}</h2>
           <div class="g-stack" style="gap:var(--space-3)">
             {speakerEntries.map((s) => <AuthorBox entry={s} base="/speakers/" />)}
+          </div>
+        </>
+      )}
+
+      {hasTalksArray && (
+        <>
+          <h2 style="font-size:var(--text-xl);margin:var(--space-5) 0 1rem">{STRINGS.talks}</h2>
+          <div class="g-stack" style="gap:var(--space-3)">
+            {talks.map((t) => (
+              <div class="g-talk">
+                <div class="g-talk__title">{t.title}</div>
+                {t.speakerName && (
+                  <div class="g-talk__by"><i class="fa-solid fa-microphone-lines" aria-hidden="true"></i> {t.speakerSlug ? <a href={`/speakers/${t.speakerSlug}/`}>{t.speakerName}</a> : t.speakerName}</div>
+                )}
+                {(t.recording || t.slides) && (
+                  <div class="g-row" style="gap:var(--space-2)">
+                    {t.recording && <a class="g-btn g-btn--sm g-btn--outline" href={t.recording} rel="noopener" target="_blank"><i class="fa-solid fa-circle-play" aria-hidden="true"></i> {STRINGS.watchRecording}</a>}
+                    {t.slides && <a class="g-btn g-btn--sm g-btn--ghost" href={t.slides} rel="noopener" target="_blank"><i class="fa-solid fa-file-lines" aria-hidden="true"></i> {STRINGS.viewSlides}</a>}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </>
       )}

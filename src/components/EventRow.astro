@@ -2,10 +2,12 @@
 import { SITE, STRINGS } from '../config';
 import type { CollectionEntry } from 'astro:content';
 import { safeCollection } from '../lib/collections';
+import { eventHasRecording } from '../lib/talks';
 
 interface Props { event: CollectionEntry<'events'> }
 const { event } = Astro.props;
 const d = event.data;
+const hasRecording = eventHasRecording(d);
 
 /* Venue: a venueRef to the venues collection wins over the flat fields. */
 const venuePage = d.venueRef ? (await safeCollection('venues')).find((v) => v.id === d.venueRef) : undefined;
@@ -46,6 +48,9 @@ const day = d.date.toLocaleDateString(SITE.locale, { month: 'short', day: 'numer
     </div>
     {speakerLine && (
       <div class="g-event__meta"><i class="fa-solid fa-microphone-lines" aria-hidden="true"></i>{speakerLine}</div>
+    )}
+    {hasRecording && (
+      <div class="g-event__meta"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>{STRINGS.hasRecording}</div>
     )}
   </div>
   <div class="g-event__aside">

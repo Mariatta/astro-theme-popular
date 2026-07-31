@@ -64,6 +64,9 @@ const ROUTES = {
     ['/venues/[...slug]', 'venues/[slug].astro'],
   ],
   tags: [['/tags/[tag]/[...page]', 'tags/[tag]/[...page].astro']],
+  // Opt-in talk archive: injected always, but the page only builds when
+  // SITE.talks is true (gated in the route's getStaticPaths).
+  talks: [['/talks/[...page]', 'talks/[...page].astro']],
   rss: [['/rss.xml', 'rss.xml.js']],
   robots: [['/robots.txt', 'robots.txt.ts']],
   calendar: [['/events/calendar.ics', 'events/calendar.ics.ts']],
