@@ -338,3 +338,14 @@ pre:hover .g-copy, .g-copy:focus-visible { opacity: 1; }
 .g-talk__by a { color: var(--text-link); }
 .g-talk__event { font-size: var(--text-sm); color: var(--text-muted); }
 .g-talk__event a { color: var(--text-link); }
+
+/* Photo gallery + pullquote (§6). No JS, no lightbox: each photo links to its
+   full-size image (native <a>, the deliberate non-feature). */
+.g-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: var(--space-3); margin: var(--space-4) 0; }
+.g-gallery__item { margin: 0; }
+.g-gallery__item img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius-lg); display: block; }
+.g-gallery__item figcaption { font-size: var(--text-sm); color: var(--text-muted); margin-top: 0.35rem; }
+.g-pullquote { margin: var(--space-4) 0; padding-left: var(--space-4); border-left: 3px solid var(--text-link); }
+.g-pullquote blockquote { margin: 0; font-size: var(--text-lg); font-style: italic; }
+.g-pullquote figcaption { margin-top: 0.5rem; font-size: var(--text-sm); color: var(--text-muted); font-style: normal; }
+.g-pullquote figcaption::before { content: "\2014 \00a0"; }

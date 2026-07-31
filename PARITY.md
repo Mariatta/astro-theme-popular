@@ -63,6 +63,9 @@ Same behaviour, different language. When you change one, port the other.
 | List pagination    | `partials/pagination.html`             | `components/Pagination.astro`           |
 | Cards / rows       | `partials/post-card.html`, `event-row.html`, `organizer-card.html` | `components/PostCard.astro`, `EventRow.astro`, `OrganizerCard.astro` |
 | Callout            | `shortcodes/callout.html`              | `components/Callout.astro`              |
+| Photo gallery      | `shortcodes/{gallery,photo}.html`      | `components/{Gallery,Photo}.astro`      |
+| Pull-quote         | `shortcodes/pullquote.html`            | `components/Pullquote.astro`            |
+| llms.txt           | `layouts/index.llms.txt` (`LLMS` output) | `pages/llms.txt.ts`                   |
 | Author box / pages | `partials/author-box.html`, `author-line.html`, `layouts/authors/*` | `components/AuthorBox.astro`, `pages/authors/[slug].astro` |
 | Speaker list / pages | `layouts/speakers/{list,single}.html` | `pages/speakers/{index,[slug]}.astro` (AuthorBox with `base`) |
 | Venue list / pages | `layouts/venues/{list,single}.html`    | `pages/venues/{index,[slug]}.astro`     |
@@ -113,6 +116,22 @@ filterable by the parent event's tags via the shared `blog-filter.js`
 (`[data-filterbar]` + `[data-tags]`). It is opt-in: Hugo enables it by adding
 `content/talks/_index.md`, Astro by `SITE.talks = true`. Strings
 `watchRecording`, `viewSlides`, `hasRecording`, `talks`, `talksLead`.
+
+**Gallery / pull-quote invariant:** the `gallery` + `photo` shortcodes (Hugo)
+⇄ `Gallery` + `Photo` components (Astro) render a CSS-grid figure list with no
+JS and no lightbox (each photo links to its full-size image). `alt` is
+**required**: a missing `alt` fails the build (`errorf` / thrown error), which
+keeps the image-alt CI green by construction. `pullquote` (Hugo) ⇄ `Pullquote`
+(Astro) is a styled blockquote with an optional `cite`. A recap is a blog post
+tagged `recap` that uses both; the KDrama demo carries the worked example.
+
+**llms.txt invariant:** a plain-text summary at `/llms.txt` (Hugo
+`layouts/index.llms.txt` via the theme's `LLMS` home output format ⇄ Astro
+`pages/llms.txt.ts`), naming the next upcoming event (regenerated each build),
+the chat URL if set, and links to Start here / About / events / the calendar
+feed / the talks archive when those exist. Always generated on Astro; on Hugo
+the site adds `LLMS` to its home `[outputs]` (the demos, exampleSite, and docs
+site do).
 
 **Pagination invariant:** list pages paginate with `/…/page/N/` URLs on both
 sides (page 1 is the section root). Page size comes from Hugo's standard

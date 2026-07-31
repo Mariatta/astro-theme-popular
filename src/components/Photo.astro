@@ -1,0 +1,12 @@
+---
+/** A gallery photo (§6). `alt` is required: the build throws with an
+ *  actionable message when it is missing, keeping the image-alt CI green by
+ *  construction. No lightbox, the figure links to the full-size image. */
+interface Props { src: string; alt: string; caption?: string; }
+const { src, alt, caption } = Astro.props;
+if (!alt) throw new Error(`<Photo src="${src}"> requires a non-empty alt`);
+---
+<figure class="g-gallery__item">
+  <a href={src}><img src={src} alt={alt} loading="lazy" decoding="async" /></a>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
