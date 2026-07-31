@@ -93,6 +93,12 @@ jobs:
           # Speaker invite card (§7) appended to the speakers list
           grep -q 'Your name here?' smoke/dist/speakers/index.html
           grep -q 'href="/speak/"' smoke/dist/speakers/index.html
+          # Talk archive (§3): event Talks section, row recording cue, /talks/ index
+          grep -q 'g-talk__title">A recorded talk' smoke/dist/events/v1/index.html
+          grep -q 'fa-circle-play.*</i>Recording available' smoke/dist/events/index.html
+          test -f smoke/dist/talks/index.html
+          grep -q 'g-talk__title">A recorded talk' smoke/dist/talks/index.html
+          grep -q 'data-filterbar' smoke/dist/talks/index.html
       - name: Route opt-outs build
         working-directory: smoke
         run: |

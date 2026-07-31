@@ -330,3 +330,11 @@ pre:hover .g-copy, .g-copy:focus-visible { opacity: 1; }
 /* Designed empty state (§5): zero upcoming events on home + events list. */
 .g-empty { display: flex; flex-direction: column; align-items: center; gap: var(--space-3); text-align: center; padding: var(--space-5) 0; }
 .g-empty .g-lead { margin: 0; max-width: 32rem; }
+
+/* Talk archive (§3): a talk entry on the event page and the /talks/ index. */
+.g-talk { display: flex; flex-direction: column; gap: 0.4rem; padding: var(--space-3); border: var(--border-width) solid var(--border-subtle); border-radius: var(--radius-lg); background: var(--surface-card); }
+.g-talk__title { font-weight: var(--weight-medium); }
+.g-talk__by { font-size: var(--text-sm); color: var(--text-muted); }
+.g-talk__by a { color: var(--text-link); }
+.g-talk__event { font-size: var(--text-sm); color: var(--text-muted); }
+.g-talk__event a { color: var(--text-link); }

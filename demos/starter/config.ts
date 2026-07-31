@@ -21,6 +21,10 @@ export const SITE = {
   // Turn on the "Your name here?" invite card at the end of the speakers list,
   // pointing to /speak/. Off by default.
   speakers: { invite: true },
+  // Enable the /talks/ archive (aggregates every event recording and slide
+  // deck). Off by default so sites without recordings do not grow an empty
+  // page; the Hugo counterpart is creating content/talks/_index.md.
+  talks: true,
 };
 
 /* UI strings. Translate your site by editing these values; keys map 1:1 to
@@ -54,6 +58,11 @@ export const STRINGS: Record<string, string> = {
   filterAll: 'All',
   subscribeRss: 'Subscribe via RSS',
   subscribeCalendar: 'Subscribe to calendar',
+  watchRecording: 'Watch',
+  viewSlides: 'Slides',
+  hasRecording: 'Recording available',
+  talks: 'Talks',
+  talksLead: 'Every talk from our past events, with recordings and slides where we have them.',
   learnMore: 'Learn more',
   joinChat: 'Join the chat',
   speakerInviteTitle: 'Your name here?',
@@ -132,6 +141,7 @@ export const NAV: {
   },
   { label: 'Blog', href: '/blog/' },
   { label: 'Events', href: '/events/' },
+  { label: 'Talks', href: '/talks/' },
   { label: 'Handbook', href: '/handbook/' },
 ];
 

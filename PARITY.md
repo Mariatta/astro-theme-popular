@@ -56,6 +56,7 @@ Same behaviour, different language. When you change one, port the other.
 | Home               | `layouts/index.html`                   | `pages/index.astro`                     |
 | Blog list / post   | `layouts/blog/*`                       | `pages/blog/*`                          |
 | Events list / page | `layouts/events/*`                     | `pages/events/*`                        |
+| Talk archive index | `layouts/talks/list.html`              | `pages/talks/[...page].astro`           |
 | Organizers         | `layouts/organizers/list.html`         | `pages/organizers/[...page].astro`      |
 | Docs (TOC)         | `layouts/docs/single.html`             | `pages/[slug].astro` (kind `doc`)       |
 | Tag pages          | `layouts/_default/term.html`           | `pages/tags/[tag]/[...page].astro`      |
@@ -101,6 +102,18 @@ linking to `/speak/`. Off by default. The speakers and venues **list** pages
 `index.astro` routes whose section header text comes from `SECTIONS.speakers`
 / `SECTIONS.venues` (mirroring the Hugo sections' `_index.md`).
 
+**Talk archive invariant:** event front matter gains optional `recording` /
+`slides` (single-talk meetups) and a `talks[]` array (`title` required,
+`speaker` / `recording` / `slides` optional); when `talks[]` is present it
+wins and event-level `recording` / `slides` are ignored (not merged). The
+event page renders a Talks section for `talks[]` or inline recording/slides
+links for the simple case; event rows with any recording show a cue
+(`hasRecording`). The `/talks/` index aggregates every talk newest-first,
+filterable by the parent event's tags via the shared `blog-filter.js`
+(`[data-filterbar]` + `[data-tags]`). It is opt-in: Hugo enables it by adding
+`content/talks/_index.md`, Astro by `SITE.talks = true`. Strings
+`watchRecording`, `viewSlides`, `hasRecording`, `talks`, `talksLead`.
+
 **Pagination invariant:** list pages paginate with `/…/page/N/` URLs on both
 sides (page 1 is the section root). Page size comes from Hugo's standard
 `[pagination] pagerSize` ⇄ `PAGINATION.pageSize` in `config.ts`; the demo
@@ -136,7 +149,7 @@ Front-matter fields must accept the same names on both sides
 
 - **blog**: `title, date, author, authors[], guestAuthors[{name,title,photo,bio,website,social[]}], description, image, tags[], speaker{name,title,photo,bio}`
 - **authors**: `title, role, photo, bio, website, social[{label,icon,url}]`
-- **events**: `title, date (event start; upcoming/past pivot), description, image, tags[], time, venue, venueWanted, address, venueRef (venues slug; wins over flat venue fields), checkin, venueNotes (overrides the venue page's notes), speaker (one-liner fallback), speakers[] (speaker slugs), rsvp, meetupUrl (metadata only; not rendered)`
+- **events**: `title, date (event start; upcoming/past pivot), description, image, tags[], time, venue, venueWanted, address, venueRef (venues slug; wins over flat venue fields), checkin, venueNotes (overrides the venue page's notes), speaker (one-liner fallback), speakers[] (speaker slugs), rsvp, meetupUrl (metadata only; not rendered), recording, slides, talks[{title, speaker, recording, slides}] (§3; talks[] wins over event-level recording/slides)`
 - **speakers**: `title, role, photo, bio, website, social[{label,icon,url}]` (same shape as authors)
 - **venues**: `title, address, photo, notes (arrival notes, inherited by events), accessibility, website`
 - **organizers**: `title, weight, role, photo, description, social[{label,icon,url}]`

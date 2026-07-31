@@ -14,6 +14,18 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+### Added
+
+- Talk archive. Events gain optional `recording` / `slides` (single-talk
+  meetups) and a `talks[]` array (`title` required; `speaker`, `recording`,
+  `slides` optional); when `talks[]` is present it wins over the event-level
+  fields. The event page renders a Talks section (or inline links for the
+  simple case), and past-event rows show a recording cue. An opt-in `/talks/`
+  archive aggregates every talk newest-first, filterable by the parent event's
+  tags: enable it with `content/talks/_index.md` (Hugo) or `SITE.talks = true`
+  (Astro). New UI strings `watchRecording`, `viewSlides`, `hasRecording`,
+  `talks`, `talksLead`.
+
 ### Changed
 
 - Speaker, organizer, and author profile pages no longer repeat the bio: the

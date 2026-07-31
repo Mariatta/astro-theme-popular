@@ -88,6 +88,35 @@
     "cost": {
       "type": "string"
     },
+    "recording": {
+      "type": "string"
+    },
+    "slides": {
+      "type": "string"
+    },
+    "talks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "speaker": {
+            "type": "string"
+          },
+          "recording": {
+            "type": "string"
+          },
+          "slides": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title"
+        ]
+      }
+    },
     "$schema": {
       "type": "string"
     }
