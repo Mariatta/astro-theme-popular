@@ -16,6 +16,21 @@ Releases) or subscribe to the releases feed
 
 ### Added
 
+- Recaps toolkit: `gallery` + `photo` and `pullquote` shortcodes (Hugo) /
+  `Gallery` + `Photo` and `Pullquote` components (Astro). The gallery is a
+  CSS-grid figure list with no JavaScript and no lightbox (each photo links to
+  its full-size image); `alt` is required and a missing one fails the build.
+  A recap is a blog post tagged `recap` that uses both, with a worked example
+  in the KDrama demo.
+- `llms.txt`: a build-time plain-text summary for AI agents at `/llms.txt`,
+  naming the next upcoming event, how to join, and links to the key pages and
+  the calendar feed. Always generated on Astro; on Hugo the site adds `LLMS`
+  to its home outputs (the demos, exampleSite, and docs site do).
+- Docs: the deliberate non-features list (job board, member directory,
+  comments, photo lightbox) and the stats strip as the social-proof pattern.
+
+### Added
+
 - Talk archive. Events gain optional `recording` / `slides` (single-talk
   meetups) and a `talks[]` array (`title` required; `speaker`, `recording`,
   `slides` optional); when `talks[]` is present it wins over the event-level

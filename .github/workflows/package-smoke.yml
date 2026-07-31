@@ -99,6 +99,13 @@ jobs:
           test -f smoke/dist/talks/index.html
           grep -q 'g-talk__title">A recorded talk' smoke/dist/talks/index.html
           grep -q 'data-filterbar' smoke/dist/talks/index.html
+          # Gallery + pull-quote (§6) render from the package components
+          grep -q 'g-gallery__item' smoke/dist/faq-test/index.html
+          grep -q 'g-pullquote' smoke/dist/faq-test/index.html
+          # llms.txt (§8): plain-text summary, names the next event
+          test -f smoke/dist/llms.txt
+          grep -q 'Next event:' smoke/dist/llms.txt
+          grep -q 'Calendar feed' smoke/dist/llms.txt
       - name: Route opt-outs build
         working-directory: smoke
         run: |
