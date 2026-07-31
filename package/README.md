@@ -47,7 +47,7 @@ behavior. Adopt the content model in one line:
 export { collections } from 'astro-theme-popular/schemas';
 ```
 
-- **Docs & feature guides**: https://popular.mariatta.ca/
+- **Docs & feature guides**: https://mariatta.ca/hugo-theme-popular/
 - **Demos** (three fictional communities + one superfan personal site):
   https://mariatta.ca/astro-theme-popular/
 - **Changelog & releases**: https://github.com/Mariatta/astro-theme-popular/releases

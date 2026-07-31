@@ -159,4 +159,4 @@ Remember: add demo content under `demos/<name>/content/`, not only `src/`.
   license attribution must keep its real links (the Code of Conduct credits
   the Django CoC and Geek Feminism template, as CC-BY requires).
 - The theme credit is "Popular. An Astro theme by Mariatta." linking to the
-  project site https://popular.mariatta.ca/ (set per site via `FOOTER.credit`).
+  project site https://mariatta.ca/hugo-theme-popular/ (set per site via `FOOTER.credit`).

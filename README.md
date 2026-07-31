@@ -131,7 +131,7 @@ repo (Watch → Custom → Releases) or subscribe to the
 Since Astro sites vendor the theme (you copy this repo), updating means
 re-copying the files you haven't customized; the changelog tells you which
 areas moved, and the full guide is at
-[/docs/updating/](https://popular.mariatta.ca/docs/updating/).
+[/docs/updating/](https://mariatta.ca/hugo-theme-popular/docs/updating/).
 
 Releases are cut by the Release workflow after the CHANGELOG entry is merged:
 `gh workflow run release.yml -f version=X.Y.Z`, run in **both** repos. It

@@ -144,7 +144,7 @@ export const SOCIAL = [
 
 export const FOOTER = {
   tagline: "Your community's motto goes here",
-  credit: { label: 'Popular. An Astro theme by Mariatta.', url: 'https://popular.mariatta.ca/' },
+  credit: { label: 'Popular. An Astro theme by Mariatta.', url: 'https://mariatta.ca/hugo-theme-popular/' },
   columns: [
     { title: 'Community', links: [
       { label: 'About us', href: '/about/' },
