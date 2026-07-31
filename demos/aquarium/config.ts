@@ -12,6 +12,11 @@ export const SITE = {
   locale: 'en-US',
   fontAwesome: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css',
   landAcknowledgement: "Add your community's land acknowledgement or welcome statement here, this demo keeps it as a placeholder.",
+  notice: {
+    text: 'Winter break: regular meetups resume in March. **Tanks stay wet**, [pop into the chat](https://example.com/chat) any time.',
+    url: 'https://example.com/news',
+  },
+  community: { chat: { url: 'https://example.com/discord', label: 'Join our Discord' } },
 };
 
 /* UI strings. Translate your site by editing these values; keys map 1:1 to

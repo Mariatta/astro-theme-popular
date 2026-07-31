@@ -124,6 +124,7 @@ export const NAV: {
   href: string;
   children?: { label: string; href: string }[];
 }[] = [
+  { label: 'Start here', href: '/start/' },
   {
     label: 'About',
     href: '/about/',
@@ -134,6 +135,7 @@ export const NAV: {
   },
   { label: 'Blog', href: '/blog/' },
   { label: 'Events', href: '/events/' },
+  { label: 'Cook with us', href: '/speak/' },
   { label: 'Handbook', href: '/handbook/' },
 ];
 

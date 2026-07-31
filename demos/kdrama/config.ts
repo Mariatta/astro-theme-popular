@@ -14,6 +14,9 @@ export const SITE = {
   landAcknowledgement: "Add your community's land acknowledgement or welcome statement here, this demo keeps it as a placeholder.",
   // Enable the /talks/ archive of past-event recordings and slides.
   talks: true,
+  // Append the "Your name here?" invite card to the speakers list, linking to
+  // /speak/.
+  speakers: { invite: true },
 };
 
 /* UI strings. Translate your site by editing these values; keys map 1:1 to
@@ -137,6 +140,7 @@ export const NAV: {
   { label: 'Blog', href: '/blog/' },
   { label: 'Events', href: '/events/' },
   { label: 'Talks', href: '/talks/' },
+  { label: 'Speak with us', href: '/speak/' },
   { label: 'Handbook', href: '/handbook/' },
 ];
 
