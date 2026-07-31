@@ -122,7 +122,7 @@ const orgLd = jsonld(buildOrgLd({
     </section>
   )}
 
-  {!next && (
+  {events.length > 0 && !next && (
     <section class="g-bg-wash-soft g-section">
       <div class="g-container"><EventsEmpty /></div>
     </section>

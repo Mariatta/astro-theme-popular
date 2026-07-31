@@ -14,6 +14,19 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-07-31
+
+### Changed
+
+- The footer shows the theme version (e.g. `v0.7.0`) next to the Popular
+  credit, on the demos and the docs site.
+
+### Fixed
+
+- The "no upcoming events" empty state no longer renders on event-less sites
+  such as the docs site; it appears only on a community that has an events
+  section but nothing upcoming.
+
 ### Added
 
 - Recaps toolkit: `gallery` + `photo` and `pullquote` shortcodes (Hugo) /
