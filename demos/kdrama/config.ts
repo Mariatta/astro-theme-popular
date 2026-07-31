@@ -12,6 +12,8 @@ export const SITE = {
   locale: 'en-US',
   fontAwesome: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css',
   landAcknowledgement: "Add your community's land acknowledgement or welcome statement here, this demo keeps it as a placeholder.",
+  // Enable the /talks/ archive of past-event recordings and slides.
+  talks: true,
 };
 
 /* UI strings. Translate your site by editing these values; keys map 1:1 to
@@ -134,6 +136,7 @@ export const NAV: {
   },
   { label: 'Blog', href: '/blog/' },
   { label: 'Events', href: '/events/' },
+  { label: 'Talks', href: '/talks/' },
   { label: 'Handbook', href: '/handbook/' },
 ];
 
