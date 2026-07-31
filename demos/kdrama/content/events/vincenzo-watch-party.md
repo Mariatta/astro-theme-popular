@@ -11,6 +11,9 @@ speaker: "Hosted by Hana: spoiler-free intro included"
 checkin: "Show your RSVP confirmation at the door, a screenshot is fine."
 venueNotes: "Buzz 3 at the alley entrance and take the stairs to the screening room."
 rsvp: "https://example.com/rsvp"
+# Simple case: a single event-level recording (renders inline links, no
+# talks[] breakdown).
+recording: "https://example.com/watch/vincenzo-ep1-2"
 ---
 
 The mafia-lawyer classic, from the top. Newcomers especially welcome: no homework required.
