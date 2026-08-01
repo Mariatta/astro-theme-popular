@@ -3,7 +3,7 @@
  *  non-null DEMO_BAR (the theme's own demo builds). Adopters: set
  *  `export const DEMO_BAR = null;` (or remove demo content) and it disappears.
  *  Links are computed client-side by swapping the /<slug>/ path segment. */
-import * as cfg from '../config';
+import * as cfg from 'popular:config';
 const bar = import.meta.env.DEV ? null : ((cfg as Record<string, any>).DEMO_BAR ?? null);
 ---
 
