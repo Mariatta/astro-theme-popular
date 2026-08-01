@@ -3,7 +3,7 @@
  *  non-null DEMO_BAR (the theme's own demo builds). Adopters: set
  *  `export const DEMO_BAR = null;` (or remove demo content) and it disappears.
  *  Links are computed client-side by swapping the /<slug>/ path segment. */
-import * as cfg from 'popular:config';
+import * as cfg from '../config';
 const bar = import.meta.env.DEV ? null : ((cfg as Record<string, any>).DEMO_BAR ?? null);
 ---
 
@@ -22,6 +22,8 @@ const bar = import.meta.env.DEV ? null : ((cfg as Record<string, any>).DEMO_BAR 
       .g-demobar a:hover { color: #fff; background: rgba(255,255,255,0.08); }
       .g-demobar a.is-current { background: var(--color-primary); color: #fff; }
       @media (max-width: 640px) { .g-demobar__label { display: none; } }
+      /* Reserve space so the fixed demo bar never covers the footer credit. */
+      .g-footer__bottom { padding-bottom: 72px; }
     </style>
     <nav class="g-demobar" aria-label="Theme demos">
       <a href="#" data-demo-home><i class="fa-solid fa-star" aria-hidden="true"></i>Popular</a>
