@@ -30,6 +30,8 @@ in both repos. The Hugo repo is the canonical source; copy Hugo → Astro.
 | `scripts/spreadsheet-import.py`      | `scripts/spreadsheet-import.py` |
 | `scripts/sample-community.xlsx`      | `scripts/sample-community.xlsx` |
 | `data/setup-questions.json`          | `src/data/setup-questions.json` |
+| `scripts/setup.py`                   | `scripts/setup.py`           |
+| `scripts/templates/`                 | `scripts/templates/`         |
 | `scripts/tests/`                     | `scripts/tests/`             |
 | `CHANGELOG.md`                       | `CHANGELOG.md`               |
 | `RELEASING.md`                       | `RELEASING.md`               |
