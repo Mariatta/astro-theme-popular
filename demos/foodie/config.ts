@@ -150,7 +150,7 @@ export const SOCIAL = [
 
 export const FOOTER = {
   tagline: "Cook · Eat · Share, an Astro demo site for the Popular theme",
-  credit: { label: 'Popular. An Astro theme by Mariatta.', url: 'https://mariatta.ca/hugo-theme-popular/' },
+  credit: { label: 'Popular. An Astro theme by Mariatta.', url: 'https://popular.mariatta.ca/' },
   columns: [
     { title: 'Community', links: [
       { label: 'About us', href: '/about/' },

@@ -158,7 +158,7 @@ export const SOCIAL = [
 
 export const FOOTER = {
   tagline: "Truly, madly, deeply a fan site, an Astro demo site for the Popular theme",
-  credit: { label: 'Popular. An Astro theme by Mariatta.', url: 'https://mariatta.ca/hugo-theme-popular/' },
+  credit: { label: 'Popular. An Astro theme by Mariatta.', url: 'https://popular.mariatta.ca/' },
   columns: [
     { title: 'Site', links: [
       { label: 'About', href: '/about/' },
