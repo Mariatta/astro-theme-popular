@@ -143,6 +143,21 @@ sites set both to 3. Blog, tag, and organizer lists paginate their full set;
 the events list paginates past events only (upcoming always shows in full).
 Both event sections group rows under `.g-year` year headings.
 
+**Setup wizard invariant:** one schema (`data/setup-questions.json` ⇄
+`src/data/setup-questions.json`, Tier 1) feeds three surfaces. (1) `scripts/setup.py`
++ `scripts/templates/` + `scripts/tests/` are Tier 1 (byte-identical, synced).
+(2) The **agent-interview protocol** (`AGENTS.md` "Setting up a new site for a
+user") is Tier 2: same five steps in both repos, wording and paths per repo
+(`hugo.toml` / build-and-serve ⇄ `src/config.ts` / `npm run build`). (3) The
+**"Before you build" worksheet** (`site/layouts/shortcodes/setup-worksheet.html`,
+rendered on `/docs/before-you-build/`) is a Hugo-docs-only surface: the canonical
+docs site has no Astro twin, so it has no parity counterpart. It renders the
+schema via `hugo.Data` (not the deprecated `site.Data`) as a persistent
+checklist. Discipline rule shared by all three: **if something is not a schema
+question, it belongs in the handbook, not on any of these surfaces**, so adding
+a question to the schema updates the wizard, the worksheet, and the interview
+with no template edit.
+
 ## Tier 2¾: UI strings (i18n)
 
 Every user-facing string in templates comes from a named key, never hardcoded.

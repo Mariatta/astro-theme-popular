@@ -70,6 +70,36 @@ planning; both share the same conventions) instead of writing the files by hand 
 `public/` here is **source** (static assets, shared scripts), unlike Hugo
 where `public/` is build output.
 
+## Setting up a new site for a user
+
+When a user asks you to set up a **new community site** with this theme (as
+opposed to modifying the theme itself), the write path is the setup wizard, not
+your editor. Your job is the conversation; `scripts/setup.py` is the
+deterministic, tested writer.
+
+1. **Read the schema** `src/data/setup-questions.json`. It is the single source
+   of truth (the Hugo repo renders it as a "Before you build" worksheet page).
+   Interview the user **conversationally, grouped by topic** (identity, then
+   governance, then links), one topic per exchange, never as a flat form dump.
+2. **For `decision`-layer questions, advise, don't just collect.** Use the
+   question's `help` text, surface its `handbook_url`, and bring relevant
+   context ("you mentioned you're a PyLadies chapter, the PSF Code of Conduct is
+   the conventional choice there"). "Not decided yet" is a valid answer: record
+   it and move on.
+3. **Write the answers to `answers.json`** and run
+   `python3 scripts/setup.py --answers answers.json --dry-run`. Show the user
+   the diff. On approval, run the same command **without** `--dry-run`. It
+   detects Astro automatically and writes `src/config.ts` plus the seed pages.
+4. **Never hand-edit `src/config.ts` or the seed pages to apply the answers.**
+   The script owns that write path; hand-edits drift from the schema and skip
+   the `DECISIONS.md` audit trail.
+5. **After writing, `npm run build`** and confirm it succeeds. Point the user at
+   `DECISIONS.md` for what was decided and the "Still open" list for what to
+   come back to.
+
+Same invariant as the wizard: sugar, never a gate. A user who wants to skip the
+interview entirely still gets a clean starter config.
+
 ## Parity rules (important)
 
 - `src/styles/**` and `public/scripts/**` must stay **byte-identical** with
