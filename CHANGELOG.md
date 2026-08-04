@@ -14,6 +14,26 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-08-04
+
+### Added
+
+- Setup wizard (`scripts/setup.py`): a stdlib, zero-dependency script that reads
+  the shared question schema (`setup-questions.json`) and writes a site's config,
+  a Code of Conduct seed page, a `DECISIONS.md` audit trail (what was decided,
+  with handbook citations, and what is still open) and a `.popular-setup.json`
+  answer record. Sugar, never a gate: skip every question and you get the clean
+  starter config. Runs interactively or non-interactively (`--answers file.json`)
+  for the agent and CI paths, detects Hugo vs Astro, and never overwrites an
+  existing file without `--force` (`--dry-run` shows the diff). Works by
+  placeholder substitution on templates, so it never parses or re-serializes
+  your config.
+- "Before you build" worksheet (`/docs/before-you-build/`): a docs page that
+  renders the same question schema as a persistent checklist (decisions to
+  settle first, then values to have ready), so the worksheet cannot drift from
+  the wizard. The quick-start is rewritten around the wizard, and both repos'
+  `AGENTS.md` gain a "Setting up a new site for a user" interview protocol.
+
 ## [0.7.0] - 2026-07-31
 
 ### Changed

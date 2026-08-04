@@ -28,3 +28,37 @@ jobs:
             || { echo "::notice::sibling repo not clonable; parity check skipped"; exit 0; }
           bash scripts/sync-shared.sh --check
 
+  e2e-wizard:
+    # End-to-end: activate the neutral starter, run scripts/setup.py over it with
+    # a fixture answer file, then confirm the generated site builds and the
+    # answers reached the rendered HTML.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Activate the starter, then run the wizard over it
+        run: |
+          npm run demo:starter
+          POPULAR_SETUP_DATE=2026-08-03 python3 scripts/setup.py \
+            --site . --format astro \
+            --answers scripts/tests/fixtures/answers-full.json --force
+      - name: Wizard wrote the config, seed, audit trail and answer record
+        run: |
+          test -f DECISIONS.md
+          test -f .popular-setup.json
+          grep -q "PyLadies Vancouver" src/config.ts
+          grep -q "coc@" src/content/pages/code-of-conduct.mdx
+      - name: The generated site builds
+        run: npm run build
+      - name: The answers reached the rendered HTML
+        run: |
+          grep -rq "PyLadies Vancouver" dist
+          grep -rq "coc@" dist
+
