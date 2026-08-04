@@ -14,6 +14,8 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-08-04
+
 ### Added
 
 - Setup wizard (`scripts/setup.py`): a stdlib, zero-dependency script that reads
@@ -26,6 +28,11 @@ Releases) or subscribe to the releases feed
   existing file without `--force` (`--dry-run` shows the diff). Works by
   placeholder substitution on templates, so it never parses or re-serializes
   your config.
+- "Before you build" worksheet (`/docs/before-you-build/`): a docs page that
+  renders the same question schema as a persistent checklist (decisions to
+  settle first, then values to have ready), so the worksheet cannot drift from
+  the wizard. The quick-start is rewritten around the wizard, and both repos'
+  `AGENTS.md` gain a "Setting up a new site for a user" interview protocol.
 
 ## [0.7.0] - 2026-07-31
 
