@@ -88,8 +88,11 @@ deterministic, tested writer.
    it and move on.
 3. **Write the answers to `answers.json`** and run
    `python3 scripts/setup.py --answers answers.json --dry-run`. Show the user
-   the diff. On approval, run the same command **without** `--dry-run`. It
-   detects Astro automatically and writes `src/config.ts` plus the seed pages.
+   the diff. On approval, run it **without** `--dry-run`; it detects Astro and
+   writes `src/config.ts` plus the seed pages. The template already ships a
+   `src/config.ts`, so the first apply also needs `--force` (the wizard refuses
+   to overwrite an existing config otherwise); drop `--force` on later runs so
+   they still protect the user's edits.
 4. **Never hand-edit `src/config.ts` or the seed pages to apply the answers.**
    The script owns that write path; hand-edits drift from the schema and skip
    the `DECISIONS.md` audit trail.
