@@ -122,6 +122,61 @@ class TestWriteContract(unittest.TestCase):
                              "PyLadies Vancouver")
 
 
+class TestPristineAdoption(unittest.TestCase):
+    """Tier-1, so it runs in both repos: exercise whichever framework's starters
+    this repo actually ships (Hugo theme -> hugo, Astro template -> astro)."""
+
+    def _native(self):
+        root = os.path.abspath(os.path.join(_HERE, "..", ".."))
+        if os.path.exists(os.path.join(root, "exampleSite", "hugo.toml")):
+            return "hugo", "hugo.toml", "content/code-of-conduct.md"
+        return "astro", "src/config.ts", "src/content/pages/code-of-conduct.mdx"
+
+    def _write(self, d, rel, text):
+        p = os.path.join(d, rel)
+        os.makedirs(os.path.dirname(p) or ".", exist_ok=True)
+        with open(p, "w", encoding="utf-8") as fh:
+            fh.write(text)
+
+    def test_map_finds_starter_files(self):
+        fmt, cfg, coc = self._native()
+        m = setup.pristine_map(fmt)
+        self.assertTrue(m.get(cfg), "no starter configs discovered")
+        self.assertTrue(m.get(coc), "no starter CoC pages discovered")
+
+    def test_adopts_unedited_starter_config(self):
+        fmt, cfg, _ = self._native()
+        adopt = setup.pristine_map(fmt)
+        with tempfile.TemporaryDirectory() as d:
+            self._write(d, cfg, sorted(adopt[cfg])[0])  # an unedited, theme-shipped config
+            files = setup.build_outputs(d, fmt, setup.find_schema(), FULL)
+            with redirect_stdout(io.StringIO()):
+                rc = setup.apply(d, files, force=False, dry_run=False, adopt=adopt)
+            self.assertEqual(rc, 0, "an unedited starter config is adopted without --force")
+            self.assertIn("PyLadies Vancouver", open(os.path.join(d, cfg)).read())
+
+    def test_adopts_unedited_starter_coc(self):
+        fmt, cfg, coc = self._native()
+        adopt = setup.pristine_map(fmt)
+        with tempfile.TemporaryDirectory() as d:
+            self._write(d, cfg, sorted(adopt[cfg])[0])
+            self._write(d, coc, sorted(adopt[coc])[0])
+            files = setup.build_outputs(d, fmt, setup.find_schema(), FULL)
+            with redirect_stdout(io.StringIO()):
+                rc = setup.apply(d, files, force=False, dry_run=False, adopt=adopt)
+            self.assertEqual(rc, 0, "an unedited starter CoC page is adopted too")
+
+    def test_refuses_customized_config(self):
+        fmt, cfg, _ = self._native()
+        adopt = setup.pristine_map(fmt)
+        with tempfile.TemporaryDirectory() as d:
+            self._write(d, cfg, "// I have edited this by hand\n")  # not pristine
+            files = setup.build_outputs(d, fmt, setup.find_schema(), FULL)
+            with redirect_stdout(io.StringIO()):
+                rc = setup.apply(d, files, force=False, dry_run=False, adopt=adopt)
+            self.assertEqual(rc, 1, "a customized config is still protected")
+
+
 class TestDecisions(unittest.TestCase):
     def test_answered_and_open(self):
         os.environ["POPULAR_SETUP_DATE"] = "2026-08-03"

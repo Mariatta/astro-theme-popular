@@ -14,6 +14,15 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+### Changed
+
+- The setup wizard now adopts an unedited starter file automatically. On a fresh
+  site (copied from `exampleSite` or a demo, or the Astro template), it writes
+  the config and Code of Conduct seed page without `--force`, because their bytes
+  still match what the theme shipped. The moment you hand-edit either one, the
+  wizard protects it again and asks for `--force`. First-time setup no longer
+  needs a flag.
+
 ## [0.8.0] - 2026-08-04
 
 ### Added
