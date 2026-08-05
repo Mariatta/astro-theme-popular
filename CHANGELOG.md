@@ -14,6 +14,8 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+## [0.8.1] - 2026-08-04
+
 ### Changed
 
 - The setup wizard now adopts an unedited starter file automatically. On a fresh
