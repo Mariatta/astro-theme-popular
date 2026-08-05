@@ -4,6 +4,8 @@
 
 > **AI agents / automated contributors:** read [AGENTS.md](AGENTS.md) before making changes. It covers the repo layout, build commands, the Hugo-Astro parity contract, and content conventions.
 
+> **Something not working as described?** Please [open an issue](https://github.com/Mariatta/astro-theme-popular/issues/new) as you hit it, while it's fresh: a command that errors, a step that's out of date, a sentence you had to read three times. Setup friction is a bug. Reporting it here gets it fixed upstream, so the next person doesn't hit the same wall. Fixes to the wording are welcome as pull requests too.
+
 **Popular** is a warm, community-first [Astro](https://astro.build) theme for meetups, user
 groups and small events. Named after the song *Pop!ular* by Darren Hayes, it is the Astro
 twin of [`hugo-theme-popular`](https://github.com/Mariatta/hugo-theme-popular). Both share the same design tokens, CSS,
