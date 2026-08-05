@@ -23,9 +23,17 @@ jobs:
           # branch name in both repos; prefer that branch on the sibling so
           # paired PRs check against each other, not against stale main.
           BRANCH="${{ github.head_ref || github.ref_name }}"
-          git clone --depth 1 -b "$BRANCH" https://github.com/Mariatta/hugo-theme-popular ../hugo-theme-popular 2>/dev/null \
-            || git clone --depth 1 https://github.com/Mariatta/hugo-theme-popular ../hugo-theme-popular 2>/dev/null \
-            || { echo "::notice::sibling repo not clonable; parity check skipped"; exit 0; }
+          # Say which ref we ended up comparing against. Without this a paired
+          # PR whose sibling branch is not pushed yet fails as "DRIFT" on the
+          # shared CHANGELOG, which reads like real drift and is not.
+          if git clone --depth 1 -b "$BRANCH" https://github.com/Mariatta/hugo-theme-popular ../hugo-theme-popular; then
+            echo "::notice::compared against hugo-theme-popular branch $BRANCH"
+          elif git clone --depth 1 https://github.com/Mariatta/hugo-theme-popular ../hugo-theme-popular; then
+            echo "::warning::hugo-theme-popular has no branch $BRANCH; compared against its default branch. If this is a paired PR, push the sibling branch and re-run."
+          else
+            echo "::notice::sibling repo not clonable; parity check skipped"; exit 0
+          fi
+          git -C ../hugo-theme-popular log --oneline -1
           bash scripts/sync-shared.sh --check
 
   e2e-wizard:
