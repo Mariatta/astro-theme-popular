@@ -128,7 +128,7 @@ jobs:
           # the custom Header replaces the theme default
           grep -q 'OVERRIDDEN HEADER' dist-overrides/index.html
           ! grep -q 'g-navlinks' dist-overrides/index.html
-      - name: Subpath build (base: '/sub')
+      - name: "Subpath build (base: /sub)"
         working-directory: smoke
         run: |
           npx astro build --config astro.base.config.mjs
