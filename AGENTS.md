@@ -170,6 +170,28 @@ Remember: add demo content under `demos/<name>/content/`, not only `src/`.
   specificity tie and revert the site to the theme's default palette.
 - `FOOTER` takes `tagline`, optional `credit: { label, url }`, and `columns`.
 
+## Subpath deployments (URL rules)
+
+A site can set `base` in `astro.config.mjs` (a GitHub project page lives at
+`user.github.io/repo/`). Astro rewrites the asset URLs it generates itself and
+nothing else, so **never write a bare path into a component**:
+
+- Any href or src: `href={withBase('/events/')}`, `src={withBase(d.image)}`
+- Absolute URLs (canonical, `og:image`, JSON-LD, feeds, `llms.txt`):
+  `absoluteUrl('/events/', Astro.site ?? Astro.url)`. `Astro.site` is the bare
+  origin and does not carry the base; `Astro.url.pathname` does.
+
+Both live in `lib/url.ts` (exported publicly as `astro-theme-popular/url`) and
+pass external URLs, `mailto:`, `tel:` and `#fragment` through untouched, so
+applying one is never wrong: use them for adopter config values and content
+front matter too, which is what keeps adopters from having to rewrite links.
+Markdown bodies are handled by a hook the integration registers on the active
+Markdown processor (`markdown.rehypePlugins` set from an integration is
+silently ignored by Astro 7's default processor). `package-smoke.yml` builds
+`smoke/astro.base.config.mjs` with `base: '/sub'` and fails on any internal
+`href`/`src` left at the root. The Hugo twin uses `rel-href.html`,
+`rel-src.html` and `abs-url.html` (PARITY.md, "Subpath deployments").
+
 ## Naming conventions
 
 - Config keys, component props, and frontmatter fields must be descriptive

@@ -308,6 +308,39 @@ plus `og:locale`, `og:image:alt` (from optional `imageAlt`), and a
 Sitemap URLs are absolute and subpath-safe. Astro-only dependency:
 `@astrojs/sitemap` (config-only, no client JS).
 
+## Subpath deployments: base-aware URLs (Tier 2)
+
+A site can be served from a path rather than a domain root (`user.github.io/repo/`,
+the default free host). Both implementations must emit every internal URL with
+that prefix; neither framework does it for hand-written paths.
+
+| Concern | Hugo | Astro |
+|---|---|---|
+| Configure it | `baseURL = "https://x.dev/repo/"` | `base: '/repo'` in `astro.config.mjs` (adopters of the npm package set it in their own config) |
+| Relative URL helper | `partials/rel-href.html` (hrefs), `partials/rel-src.html` (images and assets) | `withBase()` in `lib/url.ts` |
+| Absolute URL helper | `partials/abs-url.html` | `absoluteUrl()` in `lib/url.ts` |
+| Markdown bodies | `_markup/render-link.html`, `_markup/render-image.html` | hast/rehype hook registered by the integration (package) or `astro.config.mjs` (template copy) |
+
+Rules that keep the two in step:
+
+- **Every URL a template writes by hand goes through a helper.** That includes
+  paths built from content ids (`/events/{id}/`), adopter-authored config values
+  (nav, CTAs, socials, footer links) and content front matter (`image`, `photo`,
+  `logo`, `rsvp`, `website`). The helpers pass external URLs, `mailto:`, `tel:`
+  and `#fragment` through untouched, so applying one is never wrong.
+- **Both leading-slash and bare paths must work.** The content model is shared,
+  so `/images/x.png` (Astro's convention) and `images/x.png` (Hugo's) appear in
+  the same front-matter field. Hugo's `relURL`/`absURL` drop the subpath on the
+  first spelling, which is the trap `rel-src.html`/`abs-url.html` exist to close.
+- **Absolute URLs are origin + base + path.** Canonical, `og:image`, JSON-LD,
+  `llms.txt`, the iCalendar feed, RSS and the robots `Sitemap:` line all include
+  the subpath. In Astro, `Astro.site` is the bare origin and does not; only
+  `Astro.url.pathname` already carries the base.
+- **CI runs a subpath build in both repos** and fails on any `href`/`src` left at
+  the server root (Hugo: `image-alt.yml`; Astro: `package-smoke.yml` builds
+  `smoke/astro.base.config.mjs`). The check deliberately does not exempt
+  `href="/"`: the header brand link is exactly that.
+
 ## Computed stat values
 
 Home-page stat `value`s: `@pastEventCount` and `@count:<section>[:rounded]`

@@ -5,6 +5,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import AuthorBox from '../../components/AuthorBox.astro';
 import { SUPPORT, SITE, STRINGS, SECTIONS_MAP } from '../../config';
 import { buildBlogPostingLd, jsonld } from '../../lib/jsonld';
+import { withBase, absoluteUrl } from '../../lib/url';
 import { tagSlug } from '../../lib/slugs';
 
 export async function getStaticPaths() {
@@ -33,14 +34,14 @@ const bylineNames = [
   ...d.guestAuthors.map((g) => g.name),
 ];
 if (!bylineNames.length && d.author) bylineNames.push(d.author);
-const siteUrl = new URL('/', Astro.site ?? Astro.url).href;
+const siteUrl = absoluteUrl('/', Astro.site ?? Astro.url);
 const postLd = jsonld(buildBlogPostingLd({
   title: d.title,
   datePublished: d.date.toISOString().replace(/\.\d{3}Z$/, 'Z'),
   dateModified: d.date.toISOString().replace(/\.\d{3}Z$/, 'Z'),
   authors: bylineNames,
-  image: d.image ? new URL(d.image, Astro.site ?? Astro.url).href : undefined,
-  url: new URL(`/blog/${post.id}/`, Astro.site ?? Astro.url).href,
+  image: d.image ? absoluteUrl(d.image, Astro.site ?? Astro.url) : undefined,
+  url: absoluteUrl(`/blog/${post.id}/`, Astro.site ?? Astro.url),
   description: d.description,
   siteTitle: SITE.title,
   siteUrl,
@@ -55,12 +56,12 @@ const byline = bylineNames.length > 1
   <article>
     <header class="g-pagehero">
       <div class="g-container" style="padding-block:var(--space-6) var(--space-5)">
-        <a href="/blog/" style="display:inline-flex;gap:.4rem;align-items:center;font-size:var(--text-sm);font-weight:var(--weight-medium);margin-bottom:1rem">
+        <a href={withBase('/blog/')} style="display:inline-flex;gap:.4rem;align-items:center;font-size:var(--text-sm);font-weight:var(--weight-medium);margin-bottom:1rem">
           <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> {STRINGS.allPosts}
         </a>
         {d.tags.length > 0 && (
           <div class="g-row" style="margin-bottom:.8rem">
-            {d.tags.map((t) => <a class="g-tag" href={`/tags/${tagSlug(t)}/`}>{t}</a>)}
+            {d.tags.map((t) => <a class="g-tag" href={withBase(`/tags/${tagSlug(t)}/`)}>{t}</a>)}
           </div>
         )}
         <h1 style="margin:0">{d.title}</h1>
@@ -74,7 +75,7 @@ const byline = bylineNames.length > 1
      <div class="g-article">
       {d.image && (
         <div style="border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-md);margin-bottom:var(--space-5)">
-          <img src={d.image} alt={d.title} style="width:100%;aspect-ratio:16/9;object-fit:cover" />
+          <img src={withBase(d.image)} alt={d.title} style="width:100%;aspect-ratio:16/9;object-fit:cover" />
         </div>
       )}
 
@@ -84,7 +85,7 @@ const byline = bylineNames.length > 1
         <>
           <h2 style="font-size:var(--text-xl);margin:var(--space-5) 0 1rem">{STRINGS.ourSpeaker}</h2>
           <div class="g-persona">
-            {d.speaker.photo && <img class="g-persona__img" src={d.speaker.photo} alt={d.speaker.name} />}
+            {d.speaker.photo && <img class="g-persona__img" src={withBase(d.speaker.photo)} alt={d.speaker.name} />}
             <div>
               <div class="g-persona__name">{d.speaker.name}</div>
               {d.speaker.title && <div class="g-persona__role">{d.speaker.title}</div>}
@@ -107,13 +108,13 @@ const byline = bylineNames.length > 1
       {(older || newer) && (
         <nav class="g-postnav" aria-label={STRINGS.postNavigation}>
           {older ? (
-            <a class="g-postnav__card" href={`/blog/${older.id}/`} rel="prev">
+            <a class="g-postnav__card" href={withBase(`/blog/${older.id}/`)} rel="prev">
               <span class="g-postnav__label"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> {STRINGS.olderPost}</span>
               <span class="g-postnav__title">{older.data.title}</span>
             </a>
           ) : <span></span>}
           {newer && (
-            <a class="g-postnav__card g-postnav__card--next" href={`/blog/${newer.id}/`} rel="next">
+            <a class="g-postnav__card g-postnav__card--next" href={withBase(`/blog/${newer.id}/`)} rel="next">
               <span class="g-postnav__label">{STRINGS.newerPost} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
               <span class="g-postnav__title">{newer.data.title}</span>
             </a>
@@ -126,7 +127,7 @@ const byline = bylineNames.length > 1
           <div class="g-callout__body">{SUPPORT.text}</div>
           <div class="g-row">
             {SUPPORT.ctas.map((c) => (
-              <a class={`g-btn g-btn--${c.variant ?? 'secondary'}`} href={c.url}>{c.label}</a>
+              <a class={`g-btn g-btn--${c.variant ?? 'secondary'}`} href={withBase(c.url)}>{c.label}</a>
             ))}
           </div>
         </div>

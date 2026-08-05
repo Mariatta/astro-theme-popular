@@ -5,6 +5,7 @@ import { safeCollection } from '../../lib/collections';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/PageHero.astro';
 import EventRow from '../../components/EventRow.astro';
+import { withBase } from '../../lib/url';
 
 export async function getStaticPaths() {
   const venues = await safeCollection('venues');
@@ -24,10 +25,10 @@ const events = (await safeCollection('events'))
   <section class="g-bg-white g-section">
     <div class="g-container">
       <div class="g-article" style="margin-bottom:var(--space-5)">
-        {d.photo && <img src={d.photo} alt={d.title} style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:var(--radius-xl);box-shadow:var(--shadow-md);margin-bottom:var(--space-4)" loading="lazy" decoding="async" />}
+        {d.photo && <img src={withBase(d.photo)} alt={d.title} style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:var(--radius-xl);box-shadow:var(--shadow-md);margin-bottom:var(--space-4)" loading="lazy" decoding="async" />}
         <div class="g-meta-line" style="margin-bottom:var(--space-3)">
           {d.address && <span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> {d.address}</span>}
-          {d.website && <span><i class="fa-solid fa-globe" aria-hidden="true"></i> <a href={d.website} rel="noopener" target="_blank">{STRINGS.website}</a></span>}
+          {d.website && <span><i class="fa-solid fa-globe" aria-hidden="true"></i> <a href={withBase(d.website)} rel="noopener" target="_blank">{STRINGS.website}</a></span>}
         </div>
         {(d.notes || d.accessibility) && (
           <div class="g-callout" style="flex-direction:column;gap:.6rem">

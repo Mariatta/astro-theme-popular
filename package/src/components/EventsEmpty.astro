@@ -4,6 +4,7 @@
  *  (if SITE.community.chat is set, §4) and the calendar-subscribe link.
  *  The calendar link mirrors Hugo's OutputFormats "Calendar" endpoint. */
 import { SITE, STRINGS } from 'popular:config';
+import { withBase } from '../lib/url';
 
 const chat = (SITE as Record<string, any>).community?.chat;
 const calendar = '/events/calendar.ics';
@@ -15,11 +16,11 @@ const external = (url: string) => !url.startsWith('/');
   {(chat?.url || calendar) && (
     <div class="g-row" style="justify-content:center">
       {chat?.url && (
-        <a class="g-btn g-btn--primary" href={chat.url} {...(external(chat.url) ? { rel: 'noopener', target: '_blank' } : {})}>
+        <a class="g-btn g-btn--primary" href={withBase(chat.url)} {...(external(chat.url) ? { rel: 'noopener', target: '_blank' } : {})}>
           <i class="fa-solid fa-comments" aria-hidden="true"></i> {chat.label ?? STRINGS.joinChat}
         </a>
       )}
-      <a class="g-btn g-btn--outline" href={calendar}><i class="fa-solid fa-calendar-plus" aria-hidden="true"></i> {STRINGS.subscribeCalendar}</a>
+      <a class="g-btn g-btn--outline" href={withBase(calendar)}><i class="fa-solid fa-calendar-plus" aria-hidden="true"></i> {STRINGS.subscribeCalendar}</a>
     </div>
   )}
 </div>

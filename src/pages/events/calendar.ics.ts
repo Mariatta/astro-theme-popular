@@ -1,12 +1,13 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { buildIcs } from '../../lib/ical';
+import { absoluteUrl } from '../../lib/url';
 import { SITE } from '../../config';
 
 /* iCalendar feed: upcoming events plus the last 90 days. Mirrors the Hugo
    events/list.calendar.ics template. */
 export const GET: APIRoute = async ({ site }) => {
-  const base = site ?? new URL('https://example.com');
+  const origin = site ?? new URL('https://example.com');
   const cutoff = Date.now() - 90 * 24 * 60 * 60 * 1000;
   const events = (await getCollection('events'))
     .filter((e) => !e.data.draft && +e.data.date >= cutoff)
@@ -25,7 +26,7 @@ export const GET: APIRoute = async ({ site }) => {
         checkin: e.data.checkin,
         cancelled: e.data.cancelled,
         venue: v ? { name: v.data.title, address: v.data.address } : (e.data.venue ? { name: e.data.venue } : undefined),
-        permalink: new URL(`/events/${e.id}/`, base).href,
+        permalink: absoluteUrl(`/events/${e.id}/`, origin),
       };
     }),
     { siteTitle: SITE.title, dtstamp, durationMinutes: duration },

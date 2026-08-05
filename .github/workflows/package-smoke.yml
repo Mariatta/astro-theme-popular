@@ -128,3 +128,29 @@ jobs:
           # the custom Header replaces the theme default
           grep -q 'OVERRIDDEN HEADER' dist-overrides/index.html
           ! grep -q 'g-navlinks' dist-overrides/index.html
+      - name: Subpath build (base: '/sub')
+        working-directory: smoke
+        run: |
+          npx astro build --config astro.base.config.mjs
+          # Every internal href and src must carry the base. Astro rewrites the
+          # asset URLs it emits itself, so anything left at the root is a path
+          # the theme wrote by hand and forgot to pass through withBase()
+          # (src/lib/url.ts). Note this deliberately does NOT exempt href="/":
+          # the brand link in the header is exactly that, and is the first
+          # thing to break on a subpath install.
+          if grep -rhoE '(href|src)="/[^"]*"' dist-base --include='*.html' \
+             | grep -vE '^(href|src)="/sub' | sort -u | grep .; then
+            echo "::error::internal link or asset missing the base prefix"; exit 1
+          fi
+          # Absolute URLs (feeds, canonicals, structured data) resolve against
+          # site + base, not site alone.
+          grep -q '<link rel="canonical" href="https://example.com/sub/blog/hello-world/"' dist-base/blog/hello-world/index.html
+          grep -q 'Sitemap: https://example.com/sub/sitemap-index.xml' dist-base/robots.txt
+          grep -q 'https://example.com/sub/events/' dist-base/llms.txt
+          grep -q 'https://example.com/sub/events/' dist-base/events/calendar.ics
+          grep -q '<link>https://example.com/sub/blog/hello-world/</link>' dist-base/rss.xml
+          # markdown bodies: links and images written as /path get the prefix
+          grep -q 'href="/sub/handbook/"' dist-base/runbooks/index.html
+          python3 ../scripts/check-image-alt.py dist-base
+          python3 ../scripts/check-jsonld.py dist-base
+          python3 ../scripts/check-ics.py dist-base

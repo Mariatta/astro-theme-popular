@@ -3,6 +3,7 @@
  *  venue, sorted by name. Fixes the "All venues" backlink on venue detail pages,
  *  which previously had no list page to point to. */
 import { safeCollection } from '../../lib/collections';
+import { withBase } from '../../lib/url';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/PageHero.astro';
 import { SECTIONS } from '../../config';
@@ -19,10 +20,10 @@ const sec = SECTIONS.venues;
         {venues.map((v) => (
           <article class="g-card">
             {v.data.photo && (
-              <a href={`/venues/${v.id}/`} class="g-card__media"><img src={v.data.photo} alt={v.data.title} loading="lazy" decoding="async" /></a>
+              <a href={withBase(`/venues/${v.id}/`)} class="g-card__media"><img src={withBase(v.data.photo)} alt={v.data.title} loading="lazy" decoding="async" /></a>
             )}
             <div class="g-card__body">
-              <h3 class="g-card__title"><a href={`/venues/${v.id}/`}>{v.data.title}</a></h3>
+              <h3 class="g-card__title"><a href={withBase(`/venues/${v.id}/`)}>{v.data.title}</a></h3>
               {v.data.address && <div class="g-card__text"><i class="fa-solid fa-location-dot" aria-hidden="true"></i> {v.data.address}</div>}
             </div>
           </article>

@@ -1,4 +1,6 @@
 ---
+import { withBase } from '../lib/url';
+
 interface Props {
   eyebrow?: string;
   title: string;
@@ -12,7 +14,7 @@ const { eyebrow, title, lead, backHref, backLabel } = Astro.props;
 <header class="g-pagehero">
   <div class="g-container">
     {backHref && (
-      <div style="margin-bottom:1rem"><a href={backHref} style="display:inline-flex;gap:.4rem;align-items:center;font-size:var(--text-sm);font-weight:var(--weight-medium)"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> {backLabel}</a></div>
+      <div style="margin-bottom:1rem"><a href={withBase(backHref)} style="display:inline-flex;gap:.4rem;align-items:center;font-size:var(--text-sm);font-weight:var(--weight-medium)"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> {backLabel}</a></div>
     )}
     {eyebrow && <span class="g-eyebrow">{eyebrow}</span>}
     <h1>{title}</h1>

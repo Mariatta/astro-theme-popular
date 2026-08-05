@@ -4,6 +4,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from 'popular:component/PageHero';
 import PostCard from 'popular:component/PostCard';
 import Pagination from '../../components/Pagination.astro';
+import { withBase } from '../../lib/url';
 import { SECTIONS, STRINGS, PAGINATION } from 'popular:config';
 
 /* One route serves /blog/ and /blog/page/N/, matching the Hugo theme's
@@ -41,7 +42,7 @@ const { current, total, posts, tags } = Astro.props;
             </>
           )}
         </div>
-        <a class="g-btn g-btn--ghost g-btn--sm" href="/rss.xml" title={STRINGS.subscribeRssTitle}><i class="fa-solid fa-rss" aria-hidden="true"></i> {STRINGS.subscribeRss}</a>
+        <a class="g-btn g-btn--ghost g-btn--sm" href={withBase('/rss.xml')} title={STRINGS.subscribeRssTitle}><i class="fa-solid fa-rss" aria-hidden="true"></i> {STRINGS.subscribeRss}</a>
       </div>
       <div class="g-grid-3">
         {posts.map((p) => <PostCard post={p} />)}

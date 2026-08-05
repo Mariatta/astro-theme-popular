@@ -1,6 +1,7 @@
 ---
 import { SITE, STRINGS } from '../../config';
 import { buildEventLd, jsonld } from '../../lib/eventld';
+import { withBase, absoluteUrl } from '../../lib/url';
 import { render } from 'astro:content';
 import { safeCollection } from '../../lib/collections';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -37,8 +38,8 @@ const talks = eventTalks(d, allSpeakers, event.id);
 const hasTalksArray = !!(d.talks && d.talks.length > 0);
 
 /* schema.org/Event JSON-LD (see lib/eventld; contract in PARITY.md). */
-const siteUrl = new URL('/', Astro.site ?? Astro.url).href;
-const permalink = new URL(`/events/${event.id}/`, Astro.site ?? Astro.url).href;
+const siteUrl = absoluteUrl('/', Astro.site ?? Astro.url);
+const permalink = absoluteUrl(`/events/${event.id}/`, Astro.site ?? Astro.url);
 const eventLd = jsonld(buildEventLd({
   title: d.title,
   date: d.date,
@@ -49,7 +50,7 @@ const eventLd = jsonld(buildEventLd({
   price: (d as any).price,
   currency: (d as any).currency,
   cost: (d as any).cost,
-  image: d.image ? new URL(d.image, Astro.site ?? Astro.url).href : undefined,
+  image: d.image ? absoluteUrl(d.image, Astro.site ?? Astro.url) : undefined,
   rsvp: d.rsvp,
   permalink,
   siteUrl,
@@ -66,7 +67,7 @@ const eventLd = jsonld(buildEventLd({
     <header class="g-pagehero">
       <div class="g-container" style="padding-block:var(--space-6) var(--space-5)">
         <div style="margin-bottom:1rem">
-          <a href="/events/" style="display:inline-flex;gap:.4rem;align-items:center;font-size:var(--text-sm);font-weight:var(--weight-medium)">
+          <a href={withBase('/events/')} style="display:inline-flex;gap:.4rem;align-items:center;font-size:var(--text-sm);font-weight:var(--weight-medium)">
             <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> {STRINGS.allEvents}
           </a>
         </div>
@@ -78,13 +79,13 @@ const eventLd = jsonld(buildEventLd({
      <div class="g-article">
       <div class="g-meta-line" style="margin-bottom:var(--space-4)">
         <span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> {venuePage
-          ? <><a href={`/venues/${venuePage.id}/`}>{venuePage.data.title}</a>{venuePage.data.address && ` · ${venuePage.data.address}`}</>
+          ? <><a href={withBase(`/venues/${venuePage.id}/`)}>{venuePage.data.title}</a>{venuePage.data.address && ` · ${venuePage.data.address}`}</>
           : <>{d.venue ?? STRINGS.venueTba}{d.address && ` · ${d.address}`}</>}</span>
         {venuePage?.data.wheelchair && <span><span class="g-badge g-badge--success g-badge--soft"><i class="fa-solid fa-wheelchair" aria-hidden="true"></i> {STRINGS.wheelchairAccessible}</span></span>}
-        {venuePage && (venuePage.data.transit || venuePage.data.parking || venuePage.data.access) && <span><a href={`/venues/${venuePage.id}/`}>{STRINGS.gettingThere}</a></span>}
+        {venuePage && (venuePage.data.transit || venuePage.data.parking || venuePage.data.access) && <span><a href={withBase(`/venues/${venuePage.id}/`)}>{STRINGS.gettingThere}</a></span>}
         {d.speaker && <span><i class="fa-solid fa-microphone-lines" aria-hidden="true"></i> {d.speaker}</span>}
-        {!hasTalksArray && d.recording && <span><a href={d.recording} rel="noopener" target="_blank"><i class="fa-solid fa-circle-play" aria-hidden="true"></i> {STRINGS.watchRecording}</a></span>}
-        {!hasTalksArray && d.slides && <span><a href={d.slides} rel="noopener" target="_blank"><i class="fa-solid fa-file-lines" aria-hidden="true"></i> {STRINGS.viewSlides}</a></span>}
+        {!hasTalksArray && d.recording && <span><a href={withBase(d.recording)} rel="noopener" target="_blank"><i class="fa-solid fa-circle-play" aria-hidden="true"></i> {STRINGS.watchRecording}</a></span>}
+        {!hasTalksArray && d.slides && <span><a href={withBase(d.slides)} rel="noopener" target="_blank"><i class="fa-solid fa-file-lines" aria-hidden="true"></i> {STRINGS.viewSlides}</a></span>}
       </div>
 
       {(d.checkin || venueNotes) && (
@@ -114,12 +115,12 @@ const eventLd = jsonld(buildEventLd({
               <div class="g-talk">
                 <div class="g-talk__title">{t.title}</div>
                 {t.speakerName && (
-                  <div class="g-talk__by"><i class="fa-solid fa-microphone-lines" aria-hidden="true"></i> {t.speakerSlug ? <a href={`/speakers/${t.speakerSlug}/`}>{t.speakerName}</a> : t.speakerName}</div>
+                  <div class="g-talk__by"><i class="fa-solid fa-microphone-lines" aria-hidden="true"></i> {t.speakerSlug ? <a href={withBase(`/speakers/${t.speakerSlug}/`)}>{t.speakerName}</a> : t.speakerName}</div>
                 )}
                 {(t.recording || t.slides) && (
                   <div class="g-row" style="gap:var(--space-2)">
-                    {t.recording && <a class="g-btn g-btn--sm g-btn--outline" href={t.recording} rel="noopener" target="_blank"><i class="fa-solid fa-circle-play" aria-hidden="true"></i> {STRINGS.watchRecording}</a>}
-                    {t.slides && <a class="g-btn g-btn--sm g-btn--ghost" href={t.slides} rel="noopener" target="_blank"><i class="fa-solid fa-file-lines" aria-hidden="true"></i> {STRINGS.viewSlides}</a>}
+                    {t.recording && <a class="g-btn g-btn--sm g-btn--outline" href={withBase(t.recording)} rel="noopener" target="_blank"><i class="fa-solid fa-circle-play" aria-hidden="true"></i> {STRINGS.watchRecording}</a>}
+                    {t.slides && <a class="g-btn g-btn--sm g-btn--ghost" href={withBase(t.slides)} rel="noopener" target="_blank"><i class="fa-solid fa-file-lines" aria-hidden="true"></i> {STRINGS.viewSlides}</a>}
                   </div>
                 )}
               </div>
@@ -130,7 +131,7 @@ const eventLd = jsonld(buildEventLd({
 
       {d.rsvp && (
         <div class="g-row" style="margin-top:var(--space-4)">
-          <a class="g-btn g-btn--primary g-btn--lg" href={d.rsvp}><i class="fa-solid fa-calendar" aria-hidden="true"></i> {STRINGS.rsvpExternal}</a>
+          <a class="g-btn g-btn--primary g-btn--lg" href={withBase(d.rsvp)}><i class="fa-solid fa-calendar" aria-hidden="true"></i> {STRINGS.rsvpExternal}</a>
         </div>
       )}
      </div>

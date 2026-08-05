@@ -4,6 +4,7 @@ import { STRINGS } from 'popular:config';
  *  and docs pages (handbook, runbooks, rendered with a scroll-spy TOC). */
 import { render } from 'astro:content';
 import { safeCollection } from '../lib/collections';
+import { withBase } from '../lib/url';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from 'popular:component/PageHero';
 
@@ -18,7 +19,7 @@ export async function getStaticPaths() {
       const cut = entry.id.lastIndexOf('/');
       const parentEntry = cut > 0 ? byId.get(entry.id.slice(0, cut)) : undefined;
       const parent = parentEntry
-        ? { href: `/${parentEntry.id}/`, label: parentEntry.data.shortTitle ?? parentEntry.data.title }
+        ? { href: withBase(`/${parentEntry.id}/`), label: parentEntry.data.shortTitle ?? parentEntry.data.title }
         : null;
       return { params: { slug: entry.id }, props: { entry, kind: 'page', parent } };
     }),
@@ -47,7 +48,7 @@ const allDocs = (await safeCollection('docs')).sort(
         {allDocs.map((e) => (
           <>
             <a
-              href={`/${e.id}/`}
+              href={withBase(`/${e.id}/`)}
               class={e.id === entry.id ? 'is-active' : ''}
               aria-current={e.id === entry.id ? 'page' : undefined}
             >{e.data.title}</a>

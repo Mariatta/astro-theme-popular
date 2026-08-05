@@ -12,6 +12,7 @@ import Footer from '../components/Footer.astro';
 import DemoBar from '../components/DemoBar.astro';
 import Notice from '../components/Notice.astro';
 import { SITE, BRAND, STRINGS } from '../config';
+import { withBase, absoluteUrl } from '../lib/url';
 
 interface Props {
   title?: string;
@@ -27,6 +28,8 @@ const ogLocale = SITE.locale.replace('-', '_');
 const pageTitle = title ? `${title} · ${SITE.title}` : `${SITE.title}, ${SITE.tagline}`;
 const desc = description ?? SITE.description;
 const ogImage = image ?? SITE.ogImage;
+/* Astro.url.pathname already carries the base; Astro.site does not, hence
+   absoluteUrl() for everything built from a path we wrote ourselves. */
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
 
 /* Brand overrides: mirrors the Hugo theme's brand-vars.html partial. */
@@ -85,16 +88,16 @@ const brandCss = `html:root{${vars.join(';')}}`;
     {article?.modified && <meta property="article:modified_time" content={article.modified.toISOString()} />}
     {article?.authors?.map((a) => <meta property="article:author" content={a} />)}
     {article?.tags?.map((t) => <meta property="article:tag" content={t} />)}
-    {ogImage && <meta property="og:image" content={new URL(ogImage, Astro.site ?? Astro.url)} />}
+    {ogImage && <meta property="og:image" content={absoluteUrl(ogImage, Astro.site ?? Astro.url)} />}
     {ogImage && <meta property="og:image:alt" content={imageAlt ?? title ?? SITE.title} />}
     <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
-    <link rel="icon" href={SITE.favicon ?? SITE.logo} />
-    <link rel="alternate" type="application/rss+xml" title={(SITE as Record<string, any>).rssTitle ?? SITE.title} href={new URL("rss.xml", Astro.site ?? Astro.url)} />
+    <link rel="icon" href={withBase(SITE.favicon ?? SITE.logo)} />
+    <link rel="alternate" type="application/rss+xml" title={(SITE as Record<string, any>).rssTitle ?? SITE.title} href={absoluteUrl('/rss.xml', Astro.site ?? Astro.url)} />
     {SITE.fontAwesome.includes("font-awesome/6.5.2/css/all.min.css") && <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />}
     <link rel="stylesheet" href={SITE.fontAwesome} referrerpolicy="no-referrer"
       integrity={SITE.fontAwesome.includes("font-awesome/6.5.2/css/all.min.css") ? "sha384-PPIZEGYM1v8zp5Py7UjFb79S58UeqCL9pYVnVPURKEqvioPROaVAJKKLzvH2rDnI" : undefined}
       crossorigin={SITE.fontAwesome.includes("font-awesome/6.5.2/css/all.min.css") ? "anonymous" : undefined} />
-    {(SITE as Record<string, any>).customCSS?.map((href: string) => <link rel="stylesheet" href={href} />)}
+    {(SITE as Record<string, any>).customCSS?.map((href: string) => <link rel="stylesheet" href={withBase(href)} />)}
     {noindex && <meta name="robots" content="noindex,follow" />}
     <style is:inline id="popular-brand" set:html={brandCss}></style>
     <slot name="head" />
@@ -108,10 +111,10 @@ const brandCss = `html:root{${vars.join(';')}}`;
     </main>
     <Footer />
     <DemoBar />
-    <script src="/scripts/nav.js" is:inline defer></script>
-    <script src="/scripts/checklist.js" is:inline defer></script>
-    <script src="/scripts/toc.js" is:inline defer></script>
-    <script src="/scripts/blog-filter.js" is:inline defer></script>
-    <script src="/scripts/copy-code.js" is:inline defer></script>
+    <script src={withBase('/scripts/nav.js')} is:inline defer></script>
+    <script src={withBase('/scripts/checklist.js')} is:inline defer></script>
+    <script src={withBase('/scripts/toc.js')} is:inline defer></script>
+    <script src={withBase('/scripts/blog-filter.js')} is:inline defer></script>
+    <script src={withBase('/scripts/copy-code.js')} is:inline defer></script>
   </body>
 </html>

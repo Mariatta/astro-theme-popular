@@ -20,6 +20,7 @@
   "exports": {
     ".": "./index.mjs",
     "./schemas": "./schemas.ts",
+    "./url": "./src/lib/url.ts",
     "./pages/*": "./src/pages/*",
     "./components/*": "./src/components/*",
     "./layouts/*": "./src/layouts/*",
