@@ -46,9 +46,12 @@ jobs:
       - name: Activate the starter, then run the wizard over it
         run: |
           npm run demo:starter
+          # No --force: an unedited starter's config and CoC page are pristine,
+          # so the wizard adopts them. A regression would exit 1 here.
           POPULAR_SETUP_DATE=2026-08-03 python3 scripts/setup.py \
             --site . --format astro \
-            --answers scripts/tests/fixtures/answers-full.json --force
+            --answers scripts/tests/fixtures/answers-full.json | tee /tmp/wizard.out
+          grep -q "Adopted unedited starter file" /tmp/wizard.out
       - name: Wizard wrote the config, seed, audit trail and answer record
         run: |
           test -f DECISIONS.md

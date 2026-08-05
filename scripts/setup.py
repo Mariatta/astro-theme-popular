@@ -21,6 +21,7 @@ wizard's own strings are English-only in v1.
 import argparse
 import datetime
 import difflib
+import glob
 import json
 import os
 import re
@@ -223,9 +224,48 @@ def build_decisions(questions, answers, revisit=False):
     return "\n".join(lines)
 
 
+# --------------------------------------------------------- pristine adoption
+def pristine_map(fmt):
+    """For each file the wizard writes, the set of theme-shipped starter/demo
+    contents that count as 'pristine'. A site file whose current bytes are in
+    this set was shipped by the theme, not written by the organizer, so the
+    wizard may adopt (overwrite) it on a first run without --force. The instant
+    someone edits it, the byte-match breaks and the file is protected again.
+
+    Located relative to the script, so it works from an installed theme
+    (Hugo: themes/popular/; Astro: the template repo itself)."""
+    root = os.path.abspath(os.path.join(HERE, ".."))
+
+    def contents(paths):
+        out = set()
+        for p in paths:
+            try:
+                with open(p, encoding="utf-8") as fh:
+                    out.add(fh.read())
+            except OSError:
+                pass
+        return out
+
+    if fmt == "hugo":
+        return {
+            "hugo.toml": contents(
+                [os.path.join(root, "exampleSite", "hugo.toml")]
+                + glob.glob(os.path.join(root, "demos", "*", "hugo.toml"))),
+            "content/code-of-conduct.md": contents(
+                [os.path.join(root, "exampleSite", "content", "code-of-conduct.md")]
+                + glob.glob(os.path.join(root, "demos", "*", "content", "code-of-conduct.md"))),
+        }
+    return {
+        "src/config.ts": contents(glob.glob(os.path.join(root, "demos", "*", "config.ts"))),
+        "src/content/pages/code-of-conduct.mdx": contents(
+            glob.glob(os.path.join(root, "demos", "*", "content", "pages", "code-of-conduct.mdx"))),
+    }
+
+
 # ------------------------------------------------------------- write contract
-def apply(site, files, force, dry_run):
-    diffs, refused = [], []
+def apply(site, files, force, dry_run, adopt=None):
+    adopt = adopt or {}
+    diffs, refused, adopted = [], [], []
     for rel, content in sorted(files.items()):
         path = os.path.join(site, rel)
         old = ""
@@ -234,10 +274,15 @@ def apply(site, files, force, dry_run):
                 old = fh.read()
         if old == content:
             continue
+        # A file whose current content is exactly what the theme shipped as a
+        # starter/demo is not the organizer's work: adopt it without --force.
+        pristine = os.path.exists(path) and old in adopt.get(rel, ())
         # DECISIONS.md is append-friendly; never refuse on it.
-        protected = os.path.exists(path) and rel != "DECISIONS.md" and not force
+        protected = os.path.exists(path) and rel != "DECISIONS.md" and not force and not pristine
         if protected:
             refused.append(rel)
+        elif pristine and not force:
+            adopted.append(rel)
         diff = "".join(difflib.unified_diff(old.splitlines(True), content.splitlines(True),
                                             f"a/{rel}", f"b/{rel}"))
         diffs.append(diff)
@@ -254,6 +299,8 @@ def apply(site, files, force, dry_run):
         os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
         with open(path, "w", encoding="utf-8") as fh:
             fh.write(content)
+    if adopted:
+        print("Adopted unedited starter file(s): " + ", ".join(sorted(adopted)) + ".")
     print(f"\nWrote {len(files)} file(s). See DECISIONS.md for what was decided and what's still open.")
     return 0
 
@@ -265,7 +312,8 @@ def main(argv=None):
     ap.add_argument("--answers", help="JSON {id: value} file; non-interactive")
     ap.add_argument("--format", choices=["hugo", "astro"], help="override format detection")
     ap.add_argument("--dry-run", action="store_true", help="print the diff, write nothing")
-    ap.add_argument("--force", action="store_true", help="overwrite existing config/seed files")
+    ap.add_argument("--force", action="store_true",
+                    help="overwrite files you have customized (unedited starter files are adopted automatically)")
     args = ap.parse_args(argv)
 
     site = os.path.abspath(args.site)
@@ -282,7 +330,7 @@ def main(argv=None):
         fail("no --answers file and not a TTY; nothing to do", code=2)
 
     files = build_outputs(site, fmt, questions, answers)
-    return apply(site, files, args.force, args.dry_run)
+    return apply(site, files, args.force, args.dry_run, pristine_map(fmt))
 
 
 if __name__ == "__main__":
