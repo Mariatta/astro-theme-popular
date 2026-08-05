@@ -1,13 +1,16 @@
 ---
 import { SITE, NAV, CTA, STRINGS } from 'popular:config';
+import { withBase } from '../lib/url';
 const path = Astro.url.pathname;
-const isActive = (href: string) => href !== '/' && path.startsWith(href.replace(/\/$/, ''));
+/* Astro.url.pathname carries the site's base, so a config href has to gain
+   it too, or nothing is ever active on a subpath install. */
+const isActive = (href: string) => href !== '/' && path.startsWith(withBase(href).replace(/\/$/, ''));
 ---
 
 <header class="g-header">
   <nav class="g-container g-nav" aria-label={STRINGS.primaryNav}>
-    <a class="g-brand" href="/">
-      {SITE.logo && <img src={SITE.logo} alt={SITE.title} />}
+    <a class="g-brand" href={withBase('/')}>
+      {SITE.logo && <img src={withBase(SITE.logo)} alt={SITE.title} />}
       <span class="g-brand__text">
         <span class="g-brand__name">{SITE.brandName ?? SITE.title}</span>
         {SITE.brandSub && <span class="g-brand__sub">{SITE.brandSub}</span>}
@@ -23,25 +26,25 @@ const isActive = (href: string) => href !== '/' && path.startsWith(href.replace(
         l.children?.length ? (
           <li class="has-sub">
             <a
-              href={l.href}
+              href={withBase(l.href)}
               class={isActive(l.href) || l.children.some((c) => isActive(c.href)) ? 'is-active' : ''}
             >
               {l.label}<i class="fa-solid fa-chevron-down g-navlinks__caret" aria-hidden="true"></i>
             </a>
             <ul class="g-navlinks__sub">
               {l.children.map((c) => (
-                <li><a href={c.href} class={isActive(c.href) ? 'is-active' : ''}>{c.label}</a></li>
+                <li><a href={withBase(c.href)} class={isActive(c.href) ? 'is-active' : ''}>{c.label}</a></li>
               ))}
             </ul>
           </li>
         ) : (
-          <li><a href={l.href} class={isActive(l.href) ? 'is-active' : ''}>{l.label}</a></li>
+          <li><a href={withBase(l.href)} class={isActive(l.href) ? 'is-active' : ''}>{l.label}</a></li>
         )
       )}
     </ul>
 
     {CTA && (
-      <a class="g-btn g-btn--primary g-btn--sm g-nav__cta" href={CTA.url}>
+      <a class="g-btn g-btn--primary g-btn--sm g-nav__cta" href={withBase(CTA.url)}>
         {CTA.icon && <i class={CTA.icon} aria-hidden="true"></i>}{CTA.label}
       </a>
     )}

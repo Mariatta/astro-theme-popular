@@ -107,6 +107,14 @@ The helper scripts have a dependency-free test suite: `python3 -m unittest disco
 Static output: deploy `dist/` to Netlify, GitHub Pages, Cloudflare Pages, etc.
 Set `site` in `astro.config.mjs` for correct RSS/OG URLs.
 
+**Serving from a subpath** (a GitHub project page lives at `user.github.io/repo/`)
+is supported: set `const base = '/my-community'` at the top of
+`astro.config.mjs`, and every link, image and feed URL picks it up. Your config
+and content need no changes, paths keep their leading slash. If you write your
+own components or pages, wrap the URLs you emit:
+`import { withBase } from './lib/url'` (npm consumers:
+`from 'astro-theme-popular/url'`), then `href={withBase('/about/')}`.
+
 ## Support the theme
 
 Popular is free and MIT licensed. If it made your community site easier, there are three

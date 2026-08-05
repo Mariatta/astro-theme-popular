@@ -1,13 +1,14 @@
 ---
 import { SITE, SECTIONS_MAP } from 'popular:config';
 import { tagSlug } from '../lib/slugs';
+import { withBase } from '../lib/url';
 import type { CollectionEntry } from 'astro:content';
 import { safeCollection } from '../lib/collections';
 
 interface Props { post: CollectionEntry<'blog'> }
 const { post } = Astro.props;
 const d = post.data;
-const href = `/blog/${post.id}/`;
+const href = withBase(`/blog/${post.id}/`);
 // Mirror of the Hugo card's date guard: this component can render date-less
 // content, so omit the date (and, below, the whole eyebrow) when absent.
 const hasDate = d.date instanceof Date && !Number.isNaN(+d.date) && d.date.getFullYear() > 1;
@@ -22,7 +23,7 @@ if (!names.length && d.author) names.push(d.author);
 
 <article class="g-card" data-tags={d.tags.join(',')}>
   {d.image && (
-    <a href={href} class="g-card__media"><img src={d.image} alt={d.title} loading="lazy" decoding="async" /></a>
+    <a href={href} class="g-card__media"><img src={withBase(d.image)} alt={d.title} loading="lazy" decoding="async" /></a>
   )}
   <div class="g-card__body">
     {(month || names.length > 0) && (
@@ -33,7 +34,7 @@ if (!names.length && d.author) names.push(d.author);
     {d.tags.length > 0 && (
       <div class="g-card__footer">
         {d.tags.slice(0, 2).map((t) => (
-          <a class="g-tag" href={`/tags/${tagSlug(t)}/`}>{t}</a>
+          <a class="g-tag" href={withBase(`/tags/${tagSlug(t)}/`)}>{t}</a>
         ))}
       </div>
     )}

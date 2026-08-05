@@ -8,6 +8,7 @@
 import { SITE, STRINGS } from 'popular:config';
 import { safeCollection } from '../../lib/collections';
 import { collectTalks } from '../../lib/talks';
+import { withBase } from '../../lib/url';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from 'popular:component/PageHero';
 
@@ -41,13 +42,13 @@ const fmt = (d: Date) => d.toLocaleDateString(SITE.locale, { month: 'short', day
           <div class="g-talk" data-tags={t.tags.join(',')}>
             <div class="g-talk__title">{t.title}</div>
             {t.speakerName && (
-              <div class="g-talk__by"><i class="fa-solid fa-microphone-lines" aria-hidden="true"></i> {t.speakerSlug ? <a href={`/speakers/${t.speakerSlug}/`}>{t.speakerName}</a> : t.speakerName}</div>
+              <div class="g-talk__by"><i class="fa-solid fa-microphone-lines" aria-hidden="true"></i> {t.speakerSlug ? <a href={withBase(`/speakers/${t.speakerSlug}/`)}>{t.speakerName}</a> : t.speakerName}</div>
             )}
-            <div class="g-talk__event"><i class="fa-solid fa-calendar-day" aria-hidden="true"></i> <a href={`/events/${t.eventId}/`}>{t.eventTitle}</a> · {fmt(t.date)}</div>
+            <div class="g-talk__event"><i class="fa-solid fa-calendar-day" aria-hidden="true"></i> <a href={withBase(`/events/${t.eventId}/`)}>{t.eventTitle}</a> · {fmt(t.date)}</div>
             {(t.recording || t.slides) && (
               <div class="g-row" style="gap:var(--space-2)">
-                {t.recording && <a class="g-btn g-btn--sm g-btn--outline" href={t.recording} rel="noopener" target="_blank"><i class="fa-solid fa-circle-play" aria-hidden="true"></i> {STRINGS.watchRecording}</a>}
-                {t.slides && <a class="g-btn g-btn--sm g-btn--ghost" href={t.slides} rel="noopener" target="_blank"><i class="fa-solid fa-file-lines" aria-hidden="true"></i> {STRINGS.viewSlides}</a>}
+                {t.recording && <a class="g-btn g-btn--sm g-btn--outline" href={withBase(t.recording)} rel="noopener" target="_blank"><i class="fa-solid fa-circle-play" aria-hidden="true"></i> {STRINGS.watchRecording}</a>}
+                {t.slides && <a class="g-btn g-btn--sm g-btn--ghost" href={withBase(t.slides)} rel="noopener" target="_blank"><i class="fa-solid fa-file-lines" aria-hidden="true"></i> {STRINGS.viewSlides}</a>}
               </div>
             )}
           </div>

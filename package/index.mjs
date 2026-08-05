@@ -20,18 +20,94 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sitemap from '@astrojs/sitemap';
 
-/* loading="lazy" decoding="async" on markdown images (CWV parity with the
-   Hugo render hook). Dependency-free HAST walk. */
-function rehypeLazyImages() {
+/* Markdown body hooks: loading="lazy" decoding="async" on images (CWV parity
+   with Hugo's render-image.html), and site-absolute links/images prefixed with
+   the configured `base` so `![](/images/x.png)` and `[the handbook](/handbook/)`
+   survive a subpath install (parity with Hugo's render hooks passing paths
+   through relURL). Everything the templates write is handled by src/lib/url.ts
+   instead; MDX component props (<Photo src="/images/x.png">) are JSX, not HAST,
+   so the components prefix those themselves.
+
+   Registered on the active markdown processor rather than through
+   `markdown.rehypePlugins`: Astro 7's default processor is Sätteri, which does
+   not run remark/rehype plugins at all, and plugins added by an integration
+   after config validation are never coerced, so they are silently dropped
+   (Astro warns "your satteri processor doesn't run them" on every build).
+   Mutating processor.options is what does reach both Markdown and MDX: Astro
+   preserves the processor's reference identity, and @astrojs/mdx reads the same
+   object at astro:config:done. */
+
+const prefixPath = (value, prefix) =>
+  typeof value === 'string' &&
+  prefix &&
+  value.startsWith('/') &&
+  !value.startsWith('//') &&
+  value !== prefix &&
+  !value.startsWith(`${prefix}/`)
+    ? prefix + value
+    : value;
+
+/* Sätteri shape: filtered visitors, mutations through ctx.setProperty. */
+function satteriMarkdownHooks(prefix) {
+  return {
+    name: 'popular-markdown-hooks',
+    element: [
+      {
+        filter: ['img'],
+        visit(node, ctx) {
+          const props = node.properties ?? {};
+          if (!('loading' in props)) ctx.setProperty(node, 'loading', 'lazy');
+          if (!('decoding' in props)) ctx.setProperty(node, 'decoding', 'async');
+          const src = prefixPath(props.src, prefix);
+          if (src !== props.src) ctx.setProperty(node, 'src', src);
+        },
+      },
+      {
+        filter: ['a'],
+        visit(node, ctx) {
+          const props = node.properties ?? {};
+          const href = prefixPath(props.href, prefix);
+          if (href !== props.href) ctx.setProperty(node, 'href', href);
+        },
+      },
+    ],
+  };
+}
+
+/* unified/rehype shape, for a site that opted into `markdown.processor:
+   unified({...})` (or set the deprecated markdown.rehypePlugins, which Astro
+   coerces into one). Dependency-free HAST walk. */
+function rehypeMarkdownHooks(prefix) {
   const walk = (node) => {
-    if (node.tagName === 'img') {
-      node.properties = node.properties || {};
-      if (!('loading' in node.properties)) node.properties.loading = 'lazy';
-      if (!('decoding' in node.properties)) node.properties.decoding = 'async';
+    const props = node.properties;
+    if (props) {
+      if (node.tagName === 'img') {
+        if (!('loading' in props)) props.loading = 'lazy';
+        if (!('decoding' in props)) props.decoding = 'async';
+        props.src = prefixPath(props.src, prefix);
+      }
+      if (node.tagName === 'a') props.href = prefixPath(props.href, prefix);
     }
     (node.children || []).forEach(walk);
   };
-  return (tree) => walk(tree);
+  return () => (tree) => walk(tree);
+}
+
+function registerMarkdownHooks(config, logger) {
+  /* config.base is '/' with no base configured, '/my-community' with one. */
+  const prefix = (config.base ?? '/').replace(/\/+$/, '');
+  const processor = config.markdown?.processor;
+  if (Array.isArray(processor?.options?.hastPlugins)) {
+    processor.options.hastPlugins.push(satteriMarkdownHooks(prefix));
+  } else if (Array.isArray(processor?.options?.rehypePlugins)) {
+    processor.options.rehypePlugins.push(rehypeMarkdownHooks(prefix));
+  } else {
+    logger.warn(
+      `markdown.processor "${processor?.name ?? 'unknown'}" takes neither hastPlugins nor rehypePlugins: ` +
+        'markdown images will not get loading="lazy"' +
+        (prefix ? ', and site-absolute links in content will not carry the base' : ''),
+    );
+  }
 }
 
 /* Injected routes, grouped by opt-out key: popular({ routes: { speakers:
@@ -81,13 +157,13 @@ export default function popular(options = {}) {
   return {
     name: 'astro-theme-popular',
     hooks: {
-      'astro:config:setup': ({ config, injectRoute, injectScript, updateConfig, addWatchFile }) => {
+      'astro:config:setup': ({ config, injectRoute, injectScript, updateConfig, addWatchFile, logger }) => {
         const root = fileURLToPath(config.root);
         const userConfig = path.resolve(root, configFile);
         addWatchFile(userConfig);
+        registerMarkdownHooks(config, logger);
         updateConfig({
           integrations: [sitemap()],
-          markdown: { rehypePlugins: [rehypeLazyImages] },
           vite: {
             plugins: [
               {

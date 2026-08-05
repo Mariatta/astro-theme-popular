@@ -1,5 +1,6 @@
 ---
 import { SITE, FOOTER, SOCIAL, STRINGS } from 'popular:config';
+import { withBase } from '../lib/url';
 import { version } from '../../package.json';
 const year = new Date().getFullYear();
 const credit = (FOOTER as { credit?: { label: string; url: string } }).credit;
@@ -10,12 +11,12 @@ const showVersion = !!credit && credit.url.includes('mariatta.ca');
 <footer class="g-footer">
   <div class="g-container g-footer__top">
     <div class="g-footer__brand">
-      {SITE.logo && <img src={SITE.logo} alt={SITE.title} />}
+      {SITE.logo && <img src={withBase(SITE.logo)} alt={SITE.title} />}
       {SITE.landAcknowledgement && <p class="g-footer__ack">{SITE.landAcknowledgement}</p>}
       {SOCIAL.length > 0 && (
         <div style="display:flex;gap:0.5rem;margin-top:0.25rem">
           {SOCIAL.map((s) => (
-            <a class="g-social" href={s.url} aria-label={s.label} rel="me noopener" target="_blank">
+            <a class="g-social" href={withBase(s.url)} aria-label={s.label} rel="me noopener" target="_blank">
               <i class={s.icon} aria-hidden="true"></i>
             </a>
           ))}
@@ -28,7 +29,7 @@ const showVersion = !!credit && credit.url.includes('mariatta.ca');
         <div class="g-footer__col-title">{col.title}</div>
         <ul>
           {col.links.map((l) => (
-            <li><a href={l.href}>{l.label}</a></li>
+            <li><a href={withBase(l.href)}>{l.label}</a></li>
           ))}
         </ul>
       </div>
@@ -39,9 +40,9 @@ const showVersion = !!credit && credit.url.includes('mariatta.ca');
     <div class="g-container">
       <span>© {year} {SITE.title}</span>
       {chat && (
-        <span><a href={chat.url} {...(chat.url.startsWith('/') ? {} : { rel: 'noopener', target: '_blank' })}><i class="fa-solid fa-comments" aria-hidden="true"></i> {chat.label ?? STRINGS.joinChat}</a></span>
+        <span><a href={withBase(chat.url)} {...(chat.url.startsWith('/') ? {} : { rel: 'noopener', target: '_blank' })}><i class="fa-solid fa-comments" aria-hidden="true"></i> {chat.label ?? STRINGS.joinChat}</a></span>
       )}
-      {credit && <span><a href={credit.url} rel="noopener">{credit.label}</a>{showVersion && <> · v{version}</>}</span>}
+      {credit && <span><a href={withBase(credit.url)} rel="noopener">{credit.label}</a>{showVersion && <> · v{version}</>}</span>}
       {FOOTER.tagline && <span>{FOOTER.tagline}</span>}
     </div>
   </div>

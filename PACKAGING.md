@@ -56,6 +56,12 @@ export default defineConfig({
   loaded after).
 - **Shared JS** ships in the package; the integration injects the script
   tags that BaseLayout carries today.
+- **URL helpers**: `withBase()` / `absoluteUrl()` are exported publicly as
+  `astro-theme-popular/url`, so an adopter's own pages, overrides and config
+  resolve URLs the same way the theme does on a subpath install. The
+  integration also registers the markdown hooks (lazy images, base-aware
+  links) on the active markdown processor, since `markdown.rehypePlugins` set
+  from an integration is ignored by Astro 7's default processor.
 - **Component overrides** (the "edit the file" replacement): a Starlight
   style override map for the components adopters realistically replace:
 

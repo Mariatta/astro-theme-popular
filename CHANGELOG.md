@@ -14,6 +14,38 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+### Fixed
+
+- **Sites served from a subpath now work in both themes.** A site deployed to
+  `user.github.io/repo/` (Astro `base`, Hugo `baseURL` with a path) built and
+  styled correctly but every internal link and image stayed at the server root
+  and 404'd. Both frameworks rewrite the asset URLs they generate themselves,
+  and neither touches the paths a template writes, so those had to be resolved
+  explicitly.
+  - Astro: new `withBase()` / `absoluteUrl()` helpers (`lib/url.ts`, exported
+    from the package as `astro-theme-popular/url`) now resolve every URL the
+    theme emits: navigation, cards, tags, pagination, the brand link, images
+    from config and front matter, the shared behaviour scripts, and the
+    absolute URLs in canonical, `og:image`, JSON-LD, RSS, `llms.txt`,
+    `robots.txt` and the iCalendar feed. Markdown bodies are handled by a hook
+    the integration registers on the active Markdown processor.
+  - Hugo: `rel-href.html` now has a sibling, `rel-src.html`, for images and
+    assets, plus `abs-url.html` for absolute URLs. Front matter written the
+    Astro way (`image = "/images/x.png"`) previously lost the subpath, because
+    `relURL`/`absURL` treat a leading slash as the server root. Card, hero,
+    logo, favicon, avatar and body images, the JSON-LD `url`/`logo`/`image`
+    fields and `og:image` all go through them now.
+  - Adopter configs and content need no changes: the helpers pass external
+    URLs, `mailto:`, `tel:` and `#fragment` through untouched, and accept
+    paths written with or without a leading slash.
+  - Both repos build a subpath site in CI and fail on any internal `href` or
+    `src` left at the root (`PARITY.md`, "Subpath deployments").
+- **Astro package: markdown images regained `loading="lazy" decoding="async"`.**
+  Astro 7's default Markdown processor does not run rehype plugins, and a
+  plugin added by an integration after config validation was dropped silently
+  (Astro warned on every build). The theme's hooks are now registered on the
+  active processor, in that processor's own plugin shape.
+
 ## [0.8.1] - 2026-08-04
 
 ### Changed

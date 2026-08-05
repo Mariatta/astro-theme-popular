@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
+import { absoluteUrl } from '../lib/url';
 import { SITE } from '../config';
 
 /* §8 llms.txt: a build-time plain-text summary for AI agents. Names the next
@@ -8,8 +9,7 @@ import { SITE } from '../config';
    layouts/index.llms.txt. Always generated (SEO/discovery plumbing, like
    robots.txt). */
 export const GET: APIRoute = async ({ site }) => {
-  const base = site ?? new URL('https://example.com');
-  const abs = (p: string) => new URL(p, base).href;
+  const abs = (p: string) => absoluteUrl(p, site);
   const now = Date.now();
 
   const events = (await getCollection('events'))
@@ -31,7 +31,7 @@ export const GET: APIRoute = async ({ site }) => {
       : 'No upcoming events are scheduled right now.',
     '',
   );
-  if (chat) lines.push(`Join the community chat: ${chat.url}`, '');
+  if (chat) lines.push(`Join the community chat: ${abs(chat.url)}`, '');
   lines.push('## Links');
   if (pageIds.has('start')) lines.push(`Start here (newcomers): ${abs('/start/')}`);
   if (pageIds.has('about')) lines.push(`About and FAQ: ${abs('/about/')}`);
