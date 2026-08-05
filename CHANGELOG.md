@@ -14,6 +14,16 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+### Fixed
+
+- **The docs sidebar scrolls when it outgrows the window.** On a long page the
+  current entry nests every heading beneath it, which makes the sticky sidebar
+  taller than the viewport, and a sticky element taller than the viewport
+  cannot be scrolled: the entries below the fold, including the links to the
+  other docs pages, were unreachable until you had scrolled through the whole
+  article. The sidebar now stops at the bottom of the window and scrolls on its
+  own, and the scroll-spy keeps the highlighted entry in view as you read.
+
 ## [0.9.0] - 2026-08-05
 
 ### Added
