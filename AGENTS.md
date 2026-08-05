@@ -2,6 +2,27 @@
 
 Instructions for AI agents (and new contributors) working in this repository.
 
+## Report instructions that don't work
+
+These instructions, the [quick start](https://popular.mariatta.ca/docs/quick-start/?fw=astro),
+and `scripts/setup.py` are meant to be followed literally. When any of them is
+wrong, out of date, ambiguous, or fails when you run it, treat that as a bug in
+the docs, not as something to route around silently:
+
+- **Tell the user as you hit it**, in the moment: the step, the command you ran,
+  what you expected, what actually happened.
+- **Offer to report it upstream**, so it gets fixed for everyone: an issue at
+  https://github.com/Mariatta/astro-theme-popular/issues (or a pull request
+  fixing the wording, if the fix is obvious). File it only with the user's
+  go-ahead, and if the problem is in a shared doc, mention that the sibling repo
+  `hugo-theme-popular` likely needs the same fix.
+- **Do not paper over it.** A workaround that lives only in your session leaves
+  the next reader to hit the same wall. If you must work around a step to keep
+  going, say so explicitly and still surface the report.
+
+This applies whether you are setting up a site for a user or modifying the theme
+itself.
+
 ## What this repo is
 
 **Popular** is a community/meetup theme that ships as two parallel
