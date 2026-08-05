@@ -14,6 +14,18 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-08-05
+
+### Added
+
+- **Base-aware URL helpers, as public surface.** Astro: `withBase()` and
+  `absoluteUrl()` from `src/lib/url.ts`, exported by the package as
+  `astro-theme-popular/url`. Hugo: `rel-src.html` (images and assets) and
+  `abs-url.html` (absolute URLs) join the existing `rel-href.html`. Use them
+  for any URL your own components, overrides or templates emit, and a subpath
+  install keeps working. The Astro template repo's `astro.config.mjs` gained a
+  `base` constant at the top: leave it `'/'` for a site at a domain root.
+
 ### Fixed
 
 - **Sites served from a subpath now work in both themes.** A site deployed to
