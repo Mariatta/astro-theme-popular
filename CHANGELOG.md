@@ -14,6 +14,8 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+## [0.9.1] - 2026-08-05
+
 ### Fixed
 
 - **The docs sidebar scrolls when it outgrows the window.** On a long page the
