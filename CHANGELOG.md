@@ -14,6 +14,28 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+### Added
+
+- **The setup wizard now writes everything a GitHub Pages deployment needs.**
+  Answer the site-URL question with a project-page URL
+  (`https://you.github.io/my-community/`) and `scripts/setup.py` writes a site
+  that works there:
+  - Astro gains a generated `astro.config.mjs` carrying `site` and `base`.
+    Astro needs the origin and the subpath as separate keys and nothing wrote
+    `base` before, so a project-page site 404'd every internal link. They are
+    derived from the single `base_url` answer, so the schema is unchanged and
+    no one is asked the same thing twice.
+  - Both frameworks gain `.github/workflows/deploy.yml`, a parameterless
+    GitHub Pages workflow (everything that varies lives in the config the
+    wizard already wrote). It is skipped when the site already has workflows
+    of its own, so it never fights an existing deployment. Set Settings ->
+    Pages -> Source: GitHub Actions once, and pushes to `main` publish.
+- **Astro: `popular-markdown.mjs`,** the markdown hooks (lazy images, base-aware
+  links) as a proper integration in the template model, matching what the npm
+  package already does. Because an integration receives the resolved config,
+  `astro build --base /elsewhere/` now applies to markdown bodies too, where the
+  old config-file hook silently kept the old base.
+
 ## [0.9.1] - 2026-08-05
 
 ### Fixed

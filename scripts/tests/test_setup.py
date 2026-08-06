@@ -122,6 +122,58 @@ class TestWriteContract(unittest.TestCase):
                              "PyLadies Vancouver")
 
 
+class TestAstroSiteAndBase(unittest.TestCase):
+    """Astro needs origin and subpath as separate config keys; Hugo derives
+    both from baseURL. Getting this wrong 404s every link on a project page."""
+
+    def test_split_project_page(self):
+        self.assertEqual(setup.split_site_base("https://you.github.io/my-community/"),
+                         ("https://you.github.io", "/my-community"))
+
+    def test_split_domain_root(self):
+        self.assertEqual(setup.split_site_base("https://popular.example/"),
+                         ("https://popular.example", "/"))
+        self.assertEqual(setup.split_site_base("https://popular.example"),
+                         ("https://popular.example", "/"))
+
+    def test_split_falls_back_when_unanswered(self):
+        for value in (None, "", "not a url"):
+            self.assertEqual(setup.split_site_base(value), ("https://example.com", "/"))
+
+    def test_astro_outputs_carry_site_and_base(self):
+        with tempfile.TemporaryDirectory() as d:
+            files = setup.build_outputs(d, "astro", setup.find_schema(),
+                                        {**FULL, "base_url": "https://you.github.io/pyl/"})
+            cfg = files["astro.config.mjs"]
+            self.assertIn("site: 'https://you.github.io'", cfg)
+            self.assertIn("base: '/pyl'", cfg)
+
+    def test_hugo_gets_no_astro_config(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.assertNotIn("astro.config.mjs",
+                             setup.build_outputs(d, "hugo", setup.find_schema(), FULL))
+
+
+class TestDeployWorkflow(unittest.TestCase):
+    def test_emitted_per_format(self):
+        with tempfile.TemporaryDirectory() as d:
+            hugo = setup.build_outputs(d, "hugo", setup.find_schema(), FULL)[".github/workflows/deploy.yml"]
+            astro = setup.build_outputs(d, "astro", setup.find_schema(), FULL)[".github/workflows/deploy.yml"]
+        self.assertIn("peaceiris/actions-hugo", hugo)
+        self.assertIn("npm run build", astro)
+        for content in (hugo, astro):
+            self.assertIn("actions/deploy-pages@v4", content)
+            # parameterless: no inputs, and the URL lives in the site config
+            self.assertNotIn("workflow_call", content)
+            self.assertIn("${{ steps.deployment.outputs.page_url }}", content)
+
+    def test_left_alone_when_the_site_already_has_workflows(self):
+        with tempfile.TemporaryDirectory() as d:
+            os.makedirs(os.path.join(d, ".github", "workflows"))
+            files = setup.build_outputs(d, "hugo", setup.find_schema(), FULL)
+            self.assertNotIn(".github/workflows/deploy.yml", files)
+
+
 class TestPristineAdoption(unittest.TestCase):
     """Tier-1, so it runs in both repos: exercise whichever framework's starters
     this repo actually ships (Hugo theme -> hugo, Astro template -> astro)."""
