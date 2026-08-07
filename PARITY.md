@@ -73,6 +73,7 @@ Same behaviour, different language. When you change one, port the other.
 | Speaker list / pages | `layouts/speakers/{list,single}.html` | `pages/speakers/{index,[slug]}.astro` (AuthorBox with `base`) |
 | Venue list / pages | `layouts/venues/{list,single}.html`    | `pages/venues/{index,[slug]}.astro`     |
 | Speaker invite card | `partials/speaker-invite.html`        | `components/SpeakerInvite.astro`        |
+| Preview banner     | `partials/preview-bar.html`            | `components/PreviewBar.astro`           |
 | Checklist          | `shortcodes/checklist.html`            | `components/Checklist.astro`            |
 | Site configuration | `exampleSite/hugo.toml` `[params]`     | `src/config.ts`                         |
 
@@ -364,6 +365,29 @@ Rules that keep the two in step:
   the server root (Hugo: `image-alt.yml`; Astro: `package-smoke.yml` builds
   `smoke/astro.base.config.mjs`). The check deliberately does not exempt
   `href="/"`: the header brand link is exactly that.
+
+## Preview banner (Tier 2)
+
+A generator that renders a site it does not own (the web wizard's throwaway
+preview, shown in an iframe) sets `params.previewMode` (Hugo) ⇄ `SITE.previewMode`
+(Astro), and gets a fixed banner saying the page is a preview. Both accept `true`
+or a table/object with an optional `note`, and both read their text from the
+shared string keys `previewLabel` and `previewBanner`.
+
+Three properties are the point, and a change that breaks one breaks the feature:
+
+- **It cannot ship by accident.** Nothing the setup wizard writes into an
+  adopter's config sets the param, so a real site has no way to show it. CI in
+  both repos builds with the flag and without, and fails if the banner appears in
+  a build that did not ask for it.
+- **It is informational only.** A preview is served with `sandbox="allow-scripts"`
+  and no `allow-same-origin`, so a control inside the iframe cannot drive the page
+  around it. Actions belong in the surrounding chrome. Do not add links or buttons.
+- **It reserves footer space** with the same `.g-footer__bottom { padding-bottom:
+  72px }` the demo bar uses, so it never covers the credit line.
+
+Unlike the demo bar it renders in dev too (`hugo server`, `astro dev`): someone
+running a preview config locally is previewing as well.
 
 ## Computed stat values
 
