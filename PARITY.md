@@ -389,6 +389,14 @@ Three properties are the point, and a change that breaks one breaks the feature:
 Unlike the demo bar it renders in dev too (`hugo server`, `astro dev`): someone
 running a preview config locally is previewing as well.
 
+**Switching it on without touching the config.** A generator often owns the
+build but not the config it builds, so both sides take the flag from the
+environment: `HUGO_PARAMS_PREVIEWMODE_NOTE` (Hugo reads params from the
+environment natively) ⇄ `POPULAR_PREVIEW_NOTE` (Astro's config is TypeScript, so
+`PreviewBar.astro` reads the variable itself). Setting either one both enables
+the banner and supplies its note. Neither is set in any build a normal site
+runs, so the "cannot ship by accident" property is unchanged.
+
 ## Computed stat values
 
 Home-page stat `value`s: `@pastEventCount` and `@count:<section>[:rounded]`

@@ -228,6 +228,39 @@ Keep the two copies in step. `package-smoke.yml` builds
   `<body>` (see `data-copy-label` / `data-checklist-done` in BaseLayout).
 - Site owners translate by editing `STRINGS` and `SITE.locale` in `config.ts`.
 
+## Settings that live outside this repo
+
+The demo gallery gets a Netlify Deploy Preview per pull request. The whole
+configuration is in the Netlify UI, deliberately: no `netlify.toml`, no
+workflow, nothing an adopter who copies this template would inherit, and no
+Netlify dependency for anyone using the theme. Production stays on GitHub Pages.
+
+| Setting | Value |
+|---|---|
+| Build command | `npm ci && node scripts/build-sites.mjs "$DEPLOY_PRIME_URL" "" public` |
+| Publish directory | `public` |
+| `NODE_VERSION` | must match `deploy-demo.yml` (currently 22) |
+| `POPULAR_PREVIEW_NOTE` | optional, scoped to deploy previews: renders the preview banner |
+| Custom domain | none: production stays on GitHub Pages |
+| Sensitive variable policy | require approval for pull requests from forks |
+
+Four things that are easy to get wrong, each learned the hard way on the Hugo
+repo:
+
+- **Build the whole tree, not one site.** `scripts/build-sites.mjs` is what
+  production runs too. A preview that builds only the active `src/` looks right
+  until you click a demo in the gallery and get a 404.
+- **The base prefix is empty on Netlify** and `/astro-theme-popular` on Pages,
+  which is why it is an argument rather than a constant. Demos land at
+  `/aquarium/` and friends either way.
+- **Pin `NODE_VERSION`.** Nothing in this repo can check what Netlify uses, so
+  it drifts silently from the version CI tests. When you change the Node version
+  in `deploy-demo.yml`, change it in the Netlify UI too.
+- **Fork pull requests run `npm ci`,** which executes lifecycle scripts from the
+  fork's `package.json`. That is arbitrary code from a stranger, so require
+  approval rather than building automatically. The Hugo repo can be laxer
+  because a Hugo build runs no third-party code.
+
 ## CI checks
 
 - `.github/workflows/image-alt.yml` activates and builds each demo and fails if
