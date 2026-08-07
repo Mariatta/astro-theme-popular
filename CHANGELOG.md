@@ -23,6 +23,13 @@ Releases) or subscribe to the releases feed
   default palette in place, which keeps a first run adoptable without `--force`.
   Answers are validated as `#rgb` or `#rrggbb`, a new `color` question type in
   the shared schema.
+- **A preview banner for generators** (`partials/preview-bar.html` ⇄
+  `components/PreviewBar.astro`). Set `params.previewMode` / `SITE.previewMode`
+  and the page carries a fixed "this is a preview" bar, with an optional `note`
+  for things like an expiry. It is meant for a tool that renders a site on
+  someone's behalf and shows it in an iframe. Nothing the setup wizard writes
+  into a real site's config sets the flag, and CI in both repos fails if the
+  banner turns up in a build that did not ask for it.
 
 ### Added
 

@@ -73,6 +73,8 @@ export const STRINGS: Record<string, string> = {
   posts: 'Posts',
   guest: 'Guest',
   website: 'Website',
+  previewLabel: 'Preview',
+  previewBanner: 'This is a preview. Nothing here is published yet.',
   checklist: 'Checklist',
   copyCode: 'Copy code',
   checklistDone: 'done',

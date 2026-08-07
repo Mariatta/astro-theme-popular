@@ -168,6 +168,10 @@ Remember: add demo content under `demos/<name>/content/`, not only `src/`.
 
 ## Configuration knobs
 
+- `SITE.previewMode` renders the preview banner (`components/PreviewBar.astro`),
+  for tools that build a site on someone's behalf. Never set it in a demo config
+  or anything the wizard writes: a real site showing "this is a preview" is the
+  failure this design prevents (see PARITY.md).
 - `NAV` supports one level of nesting via a `children` array on an item;
   it renders as a dropdown (see `src/components/Header.astro`).
 - `BRAND` drives all colors/fonts; `BaseLayout.astro` emits an `html:root`

@@ -10,6 +10,7 @@ import '../styles/components.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import DemoBar from '../components/DemoBar.astro';
+import PreviewBar from '../components/PreviewBar.astro';
 import Notice from '../components/Notice.astro';
 import { SITE, BRAND, STRINGS } from '../config';
 import { withBase, absoluteUrl } from '../lib/url';
@@ -111,6 +112,7 @@ const brandCss = `html:root{${vars.join(';')}}`;
     </main>
     <Footer />
     <DemoBar />
+    <PreviewBar />
     <script src={withBase('/scripts/nav.js')} is:inline defer></script>
     <script src={withBase('/scripts/checklist.js')} is:inline defer></script>
     <script src={withBase('/scripts/toc.js')} is:inline defer></script>

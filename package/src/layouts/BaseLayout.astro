@@ -10,6 +10,7 @@ import '../styles/components.css';
 import Header from 'popular:component/Header';
 import Footer from 'popular:component/Footer';
 import DemoBar from '../components/DemoBar.astro';
+import PreviewBar from '../components/PreviewBar.astro';
 import Notice from '../components/Notice.astro';
 import { SITE, BRAND, STRINGS } from 'popular:config';
 import { withBase, absoluteUrl } from '../lib/url';
@@ -111,5 +112,6 @@ const brandCss = `html:root{${vars.join(';')}}`;
     </main>
     <Footer />
     <DemoBar />
+    <PreviewBar />
   </body>
 </html>
