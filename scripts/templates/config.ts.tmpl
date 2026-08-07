@@ -121,7 +121,7 @@ export const SECTIONS_MAP = {
    Empty = the theme's default identity (marquee gold, sunglass black,
    periwinkle). Example:
    { primary: "#0f766e", surfaceWash: "#d7ece9", fontDisplay: "Quantico, Inter, sans-serif" } */
-export const BRAND: Record<string, string> = {};
+export const BRAND: Record<string, string> = {${__brand_entries}};
 
 export const NAV: {
   label: string;

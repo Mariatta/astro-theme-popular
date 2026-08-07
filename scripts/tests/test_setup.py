@@ -122,6 +122,38 @@ class TestWriteContract(unittest.TestCase):
                              "PyLadies Vancouver")
 
 
+class TestBrandColour(unittest.TestCase):
+    """Optional by design: skipping it has to leave the config byte-identical to
+    the starter, or the wizard loses its no---force first run."""
+
+    def test_validate_accepts_hex(self):
+        q = {"id": "brand_primary", "type": "color"}
+        for value in ("#fa023c", "#FA023C", "#abc"):
+            self.assertEqual(setup.validate(q, value), value)
+
+    def test_validate_rejects_anything_else(self):
+        q = {"id": "brand_primary", "type": "color"}
+        for value in ("red", "fa023c", "#12345", "rgb(1,2,3)"):
+            with self.assertRaises(SystemExit):
+                setup.validate(q, value)
+
+    def test_answered_writes_the_brand_key(self):
+        with tempfile.TemporaryDirectory() as d:
+            answers = {**FULL, "brand_primary": "#fa023c"}
+            hugo = setup.build_outputs(d, "hugo", setup.find_schema(), answers)["hugo.toml"]
+            astro = setup.build_outputs(d, "astro", setup.find_schema(), answers)["src/config.ts"]
+        self.assertIn("[params.brand]", hugo)
+        self.assertIn('primary = "#fa023c"', hugo)
+        self.assertIn('BRAND: Record<string, string> = { primary: "#fa023c" };', astro)
+
+    def test_skipped_leaves_the_starter_untouched(self):
+        with tempfile.TemporaryDirectory() as d:
+            hugo = setup.build_outputs(d, "hugo", setup.find_schema(), FULL)["hugo.toml"]
+            astro = setup.build_outputs(d, "astro", setup.find_schema(), FULL)["src/config.ts"]
+        self.assertNotIn("[params.brand]", hugo)
+        self.assertIn("BRAND: Record<string, string> = {};", astro)
+
+
 class TestAstroSiteAndBase(unittest.TestCase):
     """Astro needs origin and subpath as separate config keys; Hugo derives
     both from baseURL. Getting this wrong 404s every link on a project page."""
