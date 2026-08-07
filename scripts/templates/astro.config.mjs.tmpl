@@ -11,7 +11,7 @@ import popularMarkdown from './popular-markdown.mjs';
    reads the resolved config, so `astro build --base ...` works too).
    scripts/setup.py writes this file from your answers. */
 export default defineConfig({
-  site: 'https://example.com',
-  base: '/',
+  site: '${__astro_site|https://example.com}',
+  base: '${__astro_base|/}',
   integrations: [mdx(), sitemap(), popularMarkdown()],
 });

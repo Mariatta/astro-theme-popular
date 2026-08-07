@@ -121,6 +121,12 @@ deterministic, tested writer.
    `DECISIONS.md` for what was decided and the "Still open" list for what to
    come back to.
 
+The wizard also writes `astro.config.mjs` (`site` and `base`, split from the one
+`base_url` answer by `split_site_base()`, because Astro needs them separate) and
+`.github/workflows/deploy.yml` (GitHub Pages, parameterless), the latter unless
+the site already has workflows of its own. Tell the user to set Settings ->
+Pages -> Source: GitHub Actions once.
+
 Same invariant as the wizard: sugar, never a gate. A user who wants to skip the
 interview entirely still gets a clean starter config.
 
@@ -185,9 +191,12 @@ Both live in `lib/url.ts` (exported publicly as `astro-theme-popular/url`) and
 pass external URLs, `mailto:`, `tel:` and `#fragment` through untouched, so
 applying one is never wrong: use them for adopter config values and content
 front matter too, which is what keeps adopters from having to rewrite links.
-Markdown bodies are handled by a hook the integration registers on the active
-Markdown processor (`markdown.rehypePlugins` set from an integration is
-silently ignored by Astro 7's default processor). `package-smoke.yml` builds
+Markdown bodies are handled by a hook registered on the active Markdown
+processor: `popular-markdown.mjs` (template model) and `package/index.mjs`
+(npm consumers). It has to be an integration, not a `markdown.rehypePlugins`
+entry: Astro 7's default processor runs no rehype plugins, and only an
+integration sees the resolved config, so `astro build --base ...` is honored.
+Keep the two copies in step. `package-smoke.yml` builds
 `smoke/astro.base.config.mjs` with `base: '/sub'` and fails on any internal
 `href`/`src` left at the root. The Hugo twin uses `rel-href.html`,
 `rel-src.html` and `abs-url.html` (PARITY.md, "Subpath deployments").

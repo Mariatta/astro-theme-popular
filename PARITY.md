@@ -158,6 +158,30 @@ question, it belongs in the handbook, not on any of these surfaces**, so adding
 a question to the schema updates the wizard, the worksheet, and the interview
 with no template edit.
 
+**What the wizard writes** (`build_outputs()` returns `{relpath: content}`, the
+integration seam for any front end, CLI or web):
+
+| File | Hugo | Astro |
+|---|---|---|
+| Theme config | `hugo.toml` | `src/config.ts` |
+| Framework config | (same file: `baseURL`) | `astro.config.mjs` (`site` + `base`) |
+| Code of Conduct seed | `content/code-of-conduct.md` | `src/content/pages/code-of-conduct.mdx` |
+| Deploy workflow | `.github/workflows/deploy.yml` | `.github/workflows/deploy.yml` |
+| Audit trail | `DECISIONS.md` | `DECISIONS.md` |
+| Answer record | `.popular-setup.json` | `.popular-setup.json` |
+
+Two asymmetries are deliberate. Hugo carries origin and subpath in one
+`baseURL`; Astro needs them split, so `split_site_base()` derives
+`site` + `base` from the same single `base_url` answer rather than asking twice
+(PARITY: one schema question, two framework spellings). And the workflows differ
+by build command only: both are parameterless, because everything that varies
+lives in the config the wizard already wrote. The workflow is skipped when the
+site already has a `.github/workflows/` directory, so it never fights an
+existing deployment.
+
+The starter scaffold a generator copies from is `exampleSite/` (Hugo) and
+`demos/starter/` (Astro), per Tier 3½ below.
+
 ## Tier 2¾: UI strings (i18n)
 
 Every user-facing string in templates comes from a named key, never hardcoded.

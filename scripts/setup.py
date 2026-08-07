@@ -186,11 +186,45 @@ def render_social(entries, fmt):
 
 
 # ------------------------------------------------------------------- outputs
+BASE_URL_RE = re.compile(r"^(https?://[^/]+)(/.*)?$")
+
+
+def split_site_base(base_url):
+    """Split a deployment URL into Astro's ('site', 'base') pair.
+
+    Hugo derives the subpath from baseURL alone; Astro needs the origin and
+    the path as separate keys, and a project page (you.github.io/repo/) is a
+    subpath. Returns ('https://you.github.io', '/repo'), or a base of '/' at
+    a domain root. An unparseable value falls back to the starter defaults so
+    a half-answered site still builds."""
+    m = BASE_URL_RE.match((base_url or "").strip())
+    if not m:
+        return "https://example.com", "/"
+    origin, path = m.group(1), m.group(2) or "/"
+    return origin, (path.rstrip("/") or "/")
+
+
 def build_outputs(site, fmt, questions, answers):
     """Return {relpath: content} for every file the wizard would write."""
     files = {}
     files[config_path(site, fmt).replace(site + os.sep, "").replace(site + "/", "")] = \
         render(tmpl("hugo.toml.tmpl" if fmt == "hugo" else "config.ts.tmpl"), answers, fmt).rstrip("\n") + "\n"
+
+    if fmt == "astro":
+        # Astro's site/base live in astro.config.mjs, not in the theme config,
+        # and nothing else writes them: a project-page site without `base`
+        # 404s every internal link. Derived, never asked (one URL answer).
+        astro_site, astro_base = split_site_base(answers.get("base_url"))
+        files["astro.config.mjs"] = render(
+            tmpl("astro.config.mjs.tmpl"),
+            {**answers, "__astro_site": astro_site, "__astro_base": astro_base}, fmt)
+
+    # Deploy workflow, parameterless by design (URL and subpath live in the
+    # config above). Skipped when the site already has workflows of its own,
+    # so this never fights an existing deployment.
+    if not os.path.isdir(os.path.join(site, ".github", "workflows")):
+        files[".github/workflows/deploy.yml"] = render(
+            tmpl("deploy-hugo.yml.tmpl" if fmt == "hugo" else "deploy-astro.yml.tmpl"), answers, fmt)
 
     if answers.get("coc_contact"):
         coc_rel = "content/code-of-conduct.md" if fmt == "hugo" else "src/content/pages/code-of-conduct.mdx"
@@ -259,6 +293,10 @@ def pristine_map(fmt):
         "src/config.ts": contents(glob.glob(os.path.join(root, "demos", "*", "config.ts"))),
         "src/content/pages/code-of-conduct.mdx": contents(
             glob.glob(os.path.join(root, "demos", "*", "content", "pages", "code-of-conduct.mdx"))),
+        # The template repo ships a runnable astro.config.mjs; an unedited one
+        # is the theme's, not the organizer's, so the wizard may write site/base
+        # into it on a first run.
+        "astro.config.mjs": contents([os.path.join(root, "astro.config.mjs")]),
     }
 
 
