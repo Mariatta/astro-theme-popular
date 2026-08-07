@@ -16,6 +16,16 @@ Releases) or subscribe to the releases feed
 
 ### Added
 
+- **The setup wizard asks for a brand colour**, optionally. One hex is enough:
+  the theme derives badges, tags, hovers and link states from it, so answering
+  `#fa023c` writes `[params.brand].primary` (Hugo) or `BRAND.primary` (Astro)
+  and the whole site follows. Skipping it writes nothing at all and leaves the
+  default palette in place, which keeps a first run adoptable without `--force`.
+  Answers are validated as `#rgb` or `#rrggbb`, a new `color` question type in
+  the shared schema.
+
+### Added
+
 - **The setup wizard now writes everything a GitHub Pages deployment needs.**
   Answer the site-URL question with a project-page URL
   (`https://you.github.io/my-community/`) and `scripts/setup.py` writes a site

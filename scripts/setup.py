@@ -114,6 +114,7 @@ def load_answers(path, questions):
 
 
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+COLOR_RE = re.compile(r"^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$")
 
 
 def validate(q, value):
@@ -124,6 +125,8 @@ def validate(q, value):
         fail(f"{q['id']}: {value!r} is not a URL (http(s):// or /path)")
     if t == "bool" and not isinstance(value, bool):
         fail(f"{q['id']}: expected true/false")
+    if t == "color" and not COLOR_RE.match(str(value)):
+        fail(f"{q['id']}: {value!r} is not a hex colour (#rgb or #rrggbb)")
     return value
 
 
@@ -204,11 +207,20 @@ def split_site_base(base_url):
     return origin, (path.rstrip("/") or "/")
 
 
+def brand_entries(answers):
+    """Astro's BRAND is a single object literal, so its optional keys are built
+    here rather than with a conditional block. Empty when nothing is answered,
+    which keeps the rendered config byte-identical to the starter."""
+    primary = answers.get("brand_primary")
+    return f" primary: {json.dumps(primary)} " if primary else ""
+
+
 def build_outputs(site, fmt, questions, answers):
     """Return {relpath: content} for every file the wizard would write."""
     files = {}
+    values = {**answers, "__brand_entries": brand_entries(answers)}
     files[config_path(site, fmt).replace(site + os.sep, "").replace(site + "/", "")] = \
-        render(tmpl("hugo.toml.tmpl" if fmt == "hugo" else "config.ts.tmpl"), answers, fmt).rstrip("\n") + "\n"
+        render(tmpl("hugo.toml.tmpl" if fmt == "hugo" else "config.ts.tmpl"), values, fmt).rstrip("\n") + "\n"
 
     if fmt == "astro":
         # Astro's site/base live in astro.config.mjs, not in the theme config,

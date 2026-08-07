@@ -31,6 +31,10 @@ buildFuture = true
   brandName = "${community_name|Your Community}"
   logo = "${logo|images/logo.png}"
 
+# popular:if brand_primary
+  [params.brand]
+    primary = "${brand_primary}"
+# popular:end
   [params.cta]
     label = "RSVP"
     url   = "${rsvp_home|https://example.com/rsvp}"

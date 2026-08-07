@@ -10,7 +10,7 @@ import os
 import unittest
 
 VALID_LAYERS = {"config", "decision"}
-VALID_TYPES = {"string", "url", "email", "bool", "choice"}
+VALID_TYPES = {"string", "url", "email", "bool", "choice", "color"}
 REQUIRED_FIELDS = {"id", "layer", "prompt", "help", "type", "target",
                    "content_target", "default", "skippable", "handbook_url"}
 
