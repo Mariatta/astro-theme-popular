@@ -397,6 +397,20 @@ environment natively) ⇄ `POPULAR_PREVIEW_NOTE` (Astro's config is TypeScript, 
 the banner and supplies its note. Neither is set in any build a normal site
 runs, so the "cannot ship by accident" property is unchanged.
 
+**Why the two variable names differ, and why they cannot be unified.** Only one
+of them is a name this theme chose. Hugo maps any `HUGO_PARAMS_<KEY>` onto
+`params.<key>` itself, so the theme named the param and Hugo dictated the
+variable. Astro has no such mechanism (its config is TypeScript evaluated at
+build time), so `PreviewBar.astro` reads a variable explicitly, and a theme
+picking its own name should namespace it: `ASTRO_…` would imply framework
+support that does not exist.
+
+The reverse symmetry is impossible rather than merely unidiomatic. Hugo's
+`security.funcs.getenv` allowlist defaults to `["^HUGO_", "^CI$"]`, so a
+template cannot read `POPULAR_PREVIEW_NOTE` at all unless every adopter loosens
+their site's security configuration, which a theme has no business requiring.
+If you find yourself renaming one to match the other, this is why not.
+
 ## Computed stat values
 
 Home-page stat `value`s: `@pastEventCount` and `@count:<section>[:rounded]`
