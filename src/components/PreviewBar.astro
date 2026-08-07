@@ -10,11 +10,19 @@
  *  iframe. Unlike DemoBar this renders in dev too: someone running the same
  *  config locally is previewing as well. Twin of Hugo's preview-bar.html.
  *
- *  previewMode accepts `true` or `{ note: 'Expires in 60 minutes.' }`.
+ *  previewMode accepts `true` or `{ note: 'Expires in 60 minutes.' }`, and
+ *  POPULAR_PREVIEW_NOTE in the environment does the same for a build whose
+ *  config someone else owns.
  */
 import * as cfg from '../config';
 const { SITE, STRINGS } = cfg;
-const preview = (SITE as Record<string, any>).previewMode ?? null;
+/* A generator owns the build but not the adopter's config, so the banner can
+   also be switched on from the environment: the counterpart of Hugo's
+   HUGO_PARAMS_PREVIEWMODE_NOTE. Read at build time, never shipped to the
+   client, and absent from any build that did not ask for it. */
+const fromEnv = process.env.POPULAR_PREVIEW_NOTE;
+const preview = (SITE as Record<string, any>).previewMode
+  ?? (fromEnv ? { note: fromEnv } : null);
 const note = typeof preview === 'object' && preview ? preview.note : undefined;
 /* The demo bar occupies the same corner, and a previewed demo has both on, so
    sit above it rather than on top of it. Matches DemoBar's own rule: it does

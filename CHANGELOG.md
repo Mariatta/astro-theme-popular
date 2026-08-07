@@ -14,6 +14,19 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+### Changed
+
+- **The Astro demo deployment builds each demo with Astro's `base`** instead of
+  rewriting the built HTML with `sed`. The rewrite predated base support and
+  could never reach the absolute URLs, so a deployed demo's canonical,
+  `og:image` and JSON-LD all pointed at the site root. Both the Pages workflow
+  and the Netlify preview build now run `scripts/build-sites.mjs`, so a preview
+  cannot differ from production.
+- **The preview banner can be switched on from the environment**, for a
+  generator that owns the build but not the config: `HUGO_PARAMS_PREVIEWMODE_NOTE`
+  (Hugo) or `POPULAR_PREVIEW_NOTE` (Astro). Setting either enables the banner and
+  supplies its note.
+
 ### Added
 
 - **The setup wizard asks for a brand colour**, optionally. One hex is enough:

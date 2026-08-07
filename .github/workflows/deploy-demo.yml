@@ -7,9 +7,9 @@ name: Deploy Astro demo sites (GitHub Pages)
 #   /foodie/     ← demos/foodie (Lucky Town Foodie Club)
 #   /kdrama/     ← demos/kdrama (KDrama Fan Club)
 #
-# The theme's internal links are root-absolute (clean for adopters, who deploy
-# at a domain root). For the subpath demo deployment we post-process the built
-# HTML, rewriting root-absolute href/src to the demo subpath.
+# Each demo is built with Astro's `base` set to its subpath, so every link,
+# image, feed and absolute URL lands under it. See scripts/build-sites.mjs,
+# which the Netlify preview build runs too.
 #
 # Enable Pages first: repo Settings → Pages → Source: "GitHub Actions".
 
@@ -47,19 +47,15 @@ jobs:
       - name: Build all demos
         env:
           BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          SITE_URL: ${{ steps.pages.outputs.origin }}
         run: |
-          mkdir -p public
-          for slug in aquarium foodie kdrama superfan; do
-            node scripts/use-demo.mjs "$slug"
-            npx astro build
-            # Rewrite root-absolute URLs to the demo subpath
-            find dist -name '*.html' -print0 | xargs -0 sed -i \
-              -e "s| href=\"/| href=\"$BASE_PATH/$slug/|g" \
-              -e "s| src=\"/| src=\"$BASE_PATH/$slug/|g" \
-              -e "s| content=\"/| content=\"$BASE_PATH/$slug/|g"
-            mv dist "public/$slug"
-          done
-          cp demos/gallery/index.html public/index.html
+          # One script, shared with the Netlify preview build, so a preview
+          # cannot quietly differ from production (scripts/build-sites.mjs).
+          # Each demo is built with Astro's own --base; this used to be a sed
+          # pass over the built HTML, which could not reach canonical, og:image
+          # or JSON-LD, and has been unnecessary since the theme became
+          # base-aware in 0.9.0.
+          node scripts/build-sites.mjs "$SITE_URL" "$BASE_PATH" public
 
 
       - name: No internal link may escape the base path
