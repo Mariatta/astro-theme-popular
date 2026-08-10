@@ -14,6 +14,8 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+## [0.10.0] - 2026-08-10
+
 ### Added
 
 - **`scripts/starter-content.py`**, the companion to the setup wizard: it copies
@@ -27,22 +29,6 @@ Releases) or subscribe to the releases feed
   integration. The result is a small repo that updates with `npm update` rather
   than by re-copying files. `--astro-model template` (the default, and what an
   existing site detects as) is unchanged.
-
-### Changed
-
-- **The Astro demo deployment builds each demo with Astro's `base`** instead of
-  rewriting the built HTML with `sed`. The rewrite predated base support and
-  could never reach the absolute URLs, so a deployed demo's canonical,
-  `og:image` and JSON-LD all pointed at the site root. Both the Pages workflow
-  and the Netlify preview build now run `scripts/build-sites.mjs`, so a preview
-  cannot differ from production.
-- **The preview banner can be switched on from the environment**, for a
-  generator that owns the build but not the config: `HUGO_PARAMS_PREVIEWMODE_NOTE`
-  (Hugo) or `POPULAR_PREVIEW_NOTE` (Astro). Setting either enables the banner and
-  supplies its note.
-
-### Added
-
 - **The setup wizard asks for a brand colour**, optionally. One hex is enough:
   the theme derives badges, tags, hovers and link states from it, so answering
   `#fa023c` writes `[params.brand].primary` (Hugo) or `BRAND.primary` (Astro)
@@ -57,9 +43,6 @@ Releases) or subscribe to the releases feed
   someone's behalf and shows it in an iframe. Nothing the setup wizard writes
   into a real site's config sets the flag, and CI in both repos fails if the
   banner turns up in a build that did not ask for it.
-
-### Added
-
 - **The setup wizard now writes everything a GitHub Pages deployment needs.**
   Answer the site-URL question with a project-page URL
   (`https://you.github.io/my-community/`) and `scripts/setup.py` writes a site
@@ -79,6 +62,19 @@ Releases) or subscribe to the releases feed
   package already does. Because an integration receives the resolved config,
   `astro build --base /elsewhere/` now applies to markdown bodies too, where the
   old config-file hook silently kept the old base.
+
+### Changed
+
+- **The Astro demo deployment builds each demo with Astro's `base`** instead of
+  rewriting the built HTML with `sed`. The rewrite predated base support and
+  could never reach the absolute URLs, so a deployed demo's canonical,
+  `og:image` and JSON-LD all pointed at the site root. Both the Pages workflow
+  and the Netlify preview build now run `scripts/build-sites.mjs`, so a preview
+  cannot differ from production.
+- **The preview banner can be switched on from the environment**, for a
+  generator that owns the build but not the config: `HUGO_PARAMS_PREVIEWMODE_NOTE`
+  (Hugo) or `POPULAR_PREVIEW_NOTE` (Astro). Setting either enables the banner and
+  supplies its note.
 
 ## [0.9.1] - 2026-08-05
 
