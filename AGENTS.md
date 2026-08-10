@@ -124,7 +124,16 @@ deterministic, tested writer.
 The wizard also writes `astro.config.mjs` (`site` and `base`, split from the one
 `base_url` answer by `split_site_base()`, because Astro needs them separate) and
 `.github/workflows/deploy.yml` (GitHub Pages, parameterless), the latter unless
-the site already has workflows of its own. Tell the user to set Settings ->
+the site already has workflows of its own.
+
+**Two shapes.** `--astro-model template` writes into a copy of this repo (the
+default, and what an existing site detects as); `--astro-model package` writes a
+small site that depends on `astro-theme-popular` from npm: `popular.config.ts`,
+a pinned `package.json`, a one-line `src/content.config.ts`. Creating a site
+from nothing wants the package model, and
+`scripts/starter-content.py --format astro --astro-model package` copies the
+starter content with its MDX component imports rewritten to package specifiers
+(a consumer has no `src/components/`). See PARITY.md for the full table. Tell the user to set Settings ->
 Pages -> Source: GitHub Actions once.
 
 Same invariant as the wizard: sugar, never a gate. A user who wants to skip the

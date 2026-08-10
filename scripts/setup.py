@@ -50,8 +50,36 @@ def detect(site):
     fail(f"Cannot detect site format in {site} (no hugo.toml or config.ts)", code=2)
 
 
-def config_path(site, fmt):
-    return os.path.join(site, "hugo.toml" if fmt == "hugo" else "src/config.ts")
+def detect_astro_model(site):
+    """Astro ships two ways (PACKAGING.md). A site that consumes the npm
+    package keeps its theme config in popular.config.ts at the root; one that
+    vendored the template repo keeps it in src/config.ts. An empty directory is
+    neither, so a generator creating a site from scratch passes the model in."""
+    if os.path.exists(os.path.join(site, "popular.config.ts")):
+        return "package"
+    return "template"
+
+
+def config_path(site, fmt, model="template"):
+    if fmt == "hugo":
+        return os.path.join(site, "hugo.toml")
+    return os.path.join(site, "popular.config.ts" if model == "package" else "src/config.ts")
+
+
+def latest_release():
+    """The most recent released version from CHANGELOG.md, for the dependency a
+    generated consumer pins. Reading it here means a release bumps it, rather
+    than someone remembering to edit a template."""
+    changelog = os.path.join(os.path.abspath(os.path.join(HERE, "..")), "CHANGELOG.md")
+    try:
+        with open(changelog, encoding="utf-8") as fh:
+            for line in fh:
+                m = re.match(r"^## \[(\d+\.\d+\.\d+)\]", line)
+                if m:
+                    return m.group(1)
+    except OSError:
+        pass
+    return "0.9.1"
 
 
 def tmpl(name):
@@ -207,6 +235,12 @@ def split_site_base(base_url):
     return origin, (path.rstrip("/") or "/")
 
 
+def slugify(text):
+    """npm package names are lowercase and URL-safe."""
+    slug = re.sub(r"[^a-z0-9]+", "-", str(text).lower()).strip("-")
+    return slug or "my-community"
+
+
 def brand_entries(answers):
     """Astro's BRAND is a single object literal, so its optional keys are built
     here rather than with a conditional block. Empty when nothing is answered,
@@ -215,11 +249,16 @@ def brand_entries(answers):
     return f" primary: {json.dumps(primary)} " if primary else ""
 
 
-def build_outputs(site, fmt, questions, answers):
-    """Return {relpath: content} for every file the wizard would write."""
+def build_outputs(site, fmt, questions, answers, model="template"):
+    """Return {relpath: content} for every file the wizard would write.
+
+    `model` applies to Astro only (PACKAGING.md): "template" writes into a copy
+    of the theme repo, "package" writes a small site that consumes the npm
+    package. The content model and every answer are identical either way; only
+    the file layout differs."""
     files = {}
     values = {**answers, "__brand_entries": brand_entries(answers)}
-    files[config_path(site, fmt).replace(site + os.sep, "").replace(site + "/", "")] = \
+    files[config_path(site, fmt, model).replace(site + os.sep, "").replace(site + "/", "")] = \
         render(tmpl("hugo.toml.tmpl" if fmt == "hugo" else "config.ts.tmpl"), values, fmt).rstrip("\n") + "\n"
 
     if fmt == "astro":
@@ -227,9 +266,19 @@ def build_outputs(site, fmt, questions, answers):
         # and nothing else writes them: a project-page site without `base`
         # 404s every internal link. Derived, never asked (one URL answer).
         astro_site, astro_base = split_site_base(answers.get("base_url"))
+        cfg_tmpl = "astro.config.package.mjs.tmpl" if model == "package" else "astro.config.mjs.tmpl"
         files["astro.config.mjs"] = render(
-            tmpl("astro.config.mjs.tmpl"),
+            tmpl(cfg_tmpl),
             {**answers, "__astro_site": astro_site, "__astro_base": astro_base}, fmt)
+
+    if fmt == "astro" and model == "package":
+        # A consumer repo is its own npm project: it depends on the theme
+        # rather than containing it, and adopts the content model in one line.
+        repo_name = slugify(answers.get("community_name") or "my-community")
+        files["package.json"] = render(
+            tmpl("package.json.tmpl"),
+            {**answers, "__repo_name": repo_name, "__theme_version": latest_release()}, fmt)
+        files["src/content.config.ts"] = render(tmpl("content.config.ts.tmpl"), answers, fmt)
 
     # Deploy workflow, parameterless by design (URL and subpath live in the
     # config above). Skipped when the site already has workflows of its own,
@@ -361,6 +410,9 @@ def main(argv=None):
     ap.add_argument("--site", default=".", help="target site directory (default: .)")
     ap.add_argument("--answers", help="JSON {id: value} file; non-interactive")
     ap.add_argument("--format", choices=["hugo", "astro"], help="override format detection")
+    ap.add_argument("--astro-model", choices=["template", "package"],
+                    help="Astro only: 'template' vendors the theme repo, 'package' consumes the "
+                         "npm package (default: detected, 'template' for an unknown site)")
     ap.add_argument("--dry-run", action="store_true", help="print the diff, write nothing")
     ap.add_argument("--force", action="store_true",
                     help="overwrite files you have customized (unedited starter files are adopted automatically)")
@@ -370,6 +422,7 @@ def main(argv=None):
     if not os.path.isdir(site):
         fail(f"--site {args.site} is not a directory", code=2)
     fmt = args.format or detect(site)
+    model = args.astro_model or (detect_astro_model(site) if fmt == "astro" else "template")
     questions = find_schema()
 
     if args.answers:
@@ -379,7 +432,7 @@ def main(argv=None):
     else:
         fail("no --answers file and not a TTY; nothing to do", code=2)
 
-    files = build_outputs(site, fmt, questions, answers)
+    files = build_outputs(site, fmt, questions, answers, model)
     return apply(site, files, args.force, args.dry_run, pristine_map(fmt))
 
 

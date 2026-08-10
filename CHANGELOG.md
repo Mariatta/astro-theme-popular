@@ -14,6 +14,20 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+### Added
+
+- **`scripts/starter-content.py`**, the companion to the setup wizard: it copies
+  the theme's starter content (a post, an event, an organizer, a speaker, a
+  venue, the handbook and runbooks) into a new site, never overwriting anything
+  that is already there.
+- **The wizard can write an Astro site that consumes the npm package**, not only
+  one that vendors this repo: `--astro-model package` writes
+  `popular.config.ts`, a `package.json` pinned to the current release, a
+  one-line `src/content.config.ts`, and an `astro.config.mjs` using the
+  integration. The result is a small repo that updates with `npm update` rather
+  than by re-copying files. `--astro-model template` (the default, and what an
+  existing site detects as) is unchanged.
+
 ### Changed
 
 - **The Astro demo deployment builds each demo with Astro's `base`** instead of
