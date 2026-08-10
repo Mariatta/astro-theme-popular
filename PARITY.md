@@ -181,7 +181,24 @@ site already has a `.github/workflows/` directory, so it never fights an
 existing deployment.
 
 The starter scaffold a generator copies from is `exampleSite/` (Hugo) and
-`demos/starter/` (Astro), per Tier 3½ below.
+`demos/starter/` (Astro), per Tier 3½ below. `scripts/starter-content.py`
+copies it without overwriting anything that already exists.
+
+**Astro ships two shapes, and the wizard writes either** (PACKAGING.md). The
+answers, the schema and the content model are identical; only the layout differs:
+
+| | template model (`--astro-model template`) | package model (`--astro-model package`) |
+|---|---|---|
+| Theme config | `src/config.ts` | `popular.config.ts` |
+| Framework config | `astro.config.mjs` importing `./popular-markdown.mjs` | `astro.config.mjs` with `integrations: [mdx(), popular()]` |
+| Theme code | vendored: the adopter copied this repo | `astro-theme-popular` in `package.json`, pinned to the current release |
+| Content model | `src/content.config.ts` from the repo | `export { collections } from 'astro-theme-popular/schemas'` |
+| Starter MDX imports | `../../components/Callout.astro` | `astro-theme-popular/components/Callout.astro`, rewritten on copy |
+
+The last row is the one that bites: a consumer has no `src/components/`, so
+copying starter MDX verbatim fails its first build. `starter-content.py`
+rewrites those specifiers in package mode, which is why content copying belongs
+to the theme rather than to whoever is generating the site.
 
 ## Tier 2¾: UI strings (i18n)
 

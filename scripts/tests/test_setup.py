@@ -186,6 +186,49 @@ class TestAstroSiteAndBase(unittest.TestCase):
                              setup.build_outputs(d, "hugo", setup.find_schema(), FULL))
 
 
+class TestAstroPackageModel(unittest.TestCase):
+    """Astro ships two ways (PACKAGING.md): a copy of the template repo, or a
+    small site that depends on the npm package. Same answers, same content
+    model, different layout."""
+
+    def _files(self, model):
+        with tempfile.TemporaryDirectory() as d:
+            return setup.build_outputs(d, "astro", setup.find_schema(), FULL, model)
+
+    def test_config_lands_in_the_right_place(self):
+        self.assertIn("src/config.ts", self._files("template"))
+        self.assertIn("popular.config.ts", self._files("package"))
+        self.assertNotIn("src/config.ts", self._files("package"))
+
+    def test_consumer_gets_its_own_npm_project(self):
+        files = self._files("package")
+        pkg = json.loads(files["package.json"])
+        self.assertEqual(pkg["name"], "pyladies-vancouver")
+        self.assertIn("astro-theme-popular", pkg["dependencies"])
+        self.assertTrue(pkg["dependencies"]["astro-theme-popular"].startswith("^"))
+        self.assertIn("astro-theme-popular/schemas", files["src/content.config.ts"])
+
+    def test_consumer_config_uses_the_integration(self):
+        cfg = self._files("package")["astro.config.mjs"]
+        self.assertIn("import popular from 'astro-theme-popular'", cfg)
+        # popular-markdown.mjs only exists in the template repo; the package
+        # integration registers those hooks itself
+        self.assertNotIn("popular-markdown", cfg)
+
+    def test_template_config_keeps_the_local_hook(self):
+        self.assertIn("popular-markdown", self._files("template")["astro.config.mjs"])
+
+    def test_pinned_version_tracks_the_changelog(self):
+        pkg = json.loads(self._files("package")["package.json"])
+        self.assertEqual(pkg["dependencies"]["astro-theme-popular"], "^" + setup.latest_release())
+
+    def test_model_detection(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.assertEqual(setup.detect_astro_model(d), "template")
+            open(os.path.join(d, "popular.config.ts"), "w").close()
+            self.assertEqual(setup.detect_astro_model(d), "package")
+
+
 class TestDeployWorkflow(unittest.TestCase):
     def test_emitted_per_format(self):
         with tempfile.TemporaryDirectory() as d:
