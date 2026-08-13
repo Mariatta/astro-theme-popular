@@ -329,8 +329,30 @@ its own rendered slot (`Astro.slots.render`). No FAQ rich results expected.
 Markdown and card/list images carry `loading="lazy" decoding="async"` (Hugo
 render hook + card partials; Astro components + a dependency-free rehype
 plugin). The home hero and event lead image stay eager (above the fold).
-A `preconnect` to cdnjs is emitted only when the default Font Awesome URL is
-used.
+A `preconnect` to cdnjs is emitted only when `fontAwesome` is explicitly set to
+the old cdnjs URL, which is no longer the default.
+
+## Icons: self-hosted Font Awesome (Tier 1)
+
+Font Awesome Free 7.3.1 ships in the theme, not from a CDN:
+`static/fontawesome/` (Hugo) ⇄ `public/fontawesome/` (Astro), plus
+`package/fontawesome/` for the npm distribution. Keep the three copies at the
+same version; they are the same files.
+
+`params.fontAwesome` (Hugo) ⇄ `SITE.fontAwesome` (Astro) is **optional**, and
+unset means "use the theme's own copy". Set it to a URL to use a CDN instead.
+The local default is base-aware through `rel-href.html` ⇄ `withBase()`, so a
+subpath install resolves; an external value passes through untouched.
+
+The two Astro models differ here by necessity, and it is the one divergence
+`package-smoke.yml` excludes from the drift guard: the template model links
+`/fontawesome/css/all.min.css` from `public/`, while a package consumer has no
+such directory, so `package/src/layouts/BaseLayout.astro` imports the
+stylesheet and lets Vite emit the woff2 files as build assets. A package
+consumer therefore gets **no** `<link>` unless it opts into a CDN.
+
+Nothing the setup wizard writes pins a version: `config.ts.tmpl` deliberately
+omits the key so generated sites inherit whichever copy the theme ships.
 
 ## Organization & BlogPosting JSON-LD (Tier 2)
 

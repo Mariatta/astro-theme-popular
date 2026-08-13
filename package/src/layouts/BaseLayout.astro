@@ -6,6 +6,13 @@ import '../styles/tokens/typography.css';
 import '../styles/tokens/spacing.css';
 import '../styles/tokens/elevation.css';
 import '../styles/base.css';
+/* Icons: bundled rather than linked. A package consumer has no
+   public/fontawesome/ to link to, so Vite processes the stylesheet, emits the
+   woff2 files as build assets, and rewrites the url() references, which gets
+   the base prefix right for free. The template model links the same files from
+   public/ instead; that is the one place the two BaseLayouts genuinely differ,
+   which is why package-smoke.yml's drift guard excludes this file. */
+import '../../fontawesome/css/all.min.css';
 import '../styles/components.css';
 import Header from 'popular:component/Header';
 import Footer from 'popular:component/Footer';
@@ -32,6 +39,11 @@ const ogImage = image ?? SITE.ogImage;
 /* Astro.url.pathname already carries the base; Astro.site does not, hence
    absoluteUrl() for everything built from a path we wrote ourselves. */
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
+
+/* Only a consumer who explicitly opts into a CDN gets a <link>; unset means
+   the bundled copy above is already doing the job. */
+const CDNJS_FONT_AWESOME =
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css';
 
 /* Brand overrides: mirrors the Hugo theme's brand-vars.html partial. */
 const vars: string[] = [];
@@ -94,10 +106,10 @@ const brandCss = `html:root{${vars.join(';')}}`;
     <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
     <link rel="icon" href={withBase(SITE.favicon ?? SITE.logo)} />
     <link rel="alternate" type="application/rss+xml" title={(SITE as Record<string, any>).rssTitle ?? SITE.title} href={absoluteUrl('/rss.xml', Astro.site ?? Astro.url)} />
-    {SITE.fontAwesome.includes("font-awesome/6.5.2/css/all.min.css") && <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />}
-    <link rel="stylesheet" href={SITE.fontAwesome} referrerpolicy="no-referrer"
-      integrity={SITE.fontAwesome.includes("font-awesome/6.5.2/css/all.min.css") ? "sha384-PPIZEGYM1v8zp5Py7UjFb79S58UeqCL9pYVnVPURKEqvioPROaVAJKKLzvH2rDnI" : undefined}
-      crossorigin={SITE.fontAwesome.includes("font-awesome/6.5.2/css/all.min.css") ? "anonymous" : undefined} />
+    {SITE.fontAwesome === CDNJS_FONT_AWESOME && <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />}
+    {SITE.fontAwesome && <link rel="stylesheet" href={SITE.fontAwesome} referrerpolicy="no-referrer"
+      integrity={SITE.fontAwesome === CDNJS_FONT_AWESOME ? "sha384-PPIZEGYM1v8zp5Py7UjFb79S58UeqCL9pYVnVPURKEqvioPROaVAJKKLzvH2rDnI" : undefined}
+      crossorigin={SITE.fontAwesome === CDNJS_FONT_AWESOME ? "anonymous" : undefined} />}
     {(SITE as Record<string, any>).customCSS?.map((href: string) => <link rel="stylesheet" href={withBase(href)} />)}
     {noindex && <meta name="robots" content="noindex,follow" />}
     <style is:inline id="popular-brand" set:html={brandCss}></style>

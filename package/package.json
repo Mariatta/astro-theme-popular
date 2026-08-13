@@ -39,6 +39,7 @@
     "schemas.ts",
     "src",
     "scripts",
+    "fontawesome",
     "tsconfig.json",
     "README.md",
     "LICENSE"

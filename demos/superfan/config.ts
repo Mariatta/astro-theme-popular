@@ -14,7 +14,9 @@ export const SITE = {
   favicon: '/images/logo.svg',
   ogImage: '/images/hero.svg',
   locale: 'en-US',
-  fontAwesome: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css',
+  // Icons, served by this site from public/fontawesome/. Set this to a URL
+  // to use a CDN instead; leaving it out uses the theme's own copy.
+  fontAwesome: '/fontawesome/css/all.min.css',
   customCSS: ['https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@700&display=swap'],
   landAcknowledgement: "Fan-made and gloriously unofficial: this site is a love letter, not affiliated with anyone it adores.",
 };
