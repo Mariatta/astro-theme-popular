@@ -18,6 +18,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+      - name: Install the workspace
+        # Since phase 3 the repo is an npm workspace, so one install at the root
+        # links the package into every member and resolves the package's own
+        # deps (@astrojs/rss) and the astro binary. The smoke consumer still
+        # consumes the package exactly as an adopter does; it is just no longer
+        # installed separately.
+        run: npm ci
       - name: Transitional drift guard (template model vs package)
         run: |
           # Until the phase-4 cutover, theme code exists twice in this repo.
@@ -41,10 +49,6 @@ jobs:
             diff -r -x BaseLayout.astro /tmp/norm/a /tmp/norm/b
           done
       - name: Build the smoke consumer
-        # Since phase 3 the repo is an npm workspace, so one install at the root
-        # links the package and resolves its own deps (@astrojs/rss) for every
-        # member. The smoke consumer still consumes the package exactly as an
-        # adopter does; it is just no longer installed separately.
         run: npm run build --workspace smoke
       - name: Output guards
         run: |
