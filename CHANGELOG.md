@@ -16,6 +16,23 @@ Releases) or subscribe to the releases feed
 
 ### Changed
 
+- **Web fonts are served by the site itself,** not fetched from
+  `fonts.googleapis.com`. Inter and Quantico now ship in the theme
+  (`static/fonts/` ⇄ `src/styles/fonts/`), 716KB of woff2 under their SIL Open
+  Font Licences. Nothing about the rendering changes: the vendored files are
+  exactly the subsets and weight ranges Google was serving.
+  - **This removes a GDPR exposure.** Embedding Google Fonts sends every
+    visitor's IP address to Google, which a German court held to violate the
+    GDPR (LG München I, 3 O 17493/20). A community site should not have to
+    think about that.
+  - It is also faster, not slower. The partitioned browser cache has meant no
+    cross-site reuse since 2020, and the old `@import` added a DNS lookup, a
+    TLS handshake and a round trip before any font could start downloading.
+  - Every face keeps its `unicode-range`, so all seven Inter subsets ship but a
+    latin-only page still downloads about 150KB of them. Greek, Cyrillic and
+    Vietnamese sites now render in Inter instead of falling back.
+  - Sites that prefer a CDN, or a different family entirely, override
+    `fonts.css` the same way as before.
 - **Font Awesome is served by the site itself,** not fetched from cdnjs. A
   Popular site now renders its icons offline, keeps working when a CDN has an
   outage or changes a URL, and no longer hands every visitor's IP address to a

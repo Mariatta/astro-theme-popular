@@ -354,6 +354,38 @@ consumer therefore gets **no** `<link>` unless it opts into a CDN.
 Nothing the setup wizard writes pins a version: `config.ts.tmpl` deliberately
 omits the key so generated sites inherit whichever copy the theme ships.
 
+## Web fonts: self-hosted Inter and Quantico (Tier 1)
+
+Same reasoning as the icons above, one tier further in: `fonts.css` is itself a
+Tier-1 byte-identical file, so the two repos cannot each point at their own
+copy. They point at the same **relative** path, and each repo puts the woff2
+files where that path lands:
+
+| Hugo                              | Astro                                            |
+|-----------------------------------|--------------------------------------------------|
+| `static/fonts/*.woff2`            | `src/styles/fonts/*.woff2` + `package/src/styles/fonts/*.woff2` |
+| published at `/fonts/`            | emitted by Vite into `_astro/`, hashed           |
+| resolved from `/css/popular.css`  | resolved from the bundled stylesheet             |
+
+`url('../fonts/…')` works in both because it resolves against the stylesheet
+rather than the host root: Hugo concatenates `fonts.css` into `/css/popular.css`
+(one level down, so `../fonts/` is `/fonts/`), and Vite resolves the same string
+against `src/styles/tokens/fonts.css` at build time and rewrites it. This is
+what makes a subpath install work with no `rel-href.html` ⇄ `withBase()` on
+either side. **Never rewrite these as `/fonts/…`**: `image-alt.yml` and
+`package-smoke.yml`'s `--base /sub` build both catch it, but the failure looks
+like missing glyphs rather than a broken link.
+
+Unlike the icons, the Astro copies are **not** a divergence: `src/styles/` and
+`package/src/styles/` are compared recursively by the drift guard, so the fonts
+directory must be identical in both. `sync-shared.sh` does not carry them (its
+pair is `assets/css/tokens` ⇄ `src/styles/tokens`, and the fonts sit beside it,
+not inside), so refresh all three homes by hand when upgrading.
+
+Every face carries a `unicode-range`, so shipping all seven Inter subsets costs
+repo size and no bandwidth. See `static/fonts/README.md` for what is vendored,
+the licence position, and how to refetch.
+
 ## Organization & BlogPosting JSON-LD (Tier 2)
 
 Home pages emit `schema.org/Organization` (Hugo `jsonld-org.html`, Astro
