@@ -37,9 +37,14 @@ jobs:
           bash scripts/sync-shared.sh --check
 
   e2e-wizard:
-    # End-to-end: activate the neutral starter, run scripts/setup.py over it with
-    # a fixture answer file, then confirm the generated site builds and the
-    # answers reached the rendered HTML.
+    # End-to-end: run scripts/setup.py over the neutral starter with a fixture
+    # answer file, then confirm the generated site builds and the answers
+    # reached the rendered HTML.
+    #
+    # There is no activation step since packaging phase 3: `src/` *is* the
+    # template-model starter, committed pristine, so a fresh checkout is
+    # already the state this test needs. (`npm run demo:starter` now starts a
+    # dev server for the demo workspace and would hang here.)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -51,9 +56,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Activate the starter, then run the wizard over it
+      - name: Run the wizard over the starter
         run: |
-          npm run demo:starter
           # No --force: an unedited starter's config and CoC page are pristine,
           # so the wizard adopts them. A regression would exit 1 here.
           POPULAR_SETUP_DATE=2026-08-03 python3 scripts/setup.py \
