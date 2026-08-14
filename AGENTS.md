@@ -34,35 +34,40 @@ here must be mirrored there (see "Parity rules" below).
 
 ## The single most important thing to know
 
-`src/` holds the **active site**, which is a *copy* produced by demo
-activation. The default active site is `demos/starter` (the neutral
-"Your Community" skeleton, twin of hugo-theme-popular's `exampleSite/`).
-The flavored sets live alongside it in `demos/<name>/` (aquarium, foodie,
-kdrama, and `superfan`: Truly Madly Riley, a fictional personal site).
-Running:
+This repo is an **npm workspace** with two ways of building the same theme, and
+knowing which one you are looking at explains most confusion.
+
+| Member | What it is |
+|---|---|
+| `package/` | The theme as a publishable Astro integration. The only published artifact. |
+| `demos/<slug>/` | Five real consumer projects (starter, aquarium, foodie, kdrama, superfan), each installing the package and supplying its own `popular.config.ts`, `src/content/`, `public/images/`. |
+| `smoke/` | The minimal consumer, with six config variants CI builds to exercise overrides, opt-outs, preview mode and subpaths. |
+| `src/` | The **template model**: the old copy-the-repo site, kept working until the phase-4 cutover. |
 
 ```bash
-npm run demo:starter    # or demo:aquarium / demo:foodie / demo:kdrama / demo:superfan
+npm install                            # one install links every member
+npm run dev --workspace demos/aquarium # or: npm run demo:aquarium
+npm run build --workspaces             # build everything
 ```
 
-copies that demo's `config.ts`, `content/`, and `images/` over `src/config.ts`,
-`src/content/`, and `public/images/`. Consequences:
+Consequences:
 
-- To change a demo, edit `demos/<name>/**`, then re-run `npm run demo:<name>`
-  to see it. Edits made only under `src/` are lost on the next activation.
-- If a change "mysteriously" does not appear, check whether `src/` is just a
-  stale activation copy. `src/config.ts` should be identical to the activated
-  demo's `config.ts`.
-- When editing shared config shape (NAV, FOOTER, BRAND), apply the same edit to
-  `src/config.ts` **and** all four `demos/*/config.ts`.
-- **Merge-based forks**: because the starter is activated into `src/` by
-  default, `src/content/` ships live sample entries (event, post, organizer,
-  speaker, venue). Forks that merge from upstream (rather than copy) should
-  expect to delete or replace those samples; only `demos/**` is inert.
+- **A demo is a project, not a fixture.** Edit `demos/<slug>/**` and build it
+  where it lives. There is no activation step and nothing is copied into `src/`
+  (`scripts/use-demo.mjs` is gone, retired in phase 3).
+- **Demo content imports theme components by package specifier**
+  (`astro-theme-popular/components/Callout.astro`), because a consumer has no
+  `src/components/`. `src/content/` still uses template-relative paths. Both are
+  correct; `scripts/starter-content.py` knows the mapping.
+- **When editing shared config shape (NAV, FOOTER, BRAND), apply the same edit
+  to `src/config.ts` and all five `demos/*/popular.config.ts`.**
+- **Merge-based forks**: `src/content/` ships live sample entries (event, post,
+  organizer, speaker, venue). Forks that merge from upstream rather than copy
+  should expect to delete or replace those samples; `demos/**` is inert.
 
 ## The npm package transition (PACKAGING.md, PR #9)
 
-`package/` is the theme as a publishable Astro integration (phase 1);
+`package/` is the theme as a publishable Astro integration (phases 1-3 done);
 `smoke/` is its minimal consumer, built in CI. Until the cutover, theme code
 exists **twice**: the canonical template-model copy (`src/`,
 `public/scripts/`) and the package copy (`package/src/`, `package/scripts/`).
@@ -76,10 +81,11 @@ injects them): mirror edits to it by hand.
 ## Commands
 
 ```bash
-npm install
-npm run dev            # dev server for the active site in src/
-npm run build          # builds to dist/
-npm run demo:<name>    # activate a demo (copies into src/, see above)
+npm install            # one install for every workspace member
+npm run dev            # dev server for the template-model site in src/
+npm run build          # builds src/ to dist/
+npm run demo:<name>    # dev server for that demo workspace
+npm run demos:build    # build every workspace member
 ```
 
 To bulk-populate events and speakers from a Sessionize event, run
@@ -173,7 +179,8 @@ Image paths are **root-absolute** (`/images/post-1.png`), both in front matter
 and in markdown bodies. The theme's links assume deployment at a domain root.
 Put an italic line right after a body image for a caption.
 
-Remember: add demo content under `demos/<name>/content/`, not only `src/`.
+Remember: add demo content under `demos/<slug>/src/content/`, not only `src/`.
+Demo MDX imports components by package specifier, not by relative path.
 
 ## Configuration knobs
 
@@ -228,7 +235,7 @@ Keep the two copies in step. `package-smoke.yml` builds
 ## Internationalization (UI strings)
 
 - Never hardcode user-facing text in components/pages. Add a key to `STRINGS`
-  in every config (`src/config.ts` + all `demos/*/config.ts`) and use
+  in every config (`src/config.ts` + all `demos/*/popular.config.ts`) and use
   `STRINGS.key`; add the same key to hugo-theme-popular's `i18n/en.toml`
   (the key sets must match, see PARITY.md).
 - Dates: always `toLocaleDateString(SITE.locale, ...)`, never a hardcoded

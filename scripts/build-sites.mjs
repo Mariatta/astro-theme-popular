@@ -11,11 +11,13 @@
  * the Netlify preview build (see AGENTS.md, "Settings that live outside this
  * repo"). One script so a preview cannot quietly differ from production.
  *
+ * Since phase 3 each demo is its own workspace consuming the package, so this
+ * builds them where they live instead of copying one into src/ at a time. That
+ * makes the deployment an integration test: five real consumers, five configs,
+ * built from the same package an adopter installs.
+ *
  * Each demo is built with Astro's own `--base`, which is what makes every
- * link, image, feed and canonical URL land under the demo's subpath. This
- * used to be a sed pass over the built HTML, rewriting `href="/`; that could
- * never reach the absolute URLs (canonical, og:image, JSON-LD), and the theme
- * has been base-aware since 0.9.0, so the rewrite is gone.
+ * link, image, feed and canonical URL land under the demo's subpath.
  *
  * Set POPULAR_PREVIEW_NOTE to render the preview banner on every page (the
  * env-var switch is meant for exactly this: a build nobody owns).
@@ -36,25 +38,23 @@ if (!site) {
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = resolve(process.cwd(), outDir);
 const DEMOS = ['aquarium', 'foodie', 'kdrama', 'superfan'];
-const run = (cmd, args) =>
-  execFileSync(cmd, args, { cwd: ROOT, stdio: 'inherit', env: process.env });
 
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
 
 for (const slug of DEMOS) {
+  const cwd = join(ROOT, 'demos', slug);
   const base = `${basePrefix}/${slug}`;
-  run('node', ['scripts/use-demo.mjs', slug]);
-  run('npx', ['astro', 'build', '--site', site, '--base', base, '--outDir', `dist-${slug}`]);
-  cpSync(join(ROOT, `dist-${slug}`), join(OUT, slug), { recursive: true });
-  rmSync(join(ROOT, `dist-${slug}`), { recursive: true, force: true });
+  execFileSync('npx', ['astro', 'build', '--site', site, '--base', base], {
+    cwd,
+    stdio: 'inherit',
+    env: process.env,
+  });
+  cpSync(join(cwd, 'dist'), join(OUT, slug), { recursive: true });
+  rmSync(join(cwd, 'dist'), { recursive: true, force: true });
 }
 
 /* The gallery is a hand-written landing page, not an Astro build. */
 cpSync(join(ROOT, 'demos/gallery/index.html'), join(OUT, 'index.html'));
-
-/* Leave the working tree on the starter, so a local run does not silently
-   leave a flavored demo activated in src/. */
-run('node', ['scripts/use-demo.mjs', 'starter']);
 
 console.log(`built ${DEMOS.length} demos + gallery into ${OUT} (site ${site}, base ${basePrefix || '/'})`);

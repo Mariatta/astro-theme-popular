@@ -18,26 +18,29 @@ NATIVE = "hugo" if os.path.isdir(os.path.join(ROOT, "exampleSite")) else "astro"
 
 
 class TestImportRewrite(unittest.TestCase):
-    """A site consuming the npm package has no src/components/, so the
-    starter's relative imports must become package specifiers or its build
-    fails on the first MDX page."""
+    """Since packaging phase 3 the starter is a package consumer, so its MDX
+    imports components by package specifier. A template-model site has no such
+    dependency but does have src/components/, so the specifiers must be
+    rewritten back to relative paths or its build fails on the first MDX page."""
 
-    def test_rewrites_relative_component_imports(self):
-        for src in ("""import Callout from '../../components/Callout.astro';""",
-                    '''import Callout from "../../../components/Callout.astro";'''):
-            out = starter.package_imports(src)
-            self.assertIn("astro-theme-popular/components/Callout.astro", out)
-            self.assertNotIn("../", out)
+    def test_rewrites_package_component_imports(self):
+        for src in ("""import Callout from 'astro-theme-popular/components/Callout.astro';""",
+                    '''import Callout from "astro-theme-popular/components/Callout.astro";'''):
+            out = starter.template_imports(src)
+            self.assertIn("../../components/Callout.astro", out)
+            self.assertNotIn("astro-theme-popular", out)
 
     def test_leaves_everything_else_alone(self):
-        for src in ("import Chart from '../../charts/Chart.astro';",
+        for src in ("import Chart from 'astro-theme-popular/charts/Chart.astro';",
+                    "import { schemas } from 'astro-theme-popular';",
                     "import x from 'some-package';",
-                    "See ../../components/Callout.astro in prose."):
-            self.assertEqual(starter.package_imports(src), src)
+                    "See astro-theme-popular/components/Callout.astro in prose."):
+            self.assertEqual(starter.template_imports(src), src)
 
     def test_quote_style_survives(self):
-        out = starter.package_imports('''import C from "../../components/C.astro";''')
-        self.assertIn('''from "astro-theme-popular/components/C.astro"''', out)
+        out = starter.template_imports(
+            '''import C from "astro-theme-popular/components/C.astro";''')
+        self.assertIn('''from "../../components/C.astro"''', out)
 
 
 class TestCopy(unittest.TestCase):

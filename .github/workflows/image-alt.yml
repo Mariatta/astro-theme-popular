@@ -1,8 +1,12 @@
 name: Images must have alt text
 
-# Activates and builds each demo set and fails if any <img> in the output
-# lacks a non-empty alt attribute, or any markdown image in content sources
-# has empty alt text. See scripts/check-image-alt.py.
+# Builds every demo workspace and fails if any <img> in the output lacks a
+# non-empty alt attribute, or any markdown image in content sources has empty
+# alt text. See scripts/check-image-alt.py.
+#
+# Since phase 3 the demos are real consumers of the package, so each one builds
+# where it lives instead of being copied into src/ first. That makes this job an
+# integration test too: five configs against the package an adopter installs.
 
 on:
   push:
@@ -23,16 +27,24 @@ jobs:
 
       - run: npm ci
 
-      - name: Build each demo and check its output
+      - name: Build each demo workspace and check its output
         run: |
           for d in starter aquarium foodie kdrama superfan; do
-            npm run "demo:$d"
-            npx astro build
-            python3 scripts/check-image-alt.py dist
-            python3 scripts/check-jsonld.py dist
-            python3 scripts/check-ics.py dist
-            if grep -rl --include="*.html" '&amp;amp;' dist; then echo "::error::double-escaped ampersand in $d"; exit 1; fi
+            npm run build --workspace "demos/$d"
+            out="demos/$d/dist"
+            python3 scripts/check-image-alt.py "$out"
+            python3 scripts/check-jsonld.py "$out"
+            python3 scripts/check-ics.py "$out"
+            if grep -rl --include="*.html" '&amp;amp;' "$out"; then echo "::error::double-escaped ampersand in $d"; exit 1; fi
           done
+
+      - name: Build the template-model site and check its output
+        # src/ keeps working until the phase-4 cutover, so it is still checked.
+        run: |
+          npx astro build
+          python3 scripts/check-image-alt.py dist
+          python3 scripts/check-jsonld.py dist
+          python3 scripts/check-ics.py dist
 
       - name: Check content sources
         run: python3 scripts/check-image-alt.py demos src/content

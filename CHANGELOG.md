@@ -16,6 +16,18 @@ Releases) or subscribe to the releases feed
 
 ### Changed
 
+- **Astro: the demos are now real consumers of the npm package** (packaging
+  phase 3). The repo is an npm workspace, and each of the five demos is a
+  project with its own `package.json`, `astro.config.mjs`, `popular.config.ts`,
+  `src/content/` and `public/images/`, installing the theme the way an adopter
+  does. `scripts/use-demo.mjs` and the copy-a-demo-into-`src/` step are gone;
+  `npm run dev --workspace demos/aquarium` replaces activation.
+  - **The demo deployment and the image-alt job became integration tests.**
+    Both now build five real consumers against the packaged theme instead of
+    one copied-together site, so a package regression fails CI rather than
+    surfacing after publish.
+  - Nothing changes for anyone using the theme. The template model (`src/`)
+    keeps working until the cutover, and the Hugo side is untouched.
 - **Web fonts are served by the site itself,** not fetched from
   `fonts.googleapis.com`. Inter and Quantico now ship in the theme
   (`static/fonts/` ⇄ `src/styles/fonts/`), 716KB of woff2 under their SIL Open

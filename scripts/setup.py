@@ -350,10 +350,18 @@ def pristine_map(fmt):
                 [os.path.join(root, "exampleSite", "content", "code-of-conduct.md")]
                 + glob.glob(os.path.join(root, "demos", "*", "content", "code-of-conduct.md"))),
         }
+    # Since packaging phase 3 a demo is a package consumer, so its config is
+    # `popular.config.ts` and its content sits under `src/`. The template-model
+    # copies in the theme root are fingerprints too, and stay so until the
+    # cutover removes them.
     return {
-        "src/config.ts": contents(glob.glob(os.path.join(root, "demos", "*", "config.ts"))),
+        "src/config.ts": contents(
+            [os.path.join(root, "src", "config.ts")]
+            + glob.glob(os.path.join(root, "demos", "*", "popular.config.ts"))),
         "src/content/pages/code-of-conduct.mdx": contents(
-            glob.glob(os.path.join(root, "demos", "*", "content", "pages", "code-of-conduct.mdx"))),
+            [os.path.join(root, "src", "content", "pages", "code-of-conduct.mdx")]
+            + glob.glob(os.path.join(root, "demos", "*", "src", "content", "pages",
+                                     "code-of-conduct.mdx"))),
         # The template repo ships a runnable astro.config.mjs; an unedited one
         # is the theme's, not the organizer's, so the wizard may write site/base
         # into it on a first run.

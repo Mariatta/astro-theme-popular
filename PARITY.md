@@ -247,12 +247,21 @@ events as an influencer's appearances, and no organizers). Demo *content and
 config values* must stay equivalent across repos: Hugo `demos/*` ⇄ Astro
 `demos/*` (slugs `aquarium`, `foodie`, `kdrama`, `superfan`; Hugo dirs use
 full names, so `demos/truly-madly-riley` ⇄ `demos/superfan`). The demo
-switcher bar is `params.demoBar` (Hugo) ⇄ `DEMO_BAR` in `config.ts` (Astro)
-with identical slugs/labels/icons.
+switcher bar is `params.demoBar` (Hugo) ⇄ `DEMO_BAR` in `popular.config.ts`
+(Astro) with identical slugs/labels/icons.
+
+The two sides hold a demo differently, which is a shape difference and not a
+content one. A Hugo demo is a Hugo site (`demos/<name>/hugo.toml` + `content/`
++ `static/`). Since packaging phase 3 an Astro demo is an npm workspace that
+*consumes* the package: `demos/<slug>/popular.config.ts` + `src/content/` +
+`public/images/`, with its own `package.json` and `astro.config.mjs`. Its MDX
+therefore imports theme components by package specifier
+(`astro-theme-popular/components/Callout.astro`) where Hugo uses a shortcode.
+Content, config values and imagery still have to match.
 
 The neutral "Your Community" starter ships on both sides: Hugo
-`exampleSite/` ⇄ Astro `demos/starter/` (which is also the Astro repo's
-default active `src/`). The starter never sets the demo bar and is not part
+`exampleSite/` ⇄ Astro `demos/starter/` (a workspace consumer like the others;
+the Astro repo's `src/` keeps a template-model copy until the cutover). The starter never sets the demo bar and is not part
 of the deployed demo set.
 
 ## Release checklist

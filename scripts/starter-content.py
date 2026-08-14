@@ -11,12 +11,13 @@ handbook and runbooks) so a new site has something to look at.
 
 Existing files are never overwritten, so it is safe to re-run.
 
-Why this is not just `cp -r`: the starter's MDX imports theme components with
-paths that only resolve inside the template repo
-(`../../components/Callout.astro`). A site that consumes the npm package has no
-such directory, and its build fails on the first import. In package mode those
-specifiers are rewritten to `astro-theme-popular/components/…`, which the
-package's export map serves. Content stays single-source either way.
+Why this is not just `cp -r`: the starter's MDX imports theme components, and
+the two Astro models spell that import differently. Since packaging phase 3 the
+starter is a package consumer, so its source form is the package specifier
+`astro-theme-popular/components/Callout.astro`, served by the export map. A
+template-model site has no such dependency but does have `src/components/`, so
+in that mode the specifiers are rewritten back to `../../components/…`.
+Content stays single-source either way; the rewrite is the only difference.
 
 Stdlib only; ships identically in both repos (see PARITY.md).
 """
@@ -29,7 +30,8 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, ".."))
 
-IMPORT_RE = re.compile(r"""from\s+(['"])(?:\.\./)+components/([A-Za-z0-9_]+)\.astro\1""")
+PACKAGE_IMPORT_RE = re.compile(
+    r"""from\s+(['"])astro-theme-popular/components/([A-Za-z0-9_]+)\.astro\1""")
 
 
 def fail(msg, code=2):
@@ -37,10 +39,15 @@ def fail(msg, code=2):
     sys.exit(code)
 
 
-def package_imports(text):
-    """Rewrite template-relative component imports to package specifiers."""
-    return IMPORT_RE.sub(lambda m: f"from {m.group(1)}astro-theme-popular/components/"
-                                   f"{m.group(2)}.astro{m.group(1)}", text)
+def template_imports(text):
+    """Rewrite package component specifiers to template-relative paths.
+
+    `../../` is right for every collection because content sits two levels
+    under `src/` (`src/content/<collection>/entry.mdx`) and the components sit
+    at `src/components/`.
+    """
+    return PACKAGE_IMPORT_RE.sub(lambda m: f"from {m.group(1)}../../components/"
+                                           f"{m.group(2)}.astro{m.group(1)}", text)
 
 
 def copy_tree(src, dest, transform=None):
@@ -71,8 +78,8 @@ def sources(fmt, model):
         return [(os.path.join(ROOT, "exampleSite", "content"), "content"),
                 (os.path.join(ROOT, "exampleSite", "static"), "static")]
     starter = os.path.join(ROOT, "demos", "starter")
-    return [(os.path.join(starter, "content"), "src/content"),
-            (os.path.join(starter, "images"), "public/images")]
+    return [(os.path.join(starter, "src", "content"), "src/content"),
+            (os.path.join(starter, "public", "images"), "public/images")]
 
 
 def main(argv=None):
@@ -83,7 +90,7 @@ def main(argv=None):
     ap.add_argument("--astro-model", choices=["template", "package"], default="template")
     args = ap.parse_args(argv)
 
-    transform = package_imports if (args.format == "astro" and args.astro_model == "package") else None
+    transform = template_imports if (args.format == "astro" and args.astro_model == "template") else None
 
     # This script is Tier-1 (identical in both repos), but the starter content
     # is not: Hugo's lives in exampleSite/, Astro's in demos/starter/. Running

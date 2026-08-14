@@ -119,6 +119,18 @@ export default defineConfig({
    complete.
 3. **Demos become consumers; scaffolder; CI reshaped** (image-alt and the
    base-path scan run per demo workspace; parity paths update).
+   - The repo became an npm workspace (`package`, `demos/*`, `smoke`), and each
+     of the five demos became a real consumer project with its own
+     `package.json`, `astro.config.mjs`, `popular.config.ts`, `src/content/`
+     and `public/images/`. `use-demo.mjs` and the `src/`-as-activation-copy
+     model for demos are gone; the deployment and the image-alt job now build
+     five real consumers, which makes both of them integration tests. [shipped]
+   - **The demo bar stays.** PACKAGING originally listed it with the activation
+     machinery, but `DEMO_BAR` ⇄ `params.demoBar` is a Tier-2 parity item with a
+     Hugo twin (`demo-bar.html`), and the deployed gallery still needs it.
+     What retired was activation, not the component.
+   - Still open: the `create-popular` scaffolder, and moving the Tier-1 parity
+     paths to `package/`. Both land before the cutover.
 4. **Cutover**: old `src/` activation model removed, docs + updating guide
    rewritten, summit fork migrated as the pilot, npm publish. This release
    is the breaking one; target `0.5.0` (or whatever 0.x is next), with 1.0
