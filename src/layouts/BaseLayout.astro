@@ -33,6 +33,16 @@ const ogImage = image ?? SITE.ogImage;
    absoluteUrl() for everything built from a path we wrote ourselves. */
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
 
+/* Icons are served by the site itself from public/fontawesome/, so a site
+   works offline, survives a CDN outage, and tells no third party who is
+   reading it. `fontAwesome` is optional: leave it unset and the theme's own
+   copy is used; set it to a URL to use a CDN instead. withBase() keeps the
+   local default working on a subpath install and passes an external URL
+   through untouched. The Hugo twin does this in partials/head.html. */
+const CDNJS_FONT_AWESOME =
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css';
+const fontAwesome = SITE.fontAwesome ?? '/fontawesome/css/all.min.css';
+
 /* Brand overrides: mirrors the Hugo theme's brand-vars.html partial. */
 const vars: string[] = [];
 const b = BRAND;
@@ -94,10 +104,10 @@ const brandCss = `html:root{${vars.join(';')}}`;
     <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
     <link rel="icon" href={withBase(SITE.favicon ?? SITE.logo)} />
     <link rel="alternate" type="application/rss+xml" title={(SITE as Record<string, any>).rssTitle ?? SITE.title} href={absoluteUrl('/rss.xml', Astro.site ?? Astro.url)} />
-    {SITE.fontAwesome.includes("font-awesome/6.5.2/css/all.min.css") && <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />}
-    <link rel="stylesheet" href={SITE.fontAwesome} referrerpolicy="no-referrer"
-      integrity={SITE.fontAwesome.includes("font-awesome/6.5.2/css/all.min.css") ? "sha384-PPIZEGYM1v8zp5Py7UjFb79S58UeqCL9pYVnVPURKEqvioPROaVAJKKLzvH2rDnI" : undefined}
-      crossorigin={SITE.fontAwesome.includes("font-awesome/6.5.2/css/all.min.css") ? "anonymous" : undefined} />
+    {fontAwesome === CDNJS_FONT_AWESOME && <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />}
+    <link rel="stylesheet" href={withBase(fontAwesome)} referrerpolicy="no-referrer"
+      integrity={fontAwesome === CDNJS_FONT_AWESOME ? "sha384-PPIZEGYM1v8zp5Py7UjFb79S58UeqCL9pYVnVPURKEqvioPROaVAJKKLzvH2rDnI" : undefined}
+      crossorigin={fontAwesome === CDNJS_FONT_AWESOME ? "anonymous" : undefined} />
     {(SITE as Record<string, any>).customCSS?.map((href: string) => <link rel="stylesheet" href={withBase(href)} />)}
     {noindex && <meta name="robots" content="noindex,follow" />}
     <style is:inline id="popular-brand" set:html={brandCss}></style>

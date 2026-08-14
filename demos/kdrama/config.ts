@@ -10,7 +10,9 @@ export const SITE = {
   favicon: '/images/logo.png',
   ogImage: '/images/hero.png',
   locale: 'en-US',
-  fontAwesome: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css',
+  // Icons, served by this site from public/fontawesome/. Set this to a URL
+  // to use a CDN instead; leaving it out uses the theme's own copy.
+  fontAwesome: '/fontawesome/css/all.min.css',
   landAcknowledgement: "Add your community's land acknowledgement or welcome statement here, this demo keeps it as a placeholder.",
   // Enable the /talks/ archive of past-event recordings and slides.
   talks: true,
