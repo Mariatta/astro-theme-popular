@@ -6,6 +6,7 @@
   "license": "MIT",
   "workspaces": [
     "package",
+    "create-popular",
     "demos/*",
     "smoke"
   ],

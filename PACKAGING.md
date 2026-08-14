@@ -129,8 +129,14 @@ export default defineConfig({
      machinery, but `DEMO_BAR` ⇄ `params.demoBar` is a Tier-2 parity item with a
      Hugo twin (`demo-bar.html`), and the deployed gallery still needs it.
      What retired was activation, not the component.
-   - Still open: the `create-popular` scaffolder, and moving the Tier-1 parity
-     paths to `package/`. Both land before the cutover.
+   - `create-popular` shipped: `npm create popular@latest` writes a project
+     that depends on the package, offering the starter or any demo as the
+     initial site. Its templates are collected from `demos/*` by `prepack`, so
+     there is no committed copy to drift, and CI scaffolds a site and builds
+     it on every PR. Releases now publish two packages in lockstep. [shipped]
+   - Still open: moving the Tier-1 parity paths to `package/`. Lands before
+     the cutover, since `sync-shared.sh` pairs `assets/css/tokens` ⇄
+     `src/styles/tokens` and `src/` stops existing at phase 4.
 4. **Cutover**: old `src/` activation model removed, docs + updating guide
    rewritten, summit fork migrated as the pilot, npm publish. This release
    is the breaking one; target `0.5.0` (or whatever 0.x is next), with 1.0

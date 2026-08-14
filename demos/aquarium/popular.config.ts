@@ -10,9 +10,6 @@ export const SITE = {
   favicon: '/images/logo.png',
   ogImage: '/images/hero.png',
   locale: 'en-US',
-  // Icons, served by this site from public/fontawesome/. Set this to a URL
-  // to use a CDN instead; leaving it out uses the theme's own copy.
-  fontAwesome: '/fontawesome/css/all.min.css',
   landAcknowledgement: "Add your community's land acknowledgement or welcome statement here, this demo keeps it as a placeholder.",
   notice: {
     text: 'Winter break: regular meetups resume in March. **Tanks stay wet**, [pop into the chat](https://example.com/chat) any time.',

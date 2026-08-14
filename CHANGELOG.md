@@ -25,6 +25,33 @@ Releases) or subscribe to the releases feed
   `min_version` is the older field, from the retired `hugoThemes` repo; both are
   kept in step. A site built with an older Hugo now says so, rather than the
   floor being a claim nothing checked.
+- **`npm create popular@latest`**, a scaffolder for Astro sites (packaging
+  phase 3). It writes a small project that *depends on* the theme rather than
+  containing a copy of it, so the site updates with `npm update` instead of by
+  diffing tags and re-copying files. Pick the neutral starter or any of the
+  four demos as a fuller example to edit down.
+  - The templates are collected from `demos/*` at pack time, so the demos stay
+    the single source of truth and there is no committed copy to drift. The
+    demo switcher bar is stripped on the way, and CI fails if it ever reaches
+    a scaffolded site.
+  - A project-page URL like `https://you.github.io/my-community/` is split into
+    Astro's `site` and `base` for you, the same split `scripts/setup.py` does.
+  - Releases now publish two npm packages: `astro-theme-popular` and
+    `create-popular`, versioned in lockstep so a scaffolded site always pins
+    the theme release that shipped with it.
+
+### Fixed
+
+- **Astro package model: an adopter's `SITE.fontAwesome` now resolves against
+  the base**, so a site-relative path survives a subpath install. It was
+  written to the page raw, unlike every other URL the theme emits. The subpath
+  guard in CI could not see it because leaving the key unset renders no link at
+  all; a smoke variant now sets it.
+- **The demo configs no longer pin `fontAwesome` to `/fontawesome/…`.** That
+  path is the template model's default and does not exist in the package model,
+  which bundles the stylesheet instead, so every page of every demo requested a
+  stylesheet that 404'd. Icons rendered anyway, from the bundled copy, which is
+  why it went unnoticed. Leaving the key unset is and was the correct setting.
 
 ### Changed
 

@@ -12,9 +12,6 @@ export const SITE = {
   favicon: '/images/logo.png',
   ogImage: '/images/hero.png',
   locale: 'en-US',
-  // Icons, served by this site from public/fontawesome/. Set this to a URL
-  // to use a CDN instead; leaving it out uses the theme's own copy.
-  fontAwesome: '/fontawesome/css/all.min.css',
   landAcknowledgement: "Add your community's land acknowledgement or welcome statement here, this starter keeps it as a placeholder.",
   // The community lives in chat between events. Set this and a "Join the chat"
   // button appears in the home hero and footer, and in the no-events empty

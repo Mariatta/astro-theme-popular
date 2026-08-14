@@ -10,10 +10,13 @@ file ships identically in both (PARITY.md Tier 1).
 1. **Write the changelog in a PR.** Move the `## [Unreleased]` entries under
    a new `## [X.Y.Z] - date` heading (blank line after every heading). Bump
    the version shown in the footer: on Hugo, `popularVersion` in the theme's
-   `hugo.toml`; on Astro,
-   `"version"` in **both** `package.json` and `package/package.json` (keep the
-   two repos' versions equal). Use the same branch name in both repos so the
-   parity CI pairs them; cut both branches from freshly pulled mains.
+   `hugo.toml`; on Astro, `"version"` in **all three** of `package.json`,
+   `package/package.json` and `create-popular/package.json` (keep the two
+   repos' versions equal). The release workflow validates all three and
+   refuses a mismatch, because `create-popular` scaffolds sites pinned to
+   `^<its own version>`: a lagging scaffolder hands new sites an old theme.
+   Use the same branch name in both repos so the parity CI pairs them; cut
+   both branches from freshly pulled mains.
 2. **Merge the pair together.**
 3. **Dispatch the release in both repos:**
 
@@ -25,7 +28,14 @@ file ships identically in both (PARITY.md Tier 1).
 The workflow validates (semver input, changelog section present, tag free,
 cross-repo parity, and on Astro the version fields), then tags `vX.Y.Z`,
 publishes the GitHub Release with the changelog section as notes, and (Astro)
-publishes `astro-theme-popular` to the npm registry.
+publishes **two** packages to npm: `astro-theme-popular` (the theme) and
+`create-popular` (the scaffolder behind `npm create popular@latest`).
+
+`create-popular` ships its templates in the tarball but not in the repo:
+`prepack` collects them from `demos/*`, so `demos/` stays the single source of
+truth. That means it must be published from a checkout that still has `demos/`,
+which the workflow does. Publishing it by hand from a bare tarball would ship
+a scaffolder with no templates.
 
 Merging a PR does **not** release anything; the dispatch is the deliberate
 act. Nothing releases with the repos out of parity.
@@ -46,6 +56,12 @@ package page → **Settings** → **Trusted Publisher**:
 - Repository: `astro-theme-popular`
 - Workflow filename: `release.yml`
 - Environment: leave blank
+
+**Do this for both packages.** `astro-theme-popular` and `create-popular` are
+separate packages on npmjs.com and each needs its own Trusted Publisher entry,
+pointing at the same repo and the same workflow file. A missing entry on the
+second one fails the release *after* the tag is pushed, which is the case the
+local-publish fallback below exists for.
 
 The workflow side is already wired: `permissions: id-token: write` and
 Node 24 (trusted publishing needs npm >= 11.5.1). Any old `NPM_TOKEN`
