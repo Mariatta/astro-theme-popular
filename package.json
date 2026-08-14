@@ -4,15 +4,21 @@
   "description": "Popular: a warm, community-first Astro theme for meetups, user groups and small events. Built to make your community seen and famous.",
   "type": "module",
   "license": "MIT",
+  "workspaces": [
+    "package",
+    "demos/*",
+    "smoke"
+  ],
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "demo:starter": "node scripts/use-demo.mjs starter",
-    "demo:superfan": "node scripts/use-demo.mjs superfan",
-    "demo:aquarium": "node scripts/use-demo.mjs aquarium",
-    "demo:foodie": "node scripts/use-demo.mjs foodie",
-    "demo:kdrama": "node scripts/use-demo.mjs kdrama"
+    "demo:starter": "npm run dev --workspace demos/starter",
+    "demo:superfan": "npm run dev --workspace demos/superfan",
+    "demo:aquarium": "npm run dev --workspace demos/aquarium",
+    "demo:foodie": "npm run dev --workspace demos/foodie",
+    "demo:kdrama": "npm run dev --workspace demos/kdrama",
+    "demos:build": "npm run build --workspaces --if-present"
   },
   "dependencies": {
     "@astrojs/mdx": "^7.0.2",
