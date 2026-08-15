@@ -23,8 +23,8 @@ Releases) or subscribe to the releases feed
 - **`[module.hugoVersion]` in the Hugo theme's `hugo.toml`,** declaring the
   0.146.0 floor where themes.gohugo.io's build actually reads it. `theme.toml`'s
   `min_version` is the older field, from the retired `hugoThemes` repo; both are
-  kept in step. A site on an older Hugo now fails with a clear version error
-  instead of building something subtly wrong.
+  kept in step. A site built with an older Hugo now says so, rather than the
+  floor being a claim nothing checked.
 
 ### Changed
 
