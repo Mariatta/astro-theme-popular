@@ -83,7 +83,7 @@ export default defineConfig({
   `npm run build` in each proves the package against four configs. The demo
   bar, activation script (`use-demo.mjs`), and `src/`-as-copy model are
   retired; `npm run dev --workspace demos/aquarium` replaces activation.
-- `create-popular/`: a scaffolder (`npm create popular@latest`), offering
+- `create-popular-site/`: a scaffolder (`npm create popular-site@latest`), offering
   the starter or any demo as the initial site. Replaces "copy the repo".
 - The starter skeleton becomes the scaffolder's default template, which also
   dissolves the merge-based-fork papercut (no live samples in a theme repo).
@@ -129,7 +129,7 @@ export default defineConfig({
      machinery, but `DEMO_BAR` ⇄ `params.demoBar` is a Tier-2 parity item with a
      Hugo twin (`demo-bar.html`), and the deployed gallery still needs it.
      What retired was activation, not the component.
-   - `create-popular` shipped: `npm create popular@latest` writes a project
+   - `create-popular-site` shipped: `npm create popular-site@latest` writes a project
      that depends on the package, offering the starter or any demo as the
      initial site. Its templates are collected from `demos/*` by `prepack`, so
      there is no committed copy to drift, and CI scaffolds a site and builds
@@ -147,7 +147,7 @@ export default defineConfig({
 - npm name: `astro-theme-popular` (matches repo) vs a scoped
   `@mariatta/popular-astro`. Unscoped matches the repo and reads better in
   `npm create popular` land; check availability for both plus
-  `create-popular`.
+  `create-popular-site`.
 - Docs collection: keep docs pages as a content collection routed by the
   package (current behavior) vs leaving docs routing to adopters. Keep, per
   the organizer-handbook feature being a core differentiator.

@@ -1,7 +1,7 @@
 {
-  "name": "create-popular",
+  "name": "create-popular-site",
   "version": "0.10.0",
-  "description": "Start a community site on the Popular Astro theme: npm create popular@latest",
+  "description": "Start a community site on the Popular Astro theme: npm create popular-site@latest",
   "type": "module",
   "license": "MIT",
   "author": "Mariatta",
@@ -9,7 +9,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Mariatta/astro-theme-popular.git",
-    "directory": "create-popular"
+    "directory": "create-popular-site"
   },
   "keywords": [
     "astro",
@@ -19,7 +19,7 @@
     "meetup"
   ],
   "bin": {
-    "create-popular": "index.mjs"
+    "create-popular-site": "index.mjs"
   },
   "engines": {
     "node": ">=20"

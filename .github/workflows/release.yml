@@ -45,11 +45,11 @@ jobs:
           NPMPKG=$(node -p "require('./package/package.json').version")
           [ "$NPMPKG" = "${{ inputs.version }}" ] \
             || { echo "::error::package/package.json says $NPMPKG; bump it to ${{ inputs.version }} in the versioning PR"; exit 1; }
-          # create-popular pins the theme range it scaffolds with (^<its own
+          # create-popular-site pins the theme range it scaffolds with (^<its own
           # version>), so a lagging version would hand new sites an old theme.
-          CREATE=$(node -p "require('./create-popular/package.json').version")
+          CREATE=$(node -p "require('./create-popular-site/package.json').version")
           [ "$CREATE" = "${{ inputs.version }}" ] \
-            || { echo "::error::create-popular/package.json says $CREATE; bump it to ${{ inputs.version }} in the versioning PR"; exit 1; }
+            || { echo "::error::create-popular-site/package.json says $CREATE; bump it to ${{ inputs.version }} in the versioning PR"; exit 1; }
 
       - name: Refuse to release out of parity
         run: |
@@ -84,9 +84,9 @@ jobs:
           npm --version
           npm publish
 
-      - name: Publish create-popular to npm (trusted publishing)
+      - name: Publish create-popular-site to npm (trusted publishing)
         # The scaffolder is a second package with its own Trusted Publisher
         # entry on npmjs.com. Its prepack collects templates/ from demos/, so
         # publishing must happen from a checkout that still has them.
-        working-directory: create-popular
+        working-directory: create-popular-site
         run: npm publish

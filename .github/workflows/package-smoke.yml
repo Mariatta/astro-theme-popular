@@ -167,7 +167,7 @@ jobs:
           python3 ../scripts/check-ics.py dist-base
 
   scaffolder:
-    # `npm create popular@latest` is how a site starts once the cutover removes
+    # `npm create popular-site@latest` is how a site starts once the cutover removes
     # "copy the repo", so it has to be proven the same way the package is: by
     # running it and building what it wrote. It is also the only place the
     # pack-time templates/ directory gets exercised.
@@ -186,7 +186,7 @@ jobs:
         # is publishing a scaffolder that can scaffold nothing. `files` lists
         # it and .npmignore stops .gitignore from excluding it again; this
         # asserts that combination still holds.
-        working-directory: create-popular
+        working-directory: create-popular-site
         run: |
           npm pack --dry-run 2>&1 | tee /tmp/pack.out
           grep -q 'templates/starter/popular.config.ts' /tmp/pack.out
@@ -194,9 +194,9 @@ jobs:
 
       - name: Scaffold a site and build it
         run: |
-          node create-popular/scripts/collect-templates.mjs
+          node create-popular-site/scripts/collect-templates.mjs
           cd "$(mktemp -d)"
-          node "$GITHUB_WORKSPACE/create-popular/index.mjs" my-community \
+          node "$GITHUB_WORKSPACE/create-popular-site/index.mjs" my-community \
             --template aquarium --site https://you.github.io/my-community/ --yes
           cd my-community
           # The scaffolder writes a registry range; point it at this checkout so

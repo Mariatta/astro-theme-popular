@@ -25,7 +25,7 @@ Releases) or subscribe to the releases feed
   `min_version` is the older field, from the retired `hugoThemes` repo; both are
   kept in step. A site built with an older Hugo now says so, rather than the
   floor being a claim nothing checked.
-- **`npm create popular@latest`**, a scaffolder for Astro sites (packaging
+- **`npm create popular-site@latest`**, a scaffolder for Astro sites (packaging
   phase 3). It writes a small project that *depends on* the theme rather than
   containing a copy of it, so the site updates with `npm update` instead of by
   diffing tags and re-copying files. Pick the neutral starter or any of the
@@ -37,7 +37,7 @@ Releases) or subscribe to the releases feed
   - A project-page URL like `https://you.github.io/my-community/` is split into
     Astro's `site` and `base` for you, the same split `scripts/setup.py` does.
   - Releases now publish two npm packages: `astro-theme-popular` and
-    `create-popular`, versioned in lockstep so a scaffolded site always pins
+    `create-popular-site`, versioned in lockstep so a scaffolded site always pins
     the theme release that shipped with it.
 
 ### Fixed

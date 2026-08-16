@@ -11,9 +11,9 @@ file ships identically in both (PARITY.md Tier 1).
    a new `## [X.Y.Z] - date` heading (blank line after every heading). Bump
    the version shown in the footer: on Hugo, `popularVersion` in the theme's
    `hugo.toml`; on Astro, `"version"` in **all three** of `package.json`,
-   `package/package.json` and `create-popular/package.json` (keep the two
+   `package/package.json` and `create-popular-site/package.json` (keep the two
    repos' versions equal). The release workflow validates all three and
-   refuses a mismatch, because `create-popular` scaffolds sites pinned to
+   refuses a mismatch, because `create-popular-site` scaffolds sites pinned to
    `^<its own version>`: a lagging scaffolder hands new sites an old theme.
    Use the same branch name in both repos so the parity CI pairs them; cut
    both branches from freshly pulled mains.
@@ -29,9 +29,9 @@ The workflow validates (semver input, changelog section present, tag free,
 cross-repo parity, and on Astro the version fields), then tags `vX.Y.Z`,
 publishes the GitHub Release with the changelog section as notes, and (Astro)
 publishes **two** packages to npm: `astro-theme-popular` (the theme) and
-`create-popular` (the scaffolder behind `npm create popular@latest`).
+`create-popular-site` (the scaffolder behind `npm create popular-site@latest`).
 
-`create-popular` ships its templates in the tarball but not in the repo:
+`create-popular-site` ships its templates in the tarball but not in the repo:
 `prepack` collects them from `demos/*`, so `demos/` stays the single source of
 truth. That means it must be published from a checkout that still has `demos/`,
 which the workflow does. Publishing it by hand from a bare tarball would ship
@@ -57,7 +57,7 @@ package page → **Settings** → **Trusted Publisher**:
 - Workflow filename: `release.yml`
 - Environment: leave blank
 
-**Do this for both packages.** `astro-theme-popular` and `create-popular` are
+**Do this for both packages.** `astro-theme-popular` and `create-popular-site` are
 separate packages on npmjs.com and each needs its own Trusted Publisher entry,
 pointing at the same repo and the same workflow file. A missing entry on the
 second one fails the release *after* the tag is pushed, which is the case the

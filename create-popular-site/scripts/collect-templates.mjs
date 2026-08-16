@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Populate create-popular/templates/ from the repo's demo workspaces.
+ * Populate create-popular-site/templates/ from the repo's demo workspaces.
  *
  * Run by `prepack`, so the published tarball carries the templates while the
  * repo does not: demos/ stays the single source of truth and there is no

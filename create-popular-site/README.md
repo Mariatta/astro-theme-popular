@@ -1,16 +1,16 @@
-# create-popular
+# create-popular-site
 
 Start a community site on [Popular](https://popular.mariatta.ca/), a warm,
 community-first Astro theme for meetups, user groups and small events.
 
 ```bash
-npm create popular@latest
+npm create popular-site@latest
 ```
 
 or, skipping the questions:
 
 ```bash
-npm create popular@latest my-community -- --template aquarium --site https://my.community --yes
+npm create popular-site@latest my-community -- --template aquarium --site https://my.community --yes
 ```
 
 ## Templates

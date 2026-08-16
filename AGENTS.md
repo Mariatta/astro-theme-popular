@@ -42,7 +42,7 @@ knowing which one you are looking at explains most confusion.
 | `package/` | The theme as a publishable Astro integration. The only published artifact. |
 | `demos/<slug>/` | Five real consumer projects (starter, aquarium, foodie, kdrama, superfan), each installing the package and supplying its own `popular.config.ts`, `src/content/`, `public/images/`. |
 | `smoke/` | The minimal consumer, with six config variants CI builds to exercise overrides, opt-outs, preview mode and subpaths. |
-| `create-popular/` | The scaffolder behind `npm create popular@latest`. Its `templates/` is gitignored and written by `prepack` from `demos/*`, so never edit templates: edit the demo. |
+| `create-popular-site/` | The scaffolder behind `npm create popular-site@latest`. Its `templates/` is gitignored and written by `prepack` from `demos/*`, so never edit templates: edit the demo. |
 | `src/` | The **template model**: the old copy-the-repo site, kept working until the phase-4 cutover. |
 
 ```bash

@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
- * create-popular: start a community site on the Popular Astro theme.
+ * create-popular-site: start a community site on the Popular Astro theme.
  *
- *   npm create popular@latest
- *   npm create popular@latest my-community -- --template aquarium
- *   npm create popular@latest my-community -- --template starter --site https://my.community --yes
+ *   npm create popular-site@latest
+ *   npm create popular-site@latest my-community -- --template aquarium
+ *   npm create popular-site@latest my-community -- --template starter --site https://my.community --yes
  *
  * Writes a small project that *depends on* astro-theme-popular rather than
  * vendoring it, so the site updates with `npm update` instead of by diffing
@@ -39,7 +39,7 @@ const TEMPLATES = {
 };
 
 const die = (msg) => {
-  console.error(`create-popular: ${msg}`);
+  console.error(`create-popular-site: ${msg}`);
   process.exit(1);
 };
 
@@ -58,9 +58,9 @@ function parseArgs(argv) {
   return out;
 }
 
-const HELP = `create-popular ${VERSION}
+const HELP = `create-popular-site ${VERSION}
 
-  npm create popular@latest [directory] -- [options]
+  npm create popular-site@latest [directory] -- [options]
 
 Options:
   -t, --template <name>   ${Object.keys(TEMPLATES).join(', ')} (default: starter)
@@ -195,7 +195,7 @@ async function main() {
 
     const from = join(TEMPLATE_DIR, template);
     if (!existsSync(from)) {
-      die(`this build of create-popular has no '${template}' template ` +
+      die(`this build of create-popular-site has no '${template}' template ` +
           `(templates/ is populated at pack time; see scripts/collect-templates.mjs)`);
     }
 
