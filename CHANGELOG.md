@@ -14,6 +14,18 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+### Added
+
+- **Every page says which generator built it**, via `<meta name="generator">`
+  (`hugo.Generator` on Hugo, `Astro.generator` on Astro). Astro does not inject
+  this itself, and it is what the Astro theme catalogue's reviewers look for
+  when verifying that a demo really is an Astro site.
+- **`[module.hugoVersion]` in the Hugo theme's `hugo.toml`,** declaring the
+  0.146.0 floor where themes.gohugo.io's build actually reads it. `theme.toml`'s
+  `min_version` is the older field, from the retired `hugoThemes` repo; both are
+  kept in step. A site built with an older Hugo now says so, rather than the
+  floor being a claim nothing checked.
+
 ### Changed
 
 - **Astro: the demos are now real consumers of the npm package** (packaging

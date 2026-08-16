@@ -88,6 +88,10 @@ const brandCss = `html:root{${vars.join(';')}}`;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* Says which generator built the page. Astro does not inject this; a
+        layout has to emit it, and the Astro theme catalogue's reviewers check
+        for exactly this tag when verifying a demo really is an Astro site. */}
+    <meta name="generator" content={Astro.generator} />
     <title>{pageTitle}</title>
     <meta name="description" content={desc} />
     <meta property="og:site_name" content={SITE.title} />
