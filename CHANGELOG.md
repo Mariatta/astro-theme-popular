@@ -42,6 +42,12 @@ Releases) or subscribe to the releases feed
 
 ### Changed
 
+- **A Popular deployment now loads nothing from a third party at all.** The
+  superfan demo was the last exception: it pulled Cinzel from Google Fonts
+  through `customCSS` for its display face. It uses the bundled Quantico like
+  the other demos now, so no page of the theme, its demos or its docs sends a
+  visitor's IP anywhere. `customCSS` itself is unchanged and still takes any
+  stylesheet URL you want, including a CDN.
 - **`npm create popular-site@latest` renders the same project templates the
   setup wizard does** (`scripts/templates/`), instead of carrying its own copies
   of `astro.config.mjs`, `package.json` and `content.config.ts`. Two generators

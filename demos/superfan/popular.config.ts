@@ -14,7 +14,6 @@ export const SITE = {
   favicon: '/images/logo.svg',
   ogImage: '/images/hero.svg',
   locale: 'en-US',
-  customCSS: ['https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@700&display=swap'],
   landAcknowledgement: "Fan-made and gloriously unofficial: this site is a love letter, not affiliated with anyone it adores.",
 };
 
@@ -134,7 +133,7 @@ export const BRAND: Record<string, string> = {
   textOnBrand: '#0A0E1A',    // dark text on gold buttons, not white
   borderSubtle: '#26304A',
   fontSans: 'Inter, system-ui, sans-serif',
-  fontDisplay: '"Cinzel Decorative", "Cinzel", Inter, sans-serif',
+  fontDisplay: 'Quantico, Inter, sans-serif',
 };
 
 export const NAV: {
