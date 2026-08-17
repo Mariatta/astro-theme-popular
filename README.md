@@ -32,22 +32,41 @@ and inline `guestAuthors` for one-off guest writers, plus a plain `author` strin
 
 ## Quick start
 
+Start a site with the scaffolder. You get a small project that **depends on**
+the theme, so updating is `npm update astro-theme-popular` rather than diffing
+tags and re-copying files:
+
 ```bash
+npm create popular-site@latest my-community
+cd my-community
 npm install
 npm run dev          # http://localhost:4321
-npm run build        # static output in dist/
 ```
 
-Out of the box, `npm run dev` boots the neutral **"Your Community" starter**.
-The repo also ships **four complete fictional demos** sharing the same theme
-code: **Rocky Cove Aquarium Club** (teal), **Lucky Town Foodie Club** (copper),
-**KDrama Fan Club** (indigo) and **Truly Madly Riley** (gold, a personal site
-for one fictional superfan). Switch the active set with `npm run demo:aquarium`
-/ `demo:foodie` / `demo:kdrama` / `demo:superfan`, and back with
-`demo:starter` (copies `demos/<slug>/` into `src/` + `public/images`). The deploy workflow publishes all four behind a
-gallery landing page with an in-page switcher (`DEMO_BAR` in `src/config.ts`, 
-set it to `null` on a real site and it never appears). All communities and venues
-in the demos are made up for demonstration.
+Pick the neutral **"Your Community" starter** (the default) or any of the four
+fictional demos as a fuller example to edit down: **Rocky Cove Aquarium Club**
+(teal), **Lucky Town Foodie Club** (copper), **KDrama Fan Club** (indigo) and
+**Truly Madly Riley** (gold, a personal site for one fictional superfan). All
+communities and venues in them are made up for demonstration.
+
+Live: the [starter](https://mariatta.ca/astro-theme-popular/) is the deployment
+root, and the [demo gallery](https://mariatta.ca/astro-theme-popular/demos/)
+links the other four.
+
+### Working in this repo
+
+Each demo is its own workspace consuming the package, so there is no activation
+step: build or serve one where it lives.
+
+```bash
+npm install                              # one install for every workspace member
+npm run dev --workspace demos/aquarium   # or: npm run demo:aquarium
+npm run build --workspaces               # build everything
+```
+
+`DEMO_BAR` in a demo's `popular.config.ts` drives the in-page switcher; it is
+`null` on the starter and on anything the scaffolder writes, so it never
+appears on a real site.
 
 ## Make it yours
 

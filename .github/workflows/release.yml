@@ -90,3 +90,24 @@ jobs:
         # publishing must happen from a checkout that still has them.
         working-directory: create-popular-site
         run: npm publish
+
+      - name: Smoke-test what was actually published
+        # The scaffolder CI job installs the theme from this checkout, which is
+        # right for a PR but can never catch a mismatch between two *published*
+        # versions. That gap shipped a create-popular-site whose templates
+        # needed a theme newer than the one it pinned, so every scaffolded site
+        # failed to build. This is the only place that is detectable.
+        run: |
+          V="${{ inputs.version }}"
+          # npm's CDN can lag a moment behind a publish.
+          for i in 1 2 3 4 5; do
+            npm view "create-popular-site@$V" version && break || sleep 10
+          done
+          cd "$(mktemp -d)"
+          npm create "popular-site@$V" -- smoke-site --template starter --yes
+          cd smoke-site
+          grep -q "\"astro-theme-popular\": \"^$V\"" package.json \
+            || { echo "::error::scaffolded site does not pin ^$V"; exit 1; }
+          npm install
+          npx astro build
+          test -f dist/index.html

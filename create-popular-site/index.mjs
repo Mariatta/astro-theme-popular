@@ -93,37 +93,21 @@ function splitSiteBase(url) {
   return { site: parsed.origin, base: path === '' ? '/' : path };
 }
 
-const astroConfig = ({ site, base }) => `import { defineConfig } from 'astro/config';
-import mdx from '@astrojs/mdx';
-import popular from 'astro-theme-popular';
+/* The project files come from scripts/templates/, the same files
+   scripts/setup.py renders, collected into templates/_shared/ at pack time.
+   Two generators writing the same file two ways is how they drift.
 
-/* \`site\` is your origin and \`base\` is the path your site is served from.
-   A GitHub project page lives at you.github.io/my-community/, so its base is
-   '/my-community'; leave it '/' for a site at a domain root. Every link, image
-   and feed URL the theme writes follows both, markdown bodies included. */
-export default defineConfig({
-  site: '${site}',
-  base: '${base}',
-  integrations: [mdx(), popular()],
-});
-`;
+   Those templates support conditional blocks and a social-links expansion for
+   the wizard's richer answer set; the three used here are placeholder-only,
+   so `${key|default}` substitution is the whole contract. Matches setup.py's
+   PLACEHOLDER_RE and its "unanswered falls back to the default" rule. */
+const PLACEHOLDER_RE = /\$\{(\w+)(?:\|([^}]*))?\}/g;
 
-const packageJson = (name) => `${JSON.stringify({
-  name,
-  private: true,
-  type: 'module',
-  scripts: { dev: 'astro dev', build: 'astro build', preview: 'astro preview' },
-  dependencies: {
-    '@astrojs/mdx': '^7.0.2',
-    astro: '^7.0.6',
-    'astro-theme-popular': `^${VERSION}`,
-  },
-}, null, 2)}\n`;
-
-const CONTENT_CONFIG = `// The theme package owns the content model; this file just adopts it.
-// Add your own collections here if you need them.
-export { collections } from 'astro-theme-popular/schemas';
-`;
+const renderTemplate = (name, answers) =>
+  readFileSync(join(TEMPLATE_DIR, '_shared', name), 'utf8').replace(
+    PLACEHOLDER_RE,
+    (_match, key, fallback = '') => (answers[key] ?? fallback),
+  );
 
 const GITIGNORE = `dist/
 node_modules/
@@ -203,9 +187,19 @@ async function main() {
     mkdirSync(target, { recursive: true });
     cpSync(from, target, { recursive: true });
     mkdirSync(join(target, 'src'), { recursive: true });
-    writeFileSync(join(target, 'src', 'content.config.ts'), CONTENT_CONFIG);
-    writeFileSync(join(target, 'astro.config.mjs'), astroConfig(splitSiteBase(siteUrl)));
-    writeFileSync(join(target, 'package.json'), packageJson(name));
+    const { site: astroSite, base } = splitSiteBase(siteUrl);
+    const answers = {
+      __astro_site: astroSite,
+      __astro_base: base,
+      __repo_name: name,
+      __theme_version: VERSION,
+    };
+    writeFileSync(join(target, 'src', 'content.config.ts'),
+                  renderTemplate('content.config.ts.tmpl', answers));
+    writeFileSync(join(target, 'astro.config.mjs'),
+                  renderTemplate('astro.config.package.mjs.tmpl', answers));
+    writeFileSync(join(target, 'package.json'),
+                  renderTemplate('package.json.tmpl', answers));
     writeFileSync(join(target, '.gitignore'), GITIGNORE);
     writeFileSync(join(target, 'README.md'), readme(name, template));
 

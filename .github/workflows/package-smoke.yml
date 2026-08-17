@@ -191,6 +191,10 @@ jobs:
           npm pack --dry-run 2>&1 | tee /tmp/pack.out
           grep -q 'templates/starter/popular.config.ts' /tmp/pack.out
           grep -q 'templates/aquarium/src/content/' /tmp/pack.out
+          # the project files shared with scripts/setup.py travel too, or the
+          # scaffolder has nothing to render astro.config.mjs from
+          grep -q 'templates/_shared/astro.config.package.mjs.tmpl' /tmp/pack.out
+          grep -q 'templates/_shared/package.json.tmpl' /tmp/pack.out
 
       - name: Scaffold a site and build it
         run: |
