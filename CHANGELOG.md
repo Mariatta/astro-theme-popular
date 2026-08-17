@@ -14,6 +14,18 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+### Changed
+
+- **The Astro demo deployment serves the neutral starter at its root**, with the
+  four flavored demos still at their subpaths and the gallery landing page moved
+  to `/demos/`. The root used to be the gallery, a hand-written HTML page that is
+  not an Astro build at all, so the URL people are given demonstrated nothing and
+  could not be verified as an Astro site. It is now exactly what
+  `npm create popular-site@latest` writes.
+  - The gallery gets its icons and fonts from the deployment instead of cdnjs and
+    Google Fonts, so the landing page stops being the one page that loads a third
+    party.
+
 ### Added
 
 - **Every page says which generator built it**, via `<meta name="generator">`

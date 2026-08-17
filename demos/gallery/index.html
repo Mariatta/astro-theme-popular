@@ -5,9 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Popular: Astro theme demos</title>
 <meta name="description" content="Three fictional communities and one fictional superfan, one theme, four configs. Demos for the Popular Astro theme." />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Quantico:wght@700&display=swap" />
+<!-- Icons and fonts come from this deployment, not a CDN, like every other
+     page here. scripts/build-sites.mjs copies the vendored files in beside
+     this one; css/fonts.css resolves ../fonts/ against itself. -->
+<link rel="stylesheet" href="fontawesome/css/all.min.css" />
+<link rel="stylesheet" href="css/fonts.css" />
 <style>
   * { box-sizing: border-box; }
   body { margin: 0; font-family: Inter, system-ui, sans-serif; background: #f8f9fa; color: #243a47; }
@@ -39,7 +41,7 @@
     <h1>One theme. Four demo sites.</h1>
     <p class="lead">Every site below runs the <strong>same theme code</strong> to demonstrate its versatility. Only the config and content differ. To learn more about the Popular theme, visit the <a href="https://popular.mariatta.ca/" style="color:#41535e">Popular project site</a>.</p>
     <div class="grid">
-      <a class="card a" href="aquarium/">
+      <a class="card a" href="../aquarium/">
         <div class="swatch"><i class="fa-solid fa-fish" aria-hidden="true"></i></div>
         <div class="body">
           <h2>Rocky Cove Aquarium Club</h2>
@@ -47,7 +49,7 @@
           <span class="go">View demo →</span>
         </div>
       </a>
-      <a class="card b" href="foodie/">
+      <a class="card b" href="../foodie/">
         <div class="swatch"><i class="fa-solid fa-utensils" aria-hidden="true"></i></div>
         <div class="body">
           <h2>Lucky Town Foodie Club</h2>
@@ -55,7 +57,7 @@
           <span class="go">View demo →</span>
         </div>
       </a>
-      <a class="card c" href="kdrama/">
+      <a class="card c" href="../kdrama/">
         <div class="swatch"><i class="fa-solid fa-tv" aria-hidden="true"></i></div>
         <div class="body">
           <h2>KDrama Fan Club</h2>
@@ -63,7 +65,7 @@
           <span class="go">View demo →</span>
         </div>
       </a>
-      <a class="card d" href="superfan/">
+      <a class="card d" href="../superfan/">
         <div class="swatch"><i class="fa-solid fa-star" aria-hidden="true"></i></div>
         <div class="body">
           <h2>Truly Madly Riley</h2>
@@ -72,7 +74,7 @@
         </div>
       </a>
     </div>
-    <p class="foot">Want your own flavour? Copy any demo's folder from the <a href="https://github.com/Mariatta/astro-theme-popular">theme repo</a>, edit its <code>config.ts</code>, and it's yours.
+    <p class="foot">Want your own flavour? Run <code>npm create popular-site@latest</code>, pick any of these as your starting point, and edit its <code>popular.config.ts</code>.
     Full documentation, feature guides and the quick start live on the <a href="https://popular.mariatta.ca/">Popular project site</a> (itself the theme, dogfooded, in its Hugo twin).</p>
   </main>
 </body>

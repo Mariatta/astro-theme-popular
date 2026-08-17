@@ -48,8 +48,10 @@ export { collections } from 'astro-theme-popular/schemas';
 ```
 
 - **Docs & feature guides**: https://popular.mariatta.ca/
-- **Demos** (three fictional communities + one superfan personal site):
+- **Live demo** (the neutral starter, exactly what this package gives you):
   https://mariatta.ca/astro-theme-popular/
+- **Demo gallery** (three fictional communities + one superfan personal site):
+  https://mariatta.ca/astro-theme-popular/demos/
 - **Changelog & releases**: https://github.com/Mariatta/astro-theme-popular/releases
 - **Hugo twin** (same design system, full parity):
   https://github.com/Mariatta/hugo-theme-popular
