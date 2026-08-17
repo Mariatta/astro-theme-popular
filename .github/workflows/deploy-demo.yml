@@ -1,11 +1,17 @@
 name: Deploy Astro demo sites (GitHub Pages)
 
-# Builds the four flavored demo sets and the gallery landing page:
+# Builds the neutral starter, the four flavored demo sets, and the gallery:
 #
-#   /            ← demos/gallery/index.html
+#   /            ← demos/starter (Your Community, the neutral skeleton)
 #   /aquarium/   ← demos/aquarium (Rocky Cove Aquarium Club, canonical)
 #   /foodie/     ← demos/foodie (Lucky Town Foodie Club)
 #   /kdrama/     ← demos/kdrama (KDrama Fan Club)
+#   /superfan/   ← demos/superfan (Truly Madly Riley, a personal site)
+#   /demos/      ← demos/gallery/index.html (the landing page)
+#
+# The starter is at the root because the root is the URL people are given,
+# including as the Demo link in the Astro theme catalogue, whose reviewers
+# require a live deployment of the repo "exactly as a new user will get".
 #
 # Each demo is built with Astro's `base` set to its subpath, so every link,
 # image, feed and absolute URL lands under it. See scripts/build-sites.mjs,
