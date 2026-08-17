@@ -239,7 +239,13 @@ jobs:
           # the scaffolder, which templates from popular.config.ts, cannot see
           # it. A real community linking to this project's demo gallery would
           # be the same class of mistake as shipping the demo bar.
-          if grep -rl --include='*.html' 'g-notice' dist; then
+          #
+          # Match that notice's text, not the g-notice class: the notice banner
+          # is a feature, several demos set one of their own, and adopters are
+          # meant to. Only this project's gallery pitch is forbidden.
+          if grep -rl --include='*.html' 'Four complete demo sites' dist; then
             echo "::error::the deploy-only notice reached a scaffolded site"; exit 1
           fi
-          grep -q '/demos/' popular.config.ts && { echo "::error::scaffolded config links the demo gallery"; exit 1; } || true
+          if grep -q '/demos/' popular.config.ts; then
+            echo "::error::scaffolded config links the demo gallery"; exit 1
+          fi
