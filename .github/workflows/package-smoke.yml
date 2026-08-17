@@ -234,3 +234,12 @@ jobs:
           if grep -rl --include='*.html' 'g-demobar' dist; then
             echo "::error::the demo bar reached a scaffolded site"; exit 1
           fi
+          # nor the published starter's "see the other demos" notice, which
+          # lives in demos/starter/popular.deploy.config.ts precisely so that
+          # the scaffolder, which templates from popular.config.ts, cannot see
+          # it. A real community linking to this project's demo gallery would
+          # be the same class of mistake as shipping the demo bar.
+          if grep -rl --include='*.html' 'g-notice' dist; then
+            echo "::error::the deploy-only notice reached a scaffolded site"; exit 1
+          fi
+          grep -q '/demos/' popular.config.ts && { echo "::error::scaffolded config links the demo gallery"; exit 1; } || true

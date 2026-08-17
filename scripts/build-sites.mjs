@@ -46,13 +46,11 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = resolve(process.cwd(), outDir);
 const DEMOS = ['aquarium', 'foodie', 'kdrama', 'superfan'];
 
-const buildSite = (slug, base) => {
+const buildSite = (slug, base, config) => {
   const cwd = join(ROOT, 'demos', slug);
-  execFileSync('npx', ['astro', 'build', '--site', site, '--base', base], {
-    cwd,
-    stdio: 'inherit',
-    env: process.env,
-  });
+  const args = ['astro', 'build', '--site', site, '--base', base];
+  if (config) args.push('--config', config);
+  execFileSync('npx', args, { cwd, stdio: 'inherit', env: process.env });
   return cwd;
 };
 
@@ -60,8 +58,14 @@ rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
 
 /* The starter lands at the root, so its base is the deployment prefix itself
-   (or '/' when there is none: Astro wants a path, not an empty string). */
-const starter = buildSite('starter', basePrefix || '/');
+   (or '/' when there is none: Astro wants a path, not an empty string).
+
+   It builds from astro.deploy.config.mjs, which differs from the starter's own
+   config in exactly one way: a notice pointing at the gallery, so someone who
+   lands on this URL can find the four flavored demos. That override cannot
+   reach an adopter, because the scaffolder templates from popular.config.ts
+   and never reads the deploy config. */
+const starter = buildSite('starter', basePrefix || '/', 'astro.deploy.config.mjs');
 cpSync(join(starter, 'dist'), OUT, { recursive: true });
 rmSync(join(starter, 'dist'), { recursive: true, force: true });
 
