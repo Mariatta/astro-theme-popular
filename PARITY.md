@@ -261,8 +261,13 @@ Content, config values and imagery still have to match.
 
 The neutral "Your Community" starter ships on both sides: Hugo
 `exampleSite/` ⇄ Astro `demos/starter/` (a workspace consumer like the others;
-the Astro repo's `src/` keeps a template-model copy until the cutover). The starter never sets the demo bar and is not part
-of the deployed demo set.
+the Astro repo's `src/` keeps a template-model copy until the cutover). The starter never sets the demo bar. It *is* the root of
+the Astro repo's deployed demo tree, and therefore the URL submitted to the
+Astro theme catalogue, but it reaches that state through
+`demos/starter/astro.deploy.config.mjs`, which adds one notice linking to the
+gallery. That override deliberately lives outside `popular.config.ts`, because
+that file is what `create-popular-site` templates from: a real community's site
+must never carry a link to this project's demos. CI asserts both.
 
 ## Release checklist
 
