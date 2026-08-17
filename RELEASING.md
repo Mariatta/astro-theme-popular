@@ -63,6 +63,31 @@ pointing at the same repo and the same workflow file. A missing entry on the
 second one fails the release *after* the tag is pushed, which is the case the
 local-publish fallback below exists for.
 
+### Bootstrapping a brand-new package name
+
+npm will not let you configure a trusted publisher for a package that does not
+exist yet, and the release workflow publishes only through OIDC. So the *first*
+version of a new package name has to be published by hand, once:
+
+```bash
+cd <package-dir>
+npm login          # browser flow, once per machine
+npm publish        # prompts for your authenticator OTP
+```
+
+Then add the Trusted Publisher as above, and every release after that is
+hands-off. Two things to get right:
+
+- **Publish from a full checkout.** `create-popular-site`'s `prepack` collects
+  its templates from `demos/` and `scripts/templates/`; a bare tarball would
+  publish a scaffolder that can scaffold nothing.
+- **Bootstrap at a version whose theme release already exists.** The scaffolder
+  pins `astro-theme-popular@^<its own version>`, and a caret on `0.x` does not
+  cross the minor. `create-popular-site@0.10.0` was bootstrapped with templates
+  from a `main` that had moved past the published 0.10.0 theme, so every site it
+  scaffolded failed to build, and it had to be deprecated. If the templates have
+  moved on, cut the theme release first, or expect to deprecate the bootstrap.
+
 The workflow side is already wired: `permissions: id-token: write` and
 Node 24 (trusted publishing needs npm >= 11.5.1). Any old `NPM_TOKEN`
 secret and granular tokens can be deleted

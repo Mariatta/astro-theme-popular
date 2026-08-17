@@ -11,6 +11,12 @@
  * appear on a real community's site. It is the last export in each file by
  * convention, and this asserts that before trimming from it to end of file,
  * so a future reorder fails here rather than shipping a demo bar to adopters.
+ *
+ * The project files a scaffolded site needs (astro.config.mjs, package.json,
+ * src/content.config.ts) are NOT written from literals here. They come from
+ * `scripts/templates/`, the same files `scripts/setup.py` renders, copied into
+ * `templates/_shared/`. Two generators writing the same file two ways is how
+ * they drift, and the wizard repo's CLAUDE.md forbids exactly that.
  */
 import { cpSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
@@ -20,6 +26,13 @@ const HERE = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const REPO = resolve(HERE, '..');
 const OUT = join(HERE, 'templates');
 const TEMPLATES = ['starter', 'aquarium', 'foodie', 'kdrama', 'superfan'];
+
+/* The project files, shared verbatim with scripts/setup.py. */
+const SHARED = [
+  'astro.config.package.mjs.tmpl',
+  'package.json.tmpl',
+  'content.config.ts.tmpl',
+];
 
 const DEMO_BAR_EXPORT = /^export const DEMO_BAR\b/m;
 
@@ -58,4 +71,11 @@ for (const slug of TEMPLATES) {
   console.log(`templates/${slug}: ${files} collection(s)`);
 }
 
-console.log(`collected ${TEMPLATES.length} templates into ${OUT}`);
+mkdirSync(join(OUT, '_shared'), { recursive: true });
+for (const name of SHARED) {
+  cpSync(join(REPO, 'scripts/templates', name), join(OUT, '_shared', name));
+}
+
+console.log(
+  `collected ${TEMPLATES.length} templates + ${SHARED.length} shared project files into ${OUT}`
+);
