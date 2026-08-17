@@ -9,5 +9,5 @@ export default defineConfig({
   site: 'https://example.com',
   base: '/sub',
   outDir: './dist-base',
-  integrations: [mdx(), popular()],
+  integrations: [mdx(), popular({ configFile: './popular.base.config.ts' })],
 });

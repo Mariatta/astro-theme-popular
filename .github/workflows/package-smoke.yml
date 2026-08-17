@@ -165,3 +165,68 @@ jobs:
           python3 ../scripts/check-image-alt.py dist-base
           python3 ../scripts/check-jsonld.py dist-base
           python3 ../scripts/check-ics.py dist-base
+
+  scaffolder:
+    # `npm create popular-site@latest` is how a site starts once the cutover removes
+    # "copy the repo", so it has to be proven the same way the package is: by
+    # running it and building what it wrote. It is also the only place the
+    # pack-time templates/ directory gets exercised.
+    if: github.repository == 'Mariatta/astro-theme-popular'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      - name: The tarball carries the templates
+        # templates/ is gitignored and written by prepack, so the failure mode
+        # is publishing a scaffolder that can scaffold nothing. `files` lists
+        # it and .npmignore stops .gitignore from excluding it again; this
+        # asserts that combination still holds.
+        working-directory: create-popular-site
+        run: |
+          npm pack --dry-run 2>&1 | tee /tmp/pack.out
+          grep -q 'templates/starter/popular.config.ts' /tmp/pack.out
+          grep -q 'templates/aquarium/src/content/' /tmp/pack.out
+
+      - name: Scaffold a site and build it
+        run: |
+          node create-popular-site/scripts/collect-templates.mjs
+          cd "$(mktemp -d)"
+          node "$GITHUB_WORKSPACE/create-popular-site/index.mjs" my-community \
+            --template aquarium --site https://you.github.io/my-community/ --yes
+          cd my-community
+          # The scaffolder writes a registry range; point it at this checkout so
+          # CI tests the code in the PR rather than the last published release.
+          node -e "
+            const fs = require('fs');
+            const p = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            p.dependencies['astro-theme-popular'] = 'file:$GITHUB_WORKSPACE/package';
+            fs.writeFileSync('package.json', JSON.stringify(p, null, 2));
+          "
+          npm install
+          npx astro build
+          echo "SCAFFOLD_DIR=$PWD" >> "$GITHUB_ENV"
+
+      - name: The scaffolded site is correct
+        run: |
+          cd "$SCAFFOLD_DIR"
+          python3 "$GITHUB_WORKSPACE/scripts/check-image-alt.py" dist
+          python3 "$GITHUB_WORKSPACE/scripts/check-jsonld.py" dist
+          python3 "$GITHUB_WORKSPACE/scripts/check-ics.py" dist
+          # site/base split: a project-page URL becomes site + base, and every
+          # internal link carries the base
+          grep -q "site: 'https://you.github.io'" astro.config.mjs
+          grep -q "base: '/my-community'" astro.config.mjs
+          if grep -rhoE '(href|src)="/[^"]*"' dist --include='*.html' \
+             | grep -vE '^(href|src)="/my-community' | sort -u | grep .; then
+            echo "::error::scaffolded site has an internal link missing the base"; exit 1
+          fi
+          # the demo switcher must never reach a real community's site
+          grep -q 'export const DEMO_BAR = null;' popular.config.ts
+          if grep -rl --include='*.html' 'g-demobar' dist; then
+            echo "::error::the demo bar reached a scaffolded site"; exit 1
+          fi

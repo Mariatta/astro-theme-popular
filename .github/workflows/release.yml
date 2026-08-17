@@ -45,6 +45,11 @@ jobs:
           NPMPKG=$(node -p "require('./package/package.json').version")
           [ "$NPMPKG" = "${{ inputs.version }}" ] \
             || { echo "::error::package/package.json says $NPMPKG; bump it to ${{ inputs.version }} in the versioning PR"; exit 1; }
+          # create-popular-site pins the theme range it scaffolds with (^<its own
+          # version>), so a lagging version would hand new sites an old theme.
+          CREATE=$(node -p "require('./create-popular-site/package.json').version")
+          [ "$CREATE" = "${{ inputs.version }}" ] \
+            || { echo "::error::create-popular-site/package.json says $CREATE; bump it to ${{ inputs.version }} in the versioning PR"; exit 1; }
 
       - name: Refuse to release out of parity
         run: |
@@ -70,7 +75,7 @@ jobs:
           # Node 24 ships npm >= 11.5.1, required for trusted publishing
           node-version: 24
 
-      - name: Publish to npm (trusted publishing)
+      - name: Publish astro-theme-popular to npm (trusted publishing)
         # No token: npm authenticates via the workflow's OIDC identity.
         # Requires the Trusted Publisher configured on npmjs.com for this
         # repo + workflow file (see RELEASING.md). Provenance is automatic.
@@ -78,3 +83,10 @@ jobs:
         run: |
           npm --version
           npm publish
+
+      - name: Publish create-popular-site to npm (trusted publishing)
+        # The scaffolder is a second package with its own Trusted Publisher
+        # entry on npmjs.com. Its prepack collects templates/ from demos/, so
+        # publishing must happen from a checkout that still has them.
+        working-directory: create-popular-site
+        run: npm publish
