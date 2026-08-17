@@ -10,7 +10,7 @@ const escapeHtml = (s: string): string =>
 
 export function inlineMarkdown(src: string): string {
   let s = escapeHtml(src);
-  // [label](http(s)://… | /path) — only http(s) and root-relative targets
+  // [label](http(s)://… | /path): only http(s) and root-relative targets
   s = s.replace(
     /\[([^\]]+)\]\((https?:\/\/[^\s)]+|\/[^\s)]*)\)/g,
     (_m, label, href) =>
