@@ -115,7 +115,7 @@ const orgLd = jsonld(buildOrgLd({
           </div>
           {next.data.description && <p style="margin:0;color:var(--text-muted);max-width:34rem">{next.data.description}</p>}
           <div class="g-row">
-            {next.data.rsvp && <a class="g-btn g-btn--primary" href={withBase(next.data.rsvp)}><i class="fa-solid fa-calendar" aria-hidden="true"></i> {STRINGS.rsvpExternal}</a>}
+            {!next.data.planning && next.data.rsvp && <a class="g-btn g-btn--primary" href={withBase(next.data.rsvp)}><i class="fa-solid fa-calendar" aria-hidden="true"></i> {STRINGS.rsvpExternal}</a>}
             <a class="g-btn g-btn--outline" href={withBase('/events/')}>{STRINGS.allEvents}</a>
           </div>
         </div>

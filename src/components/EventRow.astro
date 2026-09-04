@@ -16,6 +16,10 @@ if (d.venueRef && !venuePage) console.warn(`events/${event.id}: venueRef "${d.ve
 const venueName = venuePage?.data.title ?? d.venue;
 const venueAddress = venuePage?.data.address ?? (venuePage ? undefined : d.address);
 const tbd = d.venueWanted || !venueName;
+/* Planning: the event is on the calendar but its details are not settled.
+   Wins over the venue-wanted badge, which is inferred, and hides the RSVP
+   button even when `rsvp` is already filled in. */
+const planning = d.planning;
 
 /* Speaker line: resolved speaker-profile names, falling back to the string. */
 const allSpeakers = d.speakers.length ? await safeCollection('speakers') : [];
@@ -57,10 +61,12 @@ const day = d.date.toLocaleDateString(SITE.locale, { month: 'short', day: 'numer
   <div class="g-event__aside">
     {d.cancelled
       ? <span class="g-badge g-badge--danger g-badge--soft">{STRINGS.eventCancelled}</span>
+      : planning
+      ? <span class="g-badge g-badge--soft">{STRINGS.eventPlanning}</span>
       : tbd
       ? <span class="g-badge g-badge--warning g-badge--soft">{STRINGS.venueWanted}</span>
       : <span class="g-badge g-badge--success g-badge--soft">{STRINGS.confirmed}</span>}
-    {d.rsvp && (
+    {!planning && d.rsvp && (
       <a class="g-btn g-btn--primary g-btn--sm" href={withBase(d.rsvp)}><i class="fa-solid fa-calendar" aria-hidden="true"></i>{STRINGS.rsvp}</a>
     )}
   </div>

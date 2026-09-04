@@ -49,6 +49,7 @@ const events = defineCollection({
     time: z.string().optional(),
     venue: z.string().optional(),
     venueWanted: z.boolean().default(false),
+    planning: z.boolean().default(false), // "Planning" badge instead of "Confirmed", and no RSVP button
     address: z.string().optional(),
     speaker: z.string().optional(), // one-liner fallback when no speaker profiles are referenced
     speakers: z.array(z.string()).default([]), // slugs of entries in the speakers collection

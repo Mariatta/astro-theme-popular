@@ -9,6 +9,7 @@ venue: "Half Moon Café"
 address: "88 Sidestreet, (fictional)"
 speaker: "No homework, no spoilers, name tags provided"
 rsvp: "https://example.com/rsvp"
+planning: true
 ---
 
 Been lurking in the group chat? This one's for you: a low-pressure evening to meet the club, share your gateway drama, and claim a seat on the couch.

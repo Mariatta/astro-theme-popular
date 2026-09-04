@@ -228,7 +228,7 @@ Front-matter fields must accept the same names on both sides
 
 - **blog**: `title, date, author, authors[], guestAuthors[{name,title,photo,bio,website,social[]}], description, image, tags[], speaker{name,title,photo,bio}`
 - **authors**: `title, role, photo, bio, website, social[{label,icon,url}]`
-- **events**: `title, date (event start; upcoming/past pivot), description, image, tags[], time, venue, venueWanted, address, venueRef (venues slug; wins over flat venue fields), checkin, venueNotes (overrides the venue page's notes), speaker (one-liner fallback), speakers[] (speaker slugs), rsvp, meetupUrl (metadata only; not rendered), recording, slides, talks[{title, speaker, recording, slides}] (§3; talks[] wins over event-level recording/slides)`
+- **events**: `title, date (event start; upcoming/past pivot), description, image, tags[], time, venue, venueWanted, planning (event state badges, below), address, venueRef (venues slug; wins over flat venue fields), checkin, venueNotes (overrides the venue page's notes), speaker (one-liner fallback), speakers[] (speaker slugs), rsvp, meetupUrl (metadata only; not rendered), recording, slides, talks[{title, speaker, recording, slides}] (§3; talks[] wins over event-level recording/slides)`
 - **speakers**: `title, role, photo, bio, website, social[{label,icon,url}]` (same shape as authors)
 - **venues**: `title, address, photo, notes (arrival notes, inherited by events), accessibility, website`
 - **organizers**: `title, weight, role, photo, description, social[{label,icon,url}]`
@@ -283,6 +283,26 @@ a "Getting there & access" section (omitted when empty) and put a wheelchair
 badge + access link on referencing event pages. Astro schema in
 `content.config.ts`; spreadsheet importer has matching columns (Tier 1).
 `access` renders as markdown on Hugo, plain text on Astro.
+
+## Event state badges (Tier 2)
+
+An event row carries exactly one state badge (Hugo `partials/event-row.html`,
+Astro `EventRow.astro`), decided in this order:
+
+| Condition | Badge | i18n key | Tone |
+|---|---|---|---|
+| `cancelled = true` | Cancelled | `eventCancelled` | danger, soft |
+| `planning = true` | Planning | `eventPlanning` | default, soft |
+| `venueWanted = true`, or no `venue` and no resolvable `venueRef` | Venue wanted | `venueWanted` | warning, soft |
+| otherwise | Confirmed | `confirmed` | success, soft |
+
+`planning` beats the venue-wanted badge because it is set deliberately while
+that one is also inferred from a missing venue. It additionally suppresses the
+RSVP button in all three places one is rendered (event row, event page, home
+page "Next meetup"), so `rsvp` can be filled in early and stays hidden until
+the flag comes off. The event page repeats Cancelled and Planning next to the
+`<h1>`. Presentation only: it changes no JSON-LD and no `.ics` output, since
+schema.org has no equivalent status.
 
 ## iCalendar feed (Tier 2)
 
