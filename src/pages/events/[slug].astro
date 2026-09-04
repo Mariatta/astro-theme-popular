@@ -72,7 +72,7 @@ const eventLd = jsonld(buildEventLd({
           </a>
         </div>
         <span class="g-eyebrow">{dateStr}{d.time && ` · ${d.time}`}</span>
-        <h1 style="margin:.5rem 0 0">{d.title}{d.cancelled && <> <span class="g-badge g-badge--danger" style="vertical-align:middle;font-size:var(--text-sm)">{STRINGS.eventCancelled}</span></>}</h1>
+        <h1 style="margin:.5rem 0 0">{d.title}{d.cancelled ? <> <span class="g-badge g-badge--danger" style="vertical-align:middle;font-size:var(--text-sm)">{STRINGS.eventCancelled}</span></> : d.planning ? <> <span class="g-badge g-badge--soft" style="vertical-align:middle;font-size:var(--text-sm)">{STRINGS.eventPlanning}</span></> : null}</h1>
       </div>
     </header>
     <div class="g-container g-section--sm">
@@ -129,7 +129,8 @@ const eventLd = jsonld(buildEventLd({
         </>
       )}
 
-      {d.rsvp && (
+      {/* An event still being planned takes no RSVPs yet, even with `rsvp` set. */}
+      {!d.planning && d.rsvp && (
         <div class="g-row" style="margin-top:var(--space-4)">
           <a class="g-btn g-btn--primary g-btn--lg" href={withBase(d.rsvp)}><i class="fa-solid fa-calendar" aria-hidden="true"></i> {STRINGS.rsvpExternal}</a>
         </div>

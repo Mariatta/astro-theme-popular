@@ -12,6 +12,19 @@ To hear about new releases: watch either repo on GitHub (Watch → Custom →
 Releases) or subscribe to the releases feed
 (`https://github.com/Mariatta/hugo-theme-popular/releases.atom`).
 
+## [Unreleased]
+
+### Added
+
+- **`planning = true` on an event**, for one that is on the calendar but not
+  settled yet. It shows a neutral "Planning" badge where the row would
+  otherwise claim "Confirmed", and hides the RSVP button on the event row, the
+  event page, and the home page's "Next meetup", so `rsvp` can be filled in
+  ahead of time and appears the moment the flag comes off. It outranks the
+  "Venue wanted" badge, which is inferred from a missing venue rather than
+  declared, and is presentation only: schema.org has no status for an event
+  still being planned, so the JSON-LD and the `.ics` feed are untouched.
+
 ## [0.11.0] - 2026-08-16
 
 ### Added

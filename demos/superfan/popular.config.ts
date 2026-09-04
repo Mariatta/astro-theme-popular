@@ -40,6 +40,7 @@ export const STRINGS: Record<string, string> = {
   lookingBack: 'Looking back',
   pastEvents: 'Past appearances',
   venueWanted: 'Venue wanted',
+  eventPlanning: 'Planning',
   confirmed: 'Confirmed',
   fromTheBlog: 'From the blog',
   latestFromCommunity: 'Latest news & obsessions',
