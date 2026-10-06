@@ -99,9 +99,20 @@ jobs:
         # failed to build. This is the only place that is detectable.
         run: |
           V="${{ inputs.version }}"
-          # npm's CDN can lag a moment behind a publish.
-          for i in 1 2 3 4 5; do
-            npm view "create-popular-site@$V" version && break || sleep 10
+          # npm's CDN can lag minutes behind a publish (v0.13.0 took over a
+          # minute to appear). Poll both packages: the scaffold needs
+          # create-popular-site and its npm install needs the theme. Fail
+          # here with a clear message rather than falling through to the
+          # scaffold's confusing E404 wall.
+          for pkg in create-popular-site astro-theme-popular; do
+            for i in $(seq 1 60); do
+              npm view "$pkg@$V" version >/dev/null 2>&1 && break
+              if [ "$i" = 60 ]; then
+                echo "::error::$pkg@$V still not on the registry after 10 minutes"
+                exit 1
+              fi
+              sleep 10
+            done
           done
           cd "$(mktemp -d)"
           npm create "popular-site@$V" -- smoke-site --template starter --yes
