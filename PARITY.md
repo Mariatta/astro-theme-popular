@@ -56,6 +56,7 @@ Same behaviour, different language. When you change one, port the other.
 | Header / footer    | `partials/header.html`, `footer.html`  | `components/Header.astro`, `Footer.astro` |
 | Notice banner      | `partials/notice.html`                 | `components/Notice.astro`               |
 | Empty state (no upcoming events) | `partials/events-empty.html` | `components/EventsEmpty.astro`        |
+| Calendar subscribe buttons | `partials/calendar-subscribe.html`     | `components/CalendarSubscribe.astro`    |
 | Home               | `layouts/index.html`                   | `pages/index.astro`                     |
 | Blog list / post   | `layouts/blog/*`                       | `pages/blog/*`                          |
 | Events list / page | `layouts/events/*`                     | `pages/events/*`                        |
@@ -313,6 +314,14 @@ days, CRLF, 75-octet folded, escaped; UID = permalink; DTSTART reuses the
 Event JSON-LD; `cancelled` -> `STATUS:CANCELLED`. `scripts/check-ics.py`
 validates built feeds. Hugo folds rune-based (octet-exact for ASCII); Astro
 folds byte-exact. Hugo requires the section opt-in; Astro emits it always.
+
+The feed carries `REFRESH-INTERVAL`/`X-PUBLISHED-TTL` (PT12H) subscription
+hints. The events list and the empty state render the subscribe buttons
+(`partials/calendar-subscribe.html` / `components/CalendarSubscribe.astro`):
+a `webcal://` link (absolute feed URL with the scheme swapped), a Google
+Calendar `render?cid=` deep link, and the plain `.ics` download as the
+"add calendar from URL" fallback. Strings `subscribeCalendar`,
+`subscribeGoogle`, `downloadCalendar`.
 
 ## Event JSON-LD (schema.org/Event)
 
