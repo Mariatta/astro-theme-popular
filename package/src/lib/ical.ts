@@ -61,6 +61,10 @@ export function buildIcs(
   L.push(fold('CALSCALE:GREGORIAN'));
   L.push(fold('METHOD:PUBLISH'));
   L.push(fold(`X-WR-CALNAME:${opts.siteTitle} events`));
+  /* Subscription refresh hints (RFC 7986 + the Apple/Outlook legacy twin).
+     Google Calendar ignores both and polls on its own schedule. */
+  L.push(fold('REFRESH-INTERVAL;VALUE=DURATION:PT12H'));
+  L.push(fold('X-PUBLISHED-TTL:PT12H'));
   for (const e of events) {
     L.push(fold('BEGIN:VEVENT'));
     L.push(fold(`UID:${e.permalink}`));

@@ -12,6 +12,22 @@ To hear about new releases: watch either repo on GitHub (Watch → Custom →
 Releases) or subscribe to the releases feed
 (`https://github.com/Mariatta/hugo-theme-popular/releases.atom`).
 
+## [0.13.0] - 2026-10-05
+
+### Changed
+
+- **"Subscribe to calendar" now actually subscribes.** The events list and the
+  no-upcoming-events empty state replace the single feed link (which every
+  browser treated as a one-time .ics download: a snapshot that never updates)
+  with three options: a `webcal://` link that opens Apple Calendar, Outlook or
+  Thunderbird already subscribed to the live feed, an "Add to Google Calendar"
+  deep link (Google registers no webcal handler on the web or Android), and
+  the plain `.ics` download kept as the universal "add calendar from URL"
+  fallback. The feed itself gains `REFRESH-INTERVAL`/`X-PUBLISHED-TTL` (12
+  hour) hints for clients that honor them; Google refreshes subscribed feeds
+  on its own schedule, typically within a day. New UI strings
+  `subscribeGoogle`, `downloadCalendar`.
+
 ## [0.12.0] - 2026-09-04
 
 ### Added
