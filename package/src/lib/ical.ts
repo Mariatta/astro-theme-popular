@@ -11,7 +11,7 @@ function ymd(d: Date): string {
 }
 
 export function icsEscape(s: string): string {
-  return s.replace(/\\/g, '\\\\').replace(/;/g, '\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+  return s.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
 }
 
 /** One content line, CRLF-terminated, folded at 75 octets (continuations
