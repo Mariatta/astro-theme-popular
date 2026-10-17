@@ -16,12 +16,13 @@ Releases) or subscribe to the releases feed
 
 ### Fixed
 
-- **iCalendar feed: semicolons are now escaped.** `icsEscape` in `src/lib/ical.ts`
-  used the string literal `'\;'`, which JavaScript reads as a plain `;`, so
-  semicolons in an event title, venue or description reached the `.ics` output
-  unescaped (RFC 5545 §3.3.11 requires `\;`). Backslashes, commas and newlines
-  were already escaped correctly. Found while porting the builder for the PyCon
-  US Maintainer Summit site (pycon-maintainer-summit.github.io#36).
+- **Astro: iCalendar feed now escapes semicolons.** `icsEscape` in
+  `src/lib/ical.ts` used the string literal `'\;'`, which JavaScript reads as a
+  plain `;`, so semicolons in an event title, venue or description reached the
+  `.ics` output unescaped (RFC 5545 §3.3.11 requires `\;`). Backslashes, commas
+  and newlines were already escaped correctly. The Hugo theme already escaped
+  semicolons and is unchanged. Found while porting the builder for the PyCon US
+  Maintainer Summit site (pycon-maintainer-summit.github.io#36).
 
 ## [0.13.0] - 2026-10-05
 
