@@ -5,9 +5,37 @@ Usage: python3 scripts/check-ics.py <built-dir> [<built-dir> ...]
 
 Checks, per feed: CRLF line endings, every line <= 75 octets (folded),
 required VCALENDAR/VEVENT properties, UID present + absolute + unique, and
-that text escaping is well-formed. Shared between both repos (PARITY Tier 1)."""
+that the escaped text properties (SUMMARY, LOCATION, DESCRIPTION) contain no
+bare `;` or `,` and no stray backslash (RFC 5545 section 3.3.11).
+Shared between both repos (PARITY Tier 1)."""
 import sys
 import pathlib
+
+# The properties both templates run through their escape helper
+# (ics-escape.html / icsEscape). URL, UID and the date properties are not TEXT
+# values and legitimately contain unescaped delimiters.
+ESCAPED_TEXT_PROPERTIES = ("SUMMARY", "LOCATION", "DESCRIPTION")
+
+# What may follow a backslash in a TEXT value (RFC 5545 section 3.3.11).
+ESCAPABLE = frozenset(r"\;,nN")
+
+
+def text_escape_problem(value):
+    """Return a description of the first escaping fault in a TEXT value, or
+    None when it is well-formed. A bare `;` or `,` is the bug this catches:
+    a calendar client reads it as a delimiter and truncates the value."""
+    i = 0
+    while i < len(value):
+        ch = value[i]
+        if ch == "\\":
+            if i + 1 >= len(value) or value[i + 1] not in ESCAPABLE:
+                return f"stray backslash at offset {i}"
+            i += 2
+            continue
+        if ch in ";,":
+            return f"unescaped {ch!r} at offset {i}"
+        i += 1
+    return None
 
 
 def check_feed(path):
@@ -38,6 +66,17 @@ def check_feed(path):
             errors.append(f"{path}: UID not absolute: {uid!r}")
     if len(uids) != len(set(uids)):
         errors.append(f"{path}: duplicate UIDs")
+    # escaping, checked on the unfolded line so a `\;` split across a fold
+    # boundary is still read as one escape sequence
+    for ln in unfolded:
+        name, sep, value = ln.partition(":")
+        if not sep:
+            continue
+        prop = name.split(";", 1)[0]
+        if prop in ESCAPED_TEXT_PROPERTIES:
+            problem = text_escape_problem(value)
+            if problem:
+                errors.append(f"{path}: {prop} {problem}: {value[:40]!r}")
     vevents = props.count("BEGIN") - 1  # minus VCALENDAR
     return errors, len(uids), vevents
 
