@@ -116,8 +116,10 @@ pre code { font-size: inherit; background: none; padding: 0; border-radius: 0; }
 /* Markdown tables. Browser defaults draw no borders and no padding, so a
    cell holding several sentences runs into the next one. Every cell gets a
    thin border and the header row a wash. Text aligns left and top unless the
-   column asked for an alignment in markdown (`:---:`), which both renderers
-   emit as an inline style that wins over this default. Each table is wrapped
+   column asked for an alignment in markdown (`:---:`): Goldmark and Sätteri
+   emit that as an inline style, which beats this default on its own, and the
+   unified/rehype pipeline as an align attribute, which would lose to it, so
+   the two [align] rules restate it as author CSS. Each table is wrapped
    in .g-table-scroll by the markdown hook (Astro) and render-table.html
    (Hugo): the wrapper scrolls sideways when a table is wider than a phone,
    so the table itself keeps its semantics (display: block; overflow-x: auto
@@ -126,6 +128,8 @@ pre code { font-size: inherit; background: none; padding: 0; border-radius: 0; }
 .g-prose table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); line-height: var(--leading-normal); }
 .g-prose th, .g-prose td { border: var(--border-width) solid var(--border-default); padding: 0.55rem 0.75rem; text-align: left; vertical-align: top; }
 .g-prose th { background: var(--surface-wash-soft); color: var(--text-strong); font-weight: var(--weight-semibold); }
+.g-prose :is(th, td)[align="center"] { text-align: center; }
+.g-prose :is(th, td)[align="right"] { text-align: right; }
 
 /* Skip link for a11y */
 .g-skip { position: absolute; left: -999px; top: 0; background: var(--color-primary); color: #fff; padding: 0.6rem 1rem; border-radius: var(--radius-md); z-index: 100; }

@@ -23,8 +23,9 @@ Releases) or subscribe to the releases feed
   theme wraps each table in a `g-table-scroll` div that scrolls sideways when
   the table is wider than the screen, so a wide table no longer stretches a
   phone page. The wrapper comes from the theme, not from your content: Hugo's
-  `render-table` hook and Astro's markdown hook add it. The starter handbook's
-  meeting-formats section is now a table, so every demo palette renders one.
+  `render-table` hook and Astro's markdown hook add it. The meeting-formats
+  section of the handbook in the starter and in each community demo is now a
+  table, so every palette renders one.
   Reported by the PyCon Maintainer Summit, whose terms of service page carried
   an override until now.
 

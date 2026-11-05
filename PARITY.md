@@ -508,9 +508,11 @@ table is wider than its column, so the table itself keeps its semantics
 `layouts/_default/_markup/render-table.html`, Goldmark's default markup inside
 the wrapper. Astro: the markdown hook (`popular-markdown.mjs` ⇄
 `package/index.mjs`), in both its Sätteri and its rehype shape. Column
-alignment written in markdown (`:---:`) reaches the HTML as an inline style on
-both sides and wins over the stylesheet's left default. The starter handbook
-("Meeting cadence & format") carries a table so every demo renders one.
+alignment written in markdown (`:---:`) reaches the HTML as an inline style
+from Goldmark and Sätteri, and as an `align` attribute from the unified/rehype
+pipeline; `base.css` honours both over its left default. The handbook's
+"Meeting cadence & format" section carries a table in the starter and in each
+community demo, so every palette renders one.
 
 ## Preview banner (Tier 2)
 
