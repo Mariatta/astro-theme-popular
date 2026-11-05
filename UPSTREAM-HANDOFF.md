@@ -169,3 +169,41 @@ must delete every sync:
 
 Most adopters copy rather than merge, so this is low priority; it mainly
 taxes the summit fork until the npm package makes vendoring unnecessary.
+
+## Round 3: styling gaps found on the npm package (2026-11)
+
+Status of round 2: the summit now consumes the published package
+(`astro-theme-popular@^0.13.0`) with every injected route group switched
+off (only `robots` stays on), so item 10's route opt-outs shipped and
+item 12 no longer taxes it. Item 9 remains the summit's own multi-edition
+model.
+
+### 13. Markdown tables in prose have no styles
+
+`.g-prose` in `base.css` styles links, lists, headings, images and code
+blocks, but never `table`, `th` or `td`, so a markdown table renders with
+browser defaults: no borders, no padding, cells with several sentences run
+together. None of the six demos has a table, which is why it went unnoticed.
+It became visible on the summit's terms of service page, a three-column
+table of services with long cells. The summit carries an override in its
+[`summit.css`](https://github.com/pycon-maintainer-summit/pycon-maintainer-summit.github.io/blob/tos-policies/src/styles/summit.css)
+(on the `tos-policies` branch until PR 40 there merges) until the theme ships
+one.
+
+What upstream can do, in order of value:
+
+- **Table rules in `.g-prose`**: full width, collapsed borders, a thin
+  `--border-default` border on every cell, `0.55rem 0.75rem` padding, text
+  aligned top-left, header row on `--surface-wash-soft` in `--text-strong`,
+  and `--text-sm` type. Zebra rows are a taste call for the theme. The
+  summit's override is the draft.
+- **A scroll wrapper from the markdown integration.** The override uses
+  `display: block; overflow-x: auto` on the table itself to survive phone
+  widths, which strips the table's semantics for screen readers.
+  `popular-markdown.mjs` (and the packaged copy) already rewrite images and
+  links at build time; wrapping each table in a `<div class="g-table-scroll">`
+  there keeps the table a table. A site could register the same plugin
+  itself, but every adopter would have to write it; in the theme it is
+  written once. The Hugo side takes a `render-table.html` hook for parity.
+- **A table in one demo page**, so the rule is checked against every palette
+  and cannot regress silently.
