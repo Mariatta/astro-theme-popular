@@ -62,6 +62,8 @@ jobs:
           grep -q 'fa-arrow-left.*</i> Policies' smoke/dist/policies/conduct/index.html
           # organizer profile page renders the persona/bio card
           grep -q 'g-persona' smoke/dist/organizers/sam/index.html
+          # markdown tables: the hook wraps each one so it scrolls on a phone
+          grep -q '<div class="g-table-scroll"><table>' smoke/dist/handbook/index.html
           # @count:<section> stat resolves to a live number (starter has 1 post)
           grep -qE 'g-stat__n">1</div><div class="g-stat__l">posts' smoke/dist/index.html
           # SEO: robots.txt + sitemap emitted, og:locale present

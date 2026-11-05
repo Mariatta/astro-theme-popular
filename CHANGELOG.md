@@ -12,6 +12,22 @@ To hear about new releases: watch either repo on GitHub (Watch → Custom →
 Releases) or subscribe to the releases feed
 (`https://github.com/Mariatta/hugo-theme-popular/releases.atom`).
 
+## [Unreleased]
+
+### Fixed
+
+- **Markdown tables are styled.** A pipe table in any markdown body (a page,
+  a docs page, a post, an event description) rendered with browser defaults:
+  no borders and no padding, so cells holding several sentences ran into each
+  other. Every cell now has a thin border and the header row a wash, and the
+  theme wraps each table in a `g-table-scroll` div that scrolls sideways when
+  the table is wider than the screen, so a wide table no longer stretches a
+  phone page. The wrapper comes from the theme, not from your content: Hugo's
+  `render-table` hook and Astro's markdown hook add it. The starter handbook's
+  meeting-formats section is now a table, so every demo palette renders one.
+  Reported by the PyCon Maintainer Summit, whose terms of service page carried
+  an override until now.
+
 ## [0.14.1] - 2026-11-04
 
 ### Fixed

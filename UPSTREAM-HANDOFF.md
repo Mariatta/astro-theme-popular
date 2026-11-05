@@ -207,3 +207,12 @@ What upstream can do, in order of value:
   written once. The Hugo side takes a `render-table.html` hook for parity.
 - **A table in one demo page**, so the rule is checked against every palette
   and cannot regress silently.
+
+Status: all three shipped in the same change as this note (CHANGELOG
+"Unreleased", after 0.14.1): `.g-prose table` rules in `base.css`, the
+`g-table-scroll` wrapper from both shapes of the markdown hook and from Hugo's
+`render-table.html`, and a table in the starter handbook that the package
+smoke build and the Hugo site build both assert on. Zebra rows were left out:
+the header already sits on `--surface-wash-soft`, so striping the body in the
+same wash made every other row read as a header. The summit can drop its
+override once it moves to the release that carries this.
