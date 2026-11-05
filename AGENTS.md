@@ -214,7 +214,8 @@ applying one is never wrong: use them for adopter config values and content
 front matter too, which is what keeps adopters from having to rewrite links.
 Markdown bodies are handled by a hook registered on the active Markdown
 processor: `popular-markdown.mjs` (template model) and `package/index.mjs`
-(npm consumers). It has to be an integration, not a `markdown.rehypePlugins`
+(npm consumers); the same hook adds the per-section `#` anchors (PARITY.md,
+"Heading anchors"). It has to be an integration, not a `markdown.rehypePlugins`
 entry: Astro 7's default processor runs no rehype plugins, and only an
 integration sees the resolved config, so `astro build --base ...` is honored.
 Keep the two copies in step. `package-smoke.yml` builds
