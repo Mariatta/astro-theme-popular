@@ -3,7 +3,7 @@
  *   import popularMarkdown from './popular-markdown.mjs';
  *   export default defineConfig({ integrations: [mdx(), sitemap(), popularMarkdown()] });
  *
- * Three things, all parity with Hugo's render hooks (PARITY.md):
+ * Four things, all parity with Hugo's render hooks (PARITY.md):
  *
  *   - loading="lazy" decoding="async" on markdown images (Core Web Vitals,
  *     Hugo's render-image.html).
@@ -16,6 +16,9 @@
  *     prefix those themselves.
  *   - a hover "#" anchor on every h2-h6, so each section has a copyable URL
  *     (Hugo's render-heading.html).
+ *   - a <div class="g-table-scroll"> around every table, so a wide table
+ *     scrolls sideways on a phone instead of stretching the page (Hugo's
+ *     render-table.html).
  *
  * This is an integration rather than a plain `markdown.rehypePlugins` entry in
  * astro.config.mjs for two reasons. Astro 7's default processor is Sätteri,
@@ -62,6 +65,20 @@ const anchorNode = (id) => ({
   properties: { className: ['g-anchor'], href: `#${id}`, 'aria-hidden': 'true', tabindex: '-1' },
   children: [], // the "#" is CSS generated content; see base.css
 });
+
+/* Wide tables: every markdown <table> is wrapped in <div class="g-table-scroll">
+   (base.css: overflow-x: auto) so a table with more columns than a phone is
+   wide scrolls inside the page instead of stretching it. The wrapper scrolls,
+   not the table: `display: block; overflow-x: auto` on the table itself would
+   drop its table semantics for screen readers. Parity with Hugo's
+   render-table.html. A table an earlier hast plugin already wrapped is left
+   alone; a wrapper hand-written around a table in markdown or MDX is raw
+   HTML or JSX rather than a hast div, so it is not detected and the table
+   gets a second, harmless wrapper inside it. */
+const TABLE_WRAPPER = 'g-table-scroll';
+const tableWrapper = () => ({ type: 'element', tagName: 'div', properties: { className: [TABLE_WRAPPER] }, children: [] });
+const isTableWrapper = (node) =>
+  node?.type === 'element' && node.tagName === 'div' && [].concat(node.properties?.className ?? []).includes(TABLE_WRAPPER);
 
 /* Heading text the way Astro's own heading-id plugins read it: text nodes,
    plus MDX `{frontmatter.x}` expressions resolved against the frontmatter
@@ -116,6 +133,12 @@ function satteriMarkdownHooks(prefix) {
         },
       },
       {
+        filter: ['table'],
+        visit(node, ctx) {
+          if (!isTableWrapper(ctx.parent(node))) ctx.wrapNode(node, tableWrapper());
+        },
+      },
+      {
         filter: HEADINGS,
         visit(node, ctx) {
           let id = node.properties?.id;
@@ -158,6 +181,11 @@ function rehypeMarkdownHooks(prefix) {
           if (node.tagName !== 'h1' && props.id) (node.children ??= []).push(anchorNode(props.id));
         }
       }
+      if (node.children && !isTableWrapper(node)) {
+        node.children = node.children.map((child) =>
+          child.type === 'element' && child.tagName === 'table' ? { ...tableWrapper(), children: [child] } : child,
+        );
+      }
       (node.children || []).forEach(walk);
     };
     walk(tree);
@@ -179,7 +207,7 @@ export default function popularMarkdown() {
         } else {
           logger.warn(
             `markdown.processor "${processor?.name ?? 'unknown'}" takes neither hastPlugins nor rehypePlugins: ` +
-              'markdown images will not get loading="lazy"' +
+              'markdown images will not get loading="lazy", headings no "#" anchor, tables no scroll wrapper' +
               (prefix ? ', and site-absolute links in content will not carry the base' : ''),
           );
         }

@@ -461,7 +461,7 @@ that prefix; neither framework does it for hand-written paths.
 | Configure it | `baseURL = "https://x.dev/repo/"` | `base: '/repo'` in `astro.config.mjs` (adopters of the npm package set it in their own config) |
 | Relative URL helper | `partials/rel-href.html` (hrefs), `partials/rel-src.html` (images and assets) | `withBase()` in `lib/url.ts` |
 | Absolute URL helper | `partials/abs-url.html` | `absoluteUrl()` in `lib/url.ts` |
-| Markdown bodies | `_markup/render-link.html`, `_markup/render-image.html` | hast/rehype hook registered by the integration (package) or `astro.config.mjs` (template copy) |
+| Markdown bodies | `_markup/render-link.html`, `_markup/render-image.html` (and `render-heading.html`, `render-table.html` for the anchors and table wrapper below) | hast/rehype hook registered by the integration (package) or `astro.config.mjs` (template copy) |
 
 Rules that keep the two in step:
 
@@ -498,6 +498,22 @@ the docs sidebar pointing at the same fragments. The anchor is deliberately
 hidden from assistive tech and the tab order: a labelled link inside a heading
 becomes part of the heading's accessible name, and the docs sidebar already
 exposes the same fragments as real links. h1 gets no anchor on either side.
+
+## Markdown tables (Tier 2)
+
+Every markdown table is wrapped in `<div class="g-table-scroll">`, styled in
+`base.css` (Tier 1, with the `.g-prose table` rules) to scroll sideways when the
+table is wider than its column, so the table itself keeps its semantics
+(`display: block` on a `<table>` drops them for screen readers). Hugo:
+`layouts/_default/_markup/render-table.html`, Goldmark's default markup inside
+the wrapper. Astro: the markdown hook (`popular-markdown.mjs` ⇄
+`package/index.mjs`), in both its Sätteri and its rehype shape. Column
+alignment written in markdown (`:---:`) reaches the HTML as an inline style
+from Goldmark and Sätteri, and as an `align` attribute from the unified/rehype
+pipeline; `base.css` honours both over its start default. The handbook's
+"Meeting cadence & format" section carries a table in the starter and in the
+three community demos (the personal-site demo has no handbook), so each of
+those palettes renders one.
 
 ## Preview banner (Tier 2)
 
