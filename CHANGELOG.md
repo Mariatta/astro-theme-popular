@@ -12,6 +12,18 @@ To hear about new releases: watch either repo on GitHub (Watch → Custom →
 Releases) or subscribe to the releases feed
 (`https://github.com/Mariatta/hugo-theme-popular/releases.atom`).
 
+## [Unreleased]
+
+### Fixed
+
+- **iCalendar feed: the calendar name and product id are now escaped.** Both
+  `PRODID` and `X-WR-CALNAME` are built from the site title, and neither
+  template ran it through the escape helper, so a title such as
+  "PyLadies Vancouver, BC" shipped a bare comma in a TEXT value (RFC 5545
+  section 3.3.11). `scripts/check-ics.py` now checks those two properties as
+  well, and is registered in `scripts/sync-shared.sh` so the two copies can
+  no longer drift unnoticed.
+
 ## [0.14.0] - 2026-11-04
 
 ### Added
@@ -31,9 +43,10 @@ Releases) or subscribe to the releases feed
 - **Astro: iCalendar feed now escapes semicolons.** `icsEscape` in
   `src/lib/ical.ts` used the string literal `'\;'`, which JavaScript reads as a
   plain `;`, so semicolons in an event title, venue or description reached the
-  `.ics` output unescaped (RFC 5545 §3.3.11 requires `\;`). Backslashes, commas
-  and newlines were already escaped correctly. Found while porting the builder
-  for the PyCon US Maintainer Summit site (pycon-maintainer-summit.github.io#36).
+  `.ics` output unescaped (RFC 5545 section 3.3.11 requires `\;`). Backslashes,
+  commas and newlines were already escaped correctly. Found while porting the
+  builder for the PyCon US Maintainer Summit site
+  (pycon-maintainer-summit.github.io#36).
 - **`scripts/check-ics.py` now checks text escaping.** Its docstring claimed
   it validated escaping, but it only checked line endings, folding, required
   properties and UIDs, which is how an unescaped semicolon in the Astro feed

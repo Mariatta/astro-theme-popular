@@ -92,6 +92,30 @@ class CheckFeed(unittest.TestCase):
         )))
         self.assertEqual(errors, [])
 
+    def test_site_title_in_header_properties_is_checked(self):
+        # PRODID and X-WR-CALNAME are built from the site title, so a title
+        # like "PyLadies Vancouver, BC" has to be escaped there too.
+        bad = feed(*event("SUMMARY:Plain")).replace(
+            b"PRODID:-//Your Community//Popular theme//EN",
+            b"PRODID:-//Your Community, BC//Popular theme//EN\r\nX-WR-CALNAME:Your Community, BC events")
+        errors, _, _ = self.check(bad)
+        self.assertEqual(len(errors), 2)
+        self.assertIn("PRODID unescaped ','", errors[0])
+        self.assertIn("X-WR-CALNAME unescaped ','", errors[1])
+        good = feed(*event("SUMMARY:Plain")).replace(
+            b"PRODID:-//Your Community//Popular theme//EN",
+            b"PRODID:-//Your Community\\, BC//Popular theme//EN\r\nX-WR-CALNAME:Your Community\\, BC events")
+        self.assertEqual(self.check(good)[0], [])
+
+    def test_property_parameters_do_not_hide_the_value(self):
+        # `SUMMARY;LANGUAGE=en:...` is still a SUMMARY; the check reads past
+        # the parameter and inspects the value.
+        errors, _, _ = self.check(feed(*event("SUMMARY;LANGUAGE=en:Workshop; bring a laptop")))
+        self.assertEqual(len(errors), 1)
+        self.assertIn("SUMMARY unescaped ';'", errors[0])
+        errors, _, _ = self.check(feed(*event("SUMMARY;LANGUAGE=en:Workshop\\; bring a laptop")))
+        self.assertEqual(errors, [])
+
     def test_first_fault_only_per_property(self):
         errors, _, _ = self.check(feed(*event("SUMMARY:a;b,c")))
         self.assertEqual(len(errors), 1)

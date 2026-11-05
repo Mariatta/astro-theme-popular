@@ -33,6 +33,7 @@ in both repos. The Hugo repo is the canonical source; copy Hugo → Astro.
 | `scripts/setup.py`                   | `scripts/setup.py`           |
 | `scripts/templates/`                 | `scripts/templates/`         |
 | `scripts/tests/`                     | `scripts/tests/`             |
+| `scripts/check-ics.py`               | `scripts/check-ics.py`       |
 | `CHANGELOG.md`                       | `CHANGELOG.md`               |
 | `RELEASING.md`                       | `RELEASING.md`               |
 

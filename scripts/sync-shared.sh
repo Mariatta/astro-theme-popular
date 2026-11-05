@@ -25,8 +25,10 @@ PAIRS=(
   "scripts/sample-community.xlsx:scripts/sample-community.xlsx"
   "data/setup-questions.json:src/data/setup-questions.json"
   "scripts/setup.py:scripts/setup.py"
+  "scripts/starter-content.py:scripts/starter-content.py"
   "scripts/templates:scripts/templates"
   "scripts/tests:scripts/tests"
+  "scripts/check-ics.py:scripts/check-ics.py"
   "CHANGELOG.md:CHANGELOG.md"
   "RELEASING.md:RELEASING.md"
 )
