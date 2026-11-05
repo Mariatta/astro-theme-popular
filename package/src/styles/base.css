@@ -119,7 +119,8 @@ pre code { font-size: inherit; background: none; padding: 0; border-radius: 0; }
    column asked for an alignment in markdown (`:---:`): Goldmark and Sätteri
    emit that as an inline style, which beats this default on its own, and the
    unified/rehype pipeline as an align attribute, which would lose to it, so
-   the two [align] rules restate it as author CSS. Each table is wrapped
+   the three [align] rules restate it as author CSS (left included: start
+   is right on an RTL site, and `:---` asked for left). Each table is wrapped
    in .g-table-scroll by the markdown hook (Astro) and render-table.html
    (Hugo): the wrapper scrolls sideways when a table is wider than a phone,
    so the table itself keeps its semantics (display: block; overflow-x: auto
@@ -128,6 +129,7 @@ pre code { font-size: inherit; background: none; padding: 0; border-radius: 0; }
 .g-prose table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); line-height: var(--leading-normal); }
 .g-prose th, .g-prose td { border: var(--border-width) solid var(--border-default); padding: 0.55rem 0.75rem; text-align: start; vertical-align: top; }
 .g-prose th { background: var(--surface-wash-soft); color: var(--text-strong); font-weight: var(--weight-semibold); }
+.g-prose :is(th, td)[align="left"] { text-align: left; }
 .g-prose :is(th, td)[align="center"] { text-align: center; }
 .g-prose :is(th, td)[align="right"] { text-align: right; }
 
