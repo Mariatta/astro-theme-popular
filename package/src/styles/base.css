@@ -115,7 +115,7 @@ pre code { font-size: inherit; background: none; padding: 0; border-radius: 0; }
 .g-prose pre { overflow-x: auto; padding: 1rem 1.2rem; border-radius: var(--radius-lg); background: var(--surface-code-block) !important; color: var(--ink-100); }
 /* Markdown tables. Browser defaults draw no borders and no padding, so a
    cell holding several sentences runs into the next one. Every cell gets a
-   thin border and the header row a wash. Text aligns left and top unless the
+   thin border and the header row a wash. Text aligns start and top unless the
    column asked for an alignment in markdown (`:---:`): Goldmark and Sätteri
    emit that as an inline style, which beats this default on its own, and the
    unified/rehype pipeline as an align attribute, which would lose to it, so
@@ -126,7 +126,7 @@ pre code { font-size: inherit; background: none; padding: 0; border-radius: 0; }
    on the <table> would drop them for screen readers). */
 .g-table-scroll { overflow-x: auto; }
 .g-prose table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); line-height: var(--leading-normal); }
-.g-prose th, .g-prose td { border: var(--border-width) solid var(--border-default); padding: 0.55rem 0.75rem; text-align: left; vertical-align: top; }
+.g-prose th, .g-prose td { border: var(--border-width) solid var(--border-default); padding: 0.55rem 0.75rem; text-align: start; vertical-align: top; }
 .g-prose th { background: var(--surface-wash-soft); color: var(--text-strong); font-weight: var(--weight-semibold); }
 .g-prose :is(th, td)[align="center"] { text-align: center; }
 .g-prose :is(th, td)[align="right"] { text-align: right; }

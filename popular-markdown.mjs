@@ -71,8 +71,10 @@ const anchorNode = (id) => ({
    wide scrolls inside the page instead of stretching it. The wrapper scrolls,
    not the table: `display: block; overflow-x: auto` on the table itself would
    drop its table semantics for screen readers. Parity with Hugo's
-   render-table.html. A table already inside a wrapper (hand-written in MDX,
-   or an earlier plugin) is left alone. */
+   render-table.html. A table an earlier hast plugin already wrapped is left
+   alone; a wrapper hand-written around a table in markdown or MDX is raw
+   HTML or JSX rather than a hast div, so it is not detected and the table
+   gets a second, harmless wrapper inside it. */
 const TABLE_WRAPPER = 'g-table-scroll';
 const tableWrapper = () => ({ type: 'element', tagName: 'div', properties: { className: [TABLE_WRAPPER] }, children: [] });
 const isTableWrapper = (node) =>

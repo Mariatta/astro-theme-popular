@@ -26,8 +26,8 @@ Releases) or subscribe to the releases feed
   `render-table` hook and Astro's markdown hook add it. The meeting-formats
   section of the handbook in the starter and in each community demo is now a
   table, so every palette renders one.
-  Reported by the PyCon Maintainer Summit, whose terms of service page carried
-  an override until now.
+  Reported by the PyCon Maintainer Summit, whose terms of service page carries
+  an override until it picks up this release.
 
 ## [0.14.1] - 2026-11-04
 
