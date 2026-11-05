@@ -1,6 +1,7 @@
 name: Helper script tests
 
-# Unit tests for the Python helper scripts (importers, sponsor updater).
+# Unit tests for the Python helper scripts (importers, setup wizard, sponsor
+# updater, iCalendar feed validator).
 # Standard library only: no dependencies to install.
 
 on:

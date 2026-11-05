@@ -5,16 +5,18 @@ Usage: python3 scripts/check-ics.py <built-dir> [<built-dir> ...]
 
 Checks, per feed: CRLF line endings, every line <= 75 octets (folded),
 required VCALENDAR/VEVENT properties, UID present + absolute + unique, and
-that the escaped text properties (SUMMARY, LOCATION, DESCRIPTION) contain no
-bare `;` or `,` and no stray backslash (RFC 5545 section 3.3.11).
+that the escaped text properties (PRODID, X-WR-CALNAME, SUMMARY, LOCATION,
+DESCRIPTION) contain no bare `;` or `,` and no stray backslash (RFC 5545
+section 3.3.11).
 Shared between both repos (PARITY Tier 1)."""
 import sys
 import pathlib
 
 # The properties both templates run through their escape helper
-# (ics-escape.html / icsEscape). URL, UID and the date properties are not TEXT
+# (ics-escape.html / icsEscape): the per-event text plus the two header values
+# built from the site title. URL, UID and the date properties are not TEXT
 # values and legitimately contain unescaped delimiters.
-ESCAPED_TEXT_PROPERTIES = ("SUMMARY", "LOCATION", "DESCRIPTION")
+ESCAPED_TEXT_PROPERTIES = ("PRODID", "X-WR-CALNAME", "SUMMARY", "LOCATION", "DESCRIPTION")
 
 # What may follow a backslash in a TEXT value (RFC 5545 section 3.3.11).
 ESCAPABLE = frozenset(r"\;,nN")

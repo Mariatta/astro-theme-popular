@@ -57,10 +57,10 @@ export function buildIcs(
   const L: string[] = [];
   L.push(fold('BEGIN:VCALENDAR'));
   L.push(fold('VERSION:2.0'));
-  L.push(fold(`PRODID:-//${opts.siteTitle}//Popular theme//EN`));
+  L.push(fold(`PRODID:-//${icsEscape(opts.siteTitle)}//Popular theme//EN`));
   L.push(fold('CALSCALE:GREGORIAN'));
   L.push(fold('METHOD:PUBLISH'));
-  L.push(fold(`X-WR-CALNAME:${opts.siteTitle} events`));
+  L.push(fold(`X-WR-CALNAME:${icsEscape(opts.siteTitle)} events`));
   /* Subscription refresh hints (RFC 7986 + the Apple/Outlook legacy twin).
      Google Calendar ignores both and polls on its own schedule. */
   L.push(fold('REFRESH-INTERVAL;VALUE=DURATION:PT12H'));
