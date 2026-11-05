@@ -21,8 +21,9 @@ Releases) or subscribe to the releases feed
   template ran it through the escape helper, so a title such as
   "PyLadies Vancouver, BC" shipped a bare comma in a TEXT value (RFC 5545
   section 3.3.11). `scripts/check-ics.py` now checks those two properties as
-  well, and is registered in `scripts/sync-shared.sh` so the two copies can
-  no longer drift unnoticed.
+  well. It is also registered in `scripts/sync-shared.sh`, together with
+  `check-jsonld.py` and `check-image-alt.py`, so the shared CI checkers can
+  no longer drift between the two repos unnoticed.
 
 ## [0.14.0] - 2026-11-04
 

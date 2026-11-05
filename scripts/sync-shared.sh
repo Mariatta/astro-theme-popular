@@ -29,6 +29,8 @@ PAIRS=(
   "scripts/templates:scripts/templates"
   "scripts/tests:scripts/tests"
   "scripts/check-ics.py:scripts/check-ics.py"
+  "scripts/check-jsonld.py:scripts/check-jsonld.py"
+  "scripts/check-image-alt.py:scripts/check-image-alt.py"
   "CHANGELOG.md:CHANGELOG.md"
   "RELEASING.md:RELEASING.md"
 )
