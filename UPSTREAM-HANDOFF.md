@@ -211,9 +211,10 @@ What upstream can do, in order of value:
 Status: all three shipped in the same change as this note (CHANGELOG
 "Unreleased", after 0.14.1): `.g-prose table` rules in `base.css`, the
 `g-table-scroll` wrapper from both shapes of the markdown hook and from Hugo's
-`render-table.html`, and a table in the handbook of the starter and of each
-community demo (one page is one palette, so one demo would have checked one
-palette); the package smoke build and the Hugo site build assert on it. Zebra rows were left out:
-the header already sits on `--surface-wash-soft`, so striping the body in the
-same wash made every other row read as a header. The summit can drop its
-override once it moves to the release that carries this.
+`render-table.html`, and a table in the handbook of the starter and of the
+three community demos (one page is one palette, so one demo would have checked
+one palette; the personal-site demo has no handbook); the package smoke build
+and the Hugo site build assert on it. Zebra rows were left out: the header
+already sits on `--surface-wash-soft`, so striping the body in the same wash
+made every other row read as a header. The summit can drop its override once
+it moves to the release that carries this.
