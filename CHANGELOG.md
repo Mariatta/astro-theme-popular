@@ -24,8 +24,8 @@ Releases) or subscribe to the releases feed
   the table is wider than the screen, so a wide table no longer stretches a
   phone page. The wrapper comes from the theme, not from your content: Hugo's
   `render-table` hook and Astro's markdown hook add it. The meeting-formats
-  section of the handbook in the starter and in each community demo is now a
-  table, so every palette renders one.
+  section of the handbook is now a table in the starter and in the three
+  community demos, so each of those palettes renders one.
   Reported by the PyCon Maintainer Summit, whose terms of service page carries
   an override until it picks up this release.
 

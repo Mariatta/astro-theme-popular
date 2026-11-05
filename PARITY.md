@@ -511,8 +511,9 @@ the wrapper. Astro: the markdown hook (`popular-markdown.mjs` ⇄
 alignment written in markdown (`:---:`) reaches the HTML as an inline style
 from Goldmark and Sätteri, and as an `align` attribute from the unified/rehype
 pipeline; `base.css` honours both over its start default. The handbook's
-"Meeting cadence & format" section carries a table in the starter and in each
-community demo, so every palette renders one.
+"Meeting cadence & format" section carries a table in the starter and in the
+three community demos (the personal-site demo has no handbook), so each of
+those palettes renders one.
 
 ## Preview banner (Tier 2)
 
