@@ -258,7 +258,9 @@ pre:hover .g-copy, .g-copy:focus-visible { opacity: 1; }
 .g-doc-toc a.is-active { color: var(--gold-700); background: var(--gold-50); border-left-color: var(--color-primary); font-weight: var(--weight-semibold); }
 .g-doc__content { min-width: 0; }
 .g-doc__content h2 { margin-top: 2.5rem; }
-.g-doc__content h2, .g-doc__content h3, .g-doc__content h4 { scroll-margin-top: 108px; }
+/* A fragment target stops clear of the sticky header. Every prose heading,
+   not only docs: blog posts and event pages carry section anchors too. */
+.g-prose :is(h2, h3, h4, h5, h6) { scroll-margin-top: 108px; }
 .g-doc__content h2:first-child { margin-top: 0; }
 
 /* ---------- Callout ---------- */

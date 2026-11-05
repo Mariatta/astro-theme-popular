@@ -97,6 +97,17 @@ pre code { font-size: inherit; background: none; padding: 0; border-radius: 0; }
 .g-prose > * + * { margin-top: 1.1rem; }
 .g-prose ul, .g-prose ol { padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem; }
 .g-prose h2 { margin-top: 1.8rem; }
+/* Section permalinks: every markdown h2-h6 ends in a "#" anchor (Hugo:
+   _markup/render-heading.html; Astro: the markdown hook) so a section has a
+   URL a reader can copy. Shown while the heading is hovered; where there is
+   no hover (touch) it stays faintly visible so it can still be tapped. The
+   glyph is generated content: the anchor itself is empty so summaries, feeds
+   and plain-text excerpts of the body never pick up a stray "#". */
+.g-anchor::before { content: "#"; }
+.g-anchor { margin-left: 0.35em; font-weight: var(--weight-regular); color: var(--text-muted); text-decoration: none; opacity: 0; transition: opacity 0.15s; }
+:is(h2, h3, h4, h5, h6):hover > .g-anchor { opacity: 1; }
+.g-anchor:hover { color: var(--color-primary); }
+@media (hover: none) { .g-anchor { opacity: 0.5; } }
 .g-prose img { border-radius: var(--radius-xl); box-shadow: var(--shadow-sm); }
 /* One background for every fenced block, whatever the highlighter did.
    !important beats the inline background-color that Chroma (Hugo) and

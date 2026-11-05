@@ -480,6 +480,22 @@ Rules that keep the two in step:
   `smoke/astro.base.config.mjs`). The check deliberately does not exempt
   `href="/"`: the header brand link is exactly that.
 
+## Heading anchors (Tier 2)
+
+Every markdown h2-h6 ends in `<a class="g-anchor" href="#<id>" aria-hidden="true"
+tabindex="-1"></a>`, styled in `base.css` (Tier 1) to show a `#` on hover. The
+anchor is empty and the glyph is CSS generated content, so `.Summary`, feeds and
+plain-text excerpts of a body never pick up a stray `#`. Hugo:
+`layouts/_default/_markup/render-heading.html`, which keeps Goldmark's `.Anchor`.
+Astro: the markdown hook (`popular-markdown.mjs` ⇄ `package/index.mjs`). Astro
+assigns heading ids *after* user plugins, so the hook slugs the heading itself
+with `github-slugger` (the library Astro uses) and sets the id; Astro keeps an
+id that is already present and reports it in `headings`, which is what keeps
+the docs sidebar pointing at the same fragments. The anchor is deliberately
+hidden from assistive tech and the tab order: a labelled link inside a heading
+becomes part of the heading's accessible name, and the docs sidebar already
+exposes the same fragments as real links. h1 gets no anchor on either side.
+
 ## Preview banner (Tier 2)
 
 A generator that renders a site it does not own (the web wizard's throwaway

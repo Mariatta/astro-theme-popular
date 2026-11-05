@@ -14,6 +14,18 @@ Releases) or subscribe to the releases feed
 
 ## [Unreleased]
 
+### Added
+
+- **Section permalinks.** Every `##`-`######` heading in a markdown body (docs
+  pages, blog posts, event descriptions, any page) ends in a `#` anchor that
+  appears on hover and links to that section, so a reader can copy a URL to
+  "Submitting a proposal" instead of to the whole page. Headings already had
+  ids; what was missing was a visible way to grab them. Fragment targets on
+  every prose heading now stop clear of the sticky header (previously only
+  docs pages did). New class `g-anchor`. Hugo: a `render-heading` hook; Astro:
+  the theme's markdown hook, which slugs with the same `github-slugger` Astro
+  uses so the docs sidebar keeps matching.
+
 ### Fixed
 
 - **Astro: iCalendar feed now escapes semicolons.** `icsEscape` in
