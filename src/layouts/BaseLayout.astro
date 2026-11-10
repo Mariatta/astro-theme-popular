@@ -97,9 +97,12 @@ const brandCss = `html:root{${vars.join(';')}}`;
     <meta name="generator" content={Astro.generator} />
     <title>{pageTitle}</title>
     <meta name="description" content={desc} />
-    <meta property="og:site_name" content={SITE.title} />
+    {/* With no site title, og:site_name is left out rather than written
+        empty, and the home og:title falls back to the tagline, the same way
+        the home <title> does. The Hugo twin does the same in seo.html. */}
+    {SITE.title && <meta property="og:site_name" content={SITE.title} />}
     <meta property="og:locale" content={ogLocale} />
-    <meta property="og:title" content={title ?? SITE.title} />
+    <meta property="og:title" content={title ?? (SITE.title || SITE.tagline)} />
     <meta property="og:description" content={desc} />
     <meta property="og:url" content={canonical} />
     <link rel="canonical" href={canonical} />
