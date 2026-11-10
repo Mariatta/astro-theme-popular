@@ -12,6 +12,21 @@ To hear about new releases: watch either repo on GitHub (Watch → Custom →
 Releases) or subscribe to the releases feed
 (`https://github.com/Mariatta/hugo-theme-popular/releases.atom`).
 
+## [Unreleased]
+
+### Fixed
+
+- **No stray comma in the home page title.** The home page `<title>` is the
+  site title and the tagline joined by a comma, and the comma was written even
+  when the title was empty, so a site with only a tagline showed `, Tagline`
+  in the browser tab. The Astro twin also wrote `Title, undefined` when the
+  tagline was unset. The title now joins only the parts that are set, and
+  inner pages no longer end in ` · ` when the site title is empty. In Hugo,
+  `title` belongs at the top level of `hugo.toml`, not under `[params]`; the
+  build now warns when it is empty, and the configuration docs show it in the
+  example. Reported by Viorel Alexandrescu for kobudei.org
+  ([hugo-theme-popular#88](https://github.com/Mariatta/hugo-theme-popular/issues/88)).
+
 ## [0.14.2] - 2026-11-05
 
 ### Fixed
