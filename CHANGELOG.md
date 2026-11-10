@@ -12,7 +12,7 @@ To hear about new releases: watch either repo on GitHub (Watch → Custom →
 Releases) or subscribe to the releases feed
 (`https://github.com/Mariatta/hugo-theme-popular/releases.atom`).
 
-## [Unreleased]
+## [0.14.3] - 2026-11-10
 
 ### Fixed
 
