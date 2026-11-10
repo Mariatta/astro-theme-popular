@@ -26,6 +26,13 @@ Releases) or subscribe to the releases feed
   build now warns when it is empty, and the configuration docs show it in the
   example. Reported by Viorel Alexandrescu for kobudei.org
   ([hugo-theme-popular#88](https://github.com/Mariatta/hugo-theme-popular/issues/88)).
+- **No empty Open Graph site name.** A site with no title wrote
+  `og:site_name` with empty content, and the home page `og:title` was empty
+  too, so a link preview showed no name at all. `og:site_name` is now left out
+  when the title is empty, and the home `og:title` falls back to the tagline,
+  the same way the home page `<title>` does. Setting `title` is still the fix.
+  Found while fixing
+  [hugo-theme-popular#88](https://github.com/Mariatta/hugo-theme-popular/issues/88).
 
 ## [0.14.2] - 2026-11-05
 
