@@ -26,7 +26,12 @@ interface Props {
 }
 const { title, description, image, article, imageAlt, noindex } = Astro.props;
 const ogLocale = SITE.locale.replace('-', '_');
-const pageTitle = title ? `${title} · ${SITE.title}` : `${SITE.title}, ${SITE.tagline}`;
+/* The home title joins whichever of title and tagline are set, so a missing
+   one never leaves a stray separator (", Tagline" or "Title, undefined").
+   The Hugo twin does the same in partials/head.html. */
+const pageTitle = title
+  ? [title, SITE.title].filter(Boolean).join(' · ')
+  : [SITE.title, SITE.tagline].filter(Boolean).join(', ');
 const desc = description ?? SITE.description;
 const ogImage = image ?? SITE.ogImage;
 /* Astro.url.pathname already carries the base; Astro.site does not, hence
