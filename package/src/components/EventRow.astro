@@ -4,7 +4,7 @@ import type { CollectionEntry } from 'astro:content';
 import { safeCollection } from '../lib/collections';
 import { withBase } from '../lib/url';
 import { eventHasRecording } from '../lib/talks';
-import { formatEventDates } from '../lib/eventdates';
+import { formatEventDates, formatEventRowDay } from '../lib/eventdates';
 
 interface Props { event: CollectionEntry<'events'> }
 const { event } = Astro.props;
@@ -33,7 +33,7 @@ const speakerLine = names.length ? names.join(', ') : d.speaker;
 
 /* A multi-day event shows its span: "Sat – Sun" over "Jun 6 – 7". */
 const dow = formatEventDates(d, SITE.locale, { weekday: 'short' });
-const day = formatEventDates(d, SITE.locale, { month: 'short', day: 'numeric' });
+const day = formatEventRowDay(d, SITE.locale);
 ---
 
 <div class="g-event">

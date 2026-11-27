@@ -124,6 +124,24 @@ jobs:
           assert order == sorted(order), f"talks out of order: {order}"
           assert html.count('class="g-schedule-day"') == 2, "expected one heading per scheduled day"
           PY
+          # The /talks/ index lists them in the same order, and leaves a
+          # one-day event's talks as written.
+          python3 - smoke/dist/talks/index.html <<'PY'
+          import sys
+          html = open(sys.argv[1], encoding="utf-8").read()
+          order = [html.index(t) for t in ("Undated session", "First-day session", "Second-day session")]
+          assert order == sorted(order), f"talks index out of order: {order}"
+          assert html.index("Written first") < html.index("Written second"), "one-day talks reordered"
+          PY
+          # The event row's span carries word joiners and no-break spaces, so
+          # the narrow date box cannot leave the end day alone on a line.
+          python3 - smoke/dist/events/index.html <<'PY'
+          import sys
+          html = open(sys.argv[1], encoding="utf-8").read()
+          for span in ("Jan 16\u2060\u202f–\u2060\u202f17", "Apr\u2060\u00a030\u2060\u202f–\u2009May\u2060\u00a02",
+                       "Jan\u2060\u00a01\u2060\u00a0– Dec\u2060\u00a031"):
+              assert span in html, f"event row span missing or breakable: {span!r}"
+          PY
       - name: Route opt-outs build
         working-directory: smoke
         run: |

@@ -197,6 +197,15 @@ def to_records(rows):
     return out
 
 
+def is_calendar_day(text):
+    """True for a YYYY-MM-DD that exists (2027-02-30 does not)."""
+    try:
+        datetime.strptime(text, "%Y-%m-%d")
+    except ValueError:
+        return False
+    return True
+
+
 def excel_serial_to_iso(value):
     try:
         serial = float(value)
@@ -334,14 +343,12 @@ def main():
         # than written as front matter the site cannot read.
         end_date = excel_serial_to_iso(r.get("end date", ""))
         if end_date:
-            try:
-                # YYYY-MM-DD exactly, optionally followed by a T clock time.
-                shape = re.fullmatch(r"(\d{4}-\d{2}-\d{2})(T\d{2}:\d{2}.*)?", end_date)
-                if not shape:
-                    raise ValueError(end_date)
-                datetime.strptime(shape.group(1), "%Y-%m-%d")  # a real calendar day
+            # YYYY-MM-DD exactly, optionally followed by a T clock time
+            # (seconds and a zone allowed, nothing else).
+            shape = re.fullmatch(r"(\d{4}-\d{2}-\d{2})(T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}(:?\d{2})?)?)?", end_date)
+            if shape and is_calendar_day(shape.group(1)):
                 end_date = shape.group(1)
-            except ValueError:
+            else:
                 print(f"warning: {r.get('title')}: End Date {end_date!r} is not a date like 2027-01-17; left out", file=sys.stderr)
                 end_date = ""
         pairs = [("title", r.get("title")), ("date", date), ("endDate", end_date), ("description", r.get("description")),

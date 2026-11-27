@@ -333,19 +333,33 @@ whatever `formatRange` gives the site locale (thin spaces around the en dash
 in English). The one exception is an event row that crosses a year, where
 Astro joins the two ends itself with space, en dash, space, as Hugo does.
 
+The event row's day sits in a narrow box, so on both sides its span carries
+no-break spaces that choose where it may wrap: within one month only after
+the month (`Jan` over `16 – 17`), across months only after the dash
+(`Apr 30 –` over `May 2`). The end day never lands alone on a line. Astro
+applies the same rule to whatever the site locale writes; each line is one
+unbreakable run, so a long localized month can reach into the box's padding.
+
 **Schedule:** a `talks[]` entry may carry `date` (the day it is on, a plain
 date) and `time` (free text, shown above the title, class `g-talk__time`). On
 a multi-day event the Talks section lists undated talks first, then dated
 talks under a heading per day (class `g-schedule-day`), days in order and
 talks within a day in the order they were written. A talk `date` outside the
 event's dates **fails the build** on both sides. The `/talks/` index shows a
-talk's own day when it has one.
+talk's own day when it has one, and lists the talks of one event in the
+event page's order (on a multi-day event undated first, then by day;
+otherwise as written).
 
 **Astro reads the UTC calendar day** of an event's `date` and `endDate` and of
 a talk's `date` (event rows and their year headings, the event page, the home
 card, `llms.txt`, `/talks/`, the feed, JSON-LD), so a plain
 `date: 2026-06-06` is June 6 on any build machine, matching Hugo. Blog post
 dates are not covered.
+
+**Write event dates without a UTC offset** (`2026-06-06`, or
+`2026-06-06T18:00:00`). With one, as in `2026-09-19T18:00:00-07:00`, Astro
+shows the UTC day, September 20, while Hugo shows the day as written, so the
+twins disagree.
 
 ## iCalendar feed (Tier 2)
 

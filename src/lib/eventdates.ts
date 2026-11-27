@@ -56,3 +56,37 @@ export function formatEventDates(e: EventSpan, locale: string, options: Intl.Dat
   }
   return new Intl.DateTimeFormat(locale, { ...options, timeZone: 'UTC' }).formatRange(e.date, last);
 }
+
+/* The same text with its spaces made non-breaking (a thin space becomes the
+   narrow no-break space). A word joiner goes with each one: a line may
+   otherwise still break between an en dash and a no-break space. */
+const noBreak = (s: string) => s.replace(/\u2009/g, '\u2060\u202f').replace(/ /g, '\u2060\u00a0');
+
+/** The event row's day, "Jun 6", or "Jun 6 – 7" / "Apr 30 – May 2" for a
+ *  multi-day event. The row's date box is narrow, so the span carries
+ *  no-break spaces that keep the end day from landing alone on a line: a
+ *  shared month may sit over "16 – 17", and "Apr 30 –" over "May 2". Each
+ *  line is then one unbreakable run, so a long localized month can reach
+ *  into the box's padding. */
+export function formatEventRowDay(e: EventSpan, locale: string): string {
+  const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' };
+  if (!isMultiDay(e)) return formatEventDay(e.date, locale, options);
+  const last = eventLastDay(e);
+  if (e.date.getUTCFullYear() !== last.getUTCFullYear()) {
+    return `${noBreak(formatEventDay(e.date, locale, options))}\u2060\u00a0– ${noBreak(formatEventDay(last, locale, options))}`;
+  }
+  const parts = new Intl.DateTimeFormat(locale, { ...options, timeZone: 'UTC' }).formatRangeToParts(e.date, last);
+  const endHasMonth = parts.some((p) => p.source === 'endRange' && p.type === 'month');
+  return parts.map((p, i) => {
+    if (p.source !== 'shared') return noBreak(p.value);
+    const separator = parts[i - 1]?.source === 'startRange' && parts[i + 1]?.source === 'endRange';
+    if (!separator) return p.value;
+    /* The separator is " – " in English, but a bare "–" in en-CA and ". – "
+       in Hungarian, so an edge with no space to convert gets a word joiner.
+       Across months the space after the dash stays as the one place to wrap. */
+    const [, lead, trail] = p.value.match(/^(.*?)(\s*)$/s)!;
+    const head = (/^\s/.test(lead) ? '' : '\u2060') + noBreak(lead);
+    if (endHasMonth) return head + trail;
+    return head + (trail ? noBreak(trail) : '\u2060');
+  }).join('');
+}

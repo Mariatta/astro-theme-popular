@@ -106,6 +106,8 @@ class EndToEnd(unittest.TestCase):
                 w.writerow(["With A Time", "2027-05-01", "2027-05-02T17:00:00"])
                 w.writerow(["Unpadded Month", "2027-01-16", "2027-1-17"])
                 w.writerow(["Not A Time", "2027-06-05", "2027-06-06Tuesday"])
+                w.writerow(["Text After Time", "2027-07-03", "2027-07-04T17:00 or so"])
+                w.writerow(["With A Zone", "2027-08-07", "2027-08-08T17:00:00-07:00"])
             r = run_script("spreadsheet-import.py", "--csv-dir", str(csvdir), "--site", tmp)
             self.assertEqual(r.returncode, 0, r.stderr)
             events = pathlib.Path(tmp) / "content" / "events"
@@ -118,10 +120,12 @@ class EndToEnd(unittest.TestCase):
             self.assertIn("No Such Day", r.stderr)
             self.assertNotIn("endDate", (events / "trailing-text.md").read_text())
             self.assertIn("Trailing Text", r.stderr)
-            for slug, title in (("unpadded-month", "Unpadded Month"), ("not-a-time", "Not A Time")):
+            for slug, title in (("unpadded-month", "Unpadded Month"), ("not-a-time", "Not A Time"),
+                                ("text-after-time", "Text After Time")):
                 self.assertNotIn("endDate", (events / f"{slug}.md").read_text())
                 self.assertIn(title, r.stderr)
             self.assertIn("endDate = 2027-05-02\n", (events / "with-a-time.md").read_text())  # time dropped
+            self.assertIn("endDate = 2027-08-08\n", (events / "with-a-zone.md").read_text())
             with tempfile.TemporaryDirectory() as astro_site:
                 r = run_script("spreadsheet-import.py", "--csv-dir", str(csvdir), "--site", astro_site, "--format", "astro")
                 self.assertEqual(r.returncode, 0, r.stderr)
