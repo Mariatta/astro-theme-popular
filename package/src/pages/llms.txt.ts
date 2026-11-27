@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { absoluteUrl } from '../lib/url';
+import { formatEventDay } from '../lib/eventdates';
 import { SITE } from 'popular:config';
 
 /* §8 llms.txt: a build-time plain-text summary for AI agents. Names the next
@@ -21,7 +22,7 @@ export const GET: APIRoute = async ({ site }) => {
   const chat = (SITE as Record<string, any>).community?.chat as { url: string; label?: string } | undefined;
   const talksOn = (SITE as Record<string, any>).talks === true;
   const fmt = (d: Date) =>
-    d.toLocaleDateString(SITE.locale, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    formatEventDay(d, SITE.locale, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
 
   const lines: string[] = [`# ${SITE.title}`, ''];
   if (SITE.description) lines.push(SITE.description, '');

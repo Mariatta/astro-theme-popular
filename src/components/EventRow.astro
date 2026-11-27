@@ -4,6 +4,7 @@ import type { CollectionEntry } from 'astro:content';
 import { safeCollection } from '../lib/collections';
 import { withBase } from '../lib/url';
 import { eventHasRecording } from '../lib/talks';
+import { formatEventDay } from '../lib/eventdates';
 
 interface Props { event: CollectionEntry<'events'> }
 const { event } = Astro.props;
@@ -30,8 +31,8 @@ const names = d.speakers.map((slug) => {
 }).filter(Boolean);
 const speakerLine = names.length ? names.join(', ') : d.speaker;
 
-const dow = d.date.toLocaleDateString(SITE.locale, { weekday: 'short' });
-const day = d.date.toLocaleDateString(SITE.locale, { month: 'short', day: 'numeric' });
+const dow = formatEventDay(d.date, SITE.locale, { weekday: 'short' });
+const day = formatEventDay(d.date, SITE.locale, { month: 'short', day: 'numeric' });
 ---
 
 <div class="g-event">

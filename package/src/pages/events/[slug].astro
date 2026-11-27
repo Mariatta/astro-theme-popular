@@ -7,6 +7,7 @@ import { safeCollection } from '../../lib/collections';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import AuthorBox from 'popular:component/AuthorBox';
 import { eventTalks } from '../../lib/talks';
+import { formatEventDay } from '../../lib/eventdates';
 
 export async function getStaticPaths() {
   const events = (await safeCollection('events')).filter((e) => !e.data.draft);
@@ -16,7 +17,7 @@ export async function getStaticPaths() {
 const { event } = Astro.props;
 const d = event.data;
 const { Content } = await render(event);
-const dateStr = d.date.toLocaleDateString(SITE.locale, { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+const dateStr = formatEventDay(d.date, SITE.locale, { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
 
 /* Venue: a venueRef to the venues collection wins over the flat fields;
    its arrival notes are inherited unless the event sets venueNotes. */

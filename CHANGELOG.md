@@ -12,6 +12,18 @@ To hear about new releases: watch either repo on GitHub (Watch → Custom →
 Releases) or subscribe to the releases feed
 (`https://github.com/Mariatta/hugo-theme-popular/releases.atom`).
 
+## [Unreleased]
+
+### Fixed
+
+- **Astro: event dates no longer shift a day on a build machine west of UTC.**
+  The Astro twin formatted an event's `date` in the build machine's timezone,
+  so `date: 2026-09-15` built on a laptop in North America showed as Monday,
+  September 14, while the same site built in CI, the calendar feed and the
+  JSON-LD all said Tuesday the 15th. Event rows and their year headings, the
+  event page, the home page, `llms.txt` and the talks index now read the same
+  calendar day as the feed. Hugo was not affected.
+
 ## [0.14.3] - 2026-11-10
 
 ### Fixed

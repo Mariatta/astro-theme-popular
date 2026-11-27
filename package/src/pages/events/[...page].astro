@@ -32,7 +32,7 @@ type EventEntry = (typeof upcoming)[number];
 const groupByYear = (events: EventEntry[]) => {
   const groups: { year: number; events: EventEntry[] }[] = [];
   for (const event of events) {
-    const year = event.data.date.getFullYear();
+    const year = event.data.date.getUTCFullYear();
     const last = groups[groups.length - 1];
     if (last && last.year === year) last.events.push(event);
     else groups.push({ year, events: [event] });
