@@ -7,7 +7,7 @@ One workbook, one tab per content type (any subset is fine):
   Venues     Name, Address, Notes, Accessibility, Website, Photo
   Sponsors   Name, Level, Description, Logo, Website
   Organizers Name, Weight, Role, Photo, Description, Website
-  Events     Title, Date, Time, Venue, Speakers, Checkin, Venue Notes, RSVP, Tags, Description
+  Events     Title, Date, End Date, Time, Venue, Speakers, Checkin, Venue Notes, RSVP, Tags, Description
 
 The Events tab cross-references the others by name: a Venue matching a Venues
 row becomes a `venueRef` (unknown names stay as a plain venue string), and the
@@ -62,8 +62,8 @@ SAMPLE = {
         ["Sam Example", "10", "Lead organizer", "", "Replace with a short, friendly bio.", "https://example.com"],
     ],
     "Events": [
-        ["Title", "Date", "Time", "Venue", "Speakers", "Checkin", "Venue Notes", "RSVP", "Tags", "Description"],
-        ["Community Kickoff", "2026-09-19T18:00:00", "6:00 – 8:30 PM", "Community Hall", "Jordan Rivera, Sasha Chen", "Bring your registration email (print or phone) and photo ID.", "", "https://example.com/rsvp", "meetup, social", "Describe the event in a sentence or two."],
+        ["Title", "Date", "End Date", "Time", "Venue", "Speakers", "Checkin", "Venue Notes", "RSVP", "Tags", "Description"],
+        ["Community Kickoff", "2026-09-19T18:00:00", "", "6:00 – 8:30 PM", "Community Hall", "Jordan Rivera, Sasha Chen", "Bring your registration email (print or phone) and photo ID.", "", "https://example.com/rsvp", "meetup, social", "Describe the event in a sentence or two."],
     ],
 }
 
@@ -209,7 +209,7 @@ def excel_serial_to_iso(value):
 def fm(fmt, pairs, socials=(), arrays=()):
     """pairs: [(key, value)]; arrays: [(key, [items])]; socials: [(label, icon, url)]."""
     if fmt == "hugo":
-        lines = ["+++"] + [f"{k} = {v if k in ('date', 'weight', 'wheelchair') else q(v)}" for k, v in pairs if v]
+        lines = ["+++"] + [f"{k} = {v if k in ('date', 'endDate', 'weight', 'wheelchair') else q(v)}" for k, v in pairs if v]
         for k, items in arrays:
             if items:
                 lines.append(f"{k} = {json.dumps(items)}")
@@ -217,7 +217,7 @@ def fm(fmt, pairs, socials=(), arrays=()):
             lines += ["[[social]]", f"  label = {q(label)}", f"  icon = {q(icon)}", f"  url = {q(url)}"]
         lines.append("+++")
     else:
-        lines = ["---"] + [f"{k}: {v if k in ('date', 'weight', 'wheelchair') else q(v)}" for k, v in pairs if v]
+        lines = ["---"] + [f"{k}: {v if k in ('date', 'endDate', 'weight', 'wheelchair') else q(v)}" for k, v in pairs if v]
         for k, items in arrays:
             if items:
                 lines.append(f"{k}: {json.dumps(items)}")
@@ -329,7 +329,22 @@ def main():
     for r in tabs["events"]:
         date = excel_serial_to_iso(r.get("date", ""))
         venue = r.get("venue", "")
-        pairs = [("title", r.get("title")), ("date", date), ("description", r.get("description")),
+        # End Date (optional): the last day of a multi-day event, date only.
+        # Anything that is not an ISO date is left out with a warning rather
+        # than written as front matter the site cannot read.
+        end_date = excel_serial_to_iso(r.get("end date", ""))
+        if end_date:
+            try:
+                # YYYY-MM-DD exactly, optionally followed by a T clock time.
+                shape = re.fullmatch(r"(\d{4}-\d{2}-\d{2})(T\d{2}:\d{2}.*)?", end_date)
+                if not shape:
+                    raise ValueError(end_date)
+                datetime.strptime(shape.group(1), "%Y-%m-%d")  # a real calendar day
+                end_date = shape.group(1)
+            except ValueError:
+                print(f"warning: {r.get('title')}: End Date {end_date!r} is not a date like 2027-01-17; left out", file=sys.stderr)
+                end_date = ""
+        pairs = [("title", r.get("title")), ("date", date), ("endDate", end_date), ("description", r.get("description")),
                  ("time", r.get("time"))]
         arrays = []
         if venue in venue_slugs:

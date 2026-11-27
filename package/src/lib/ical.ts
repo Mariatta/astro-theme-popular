@@ -2,6 +2,7 @@
  *  template. DTSTART reuses parseEventTime (lib/eventld) so the feed and the
  *  Event JSON-LD agree. Folding is byte-accurate at 75 octets. */
 import { parseEventTime } from './eventld';
+import { eventLastDay, isMultiDay } from './eventdates';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 const enc = new TextEncoder();
@@ -42,6 +43,7 @@ export function fold(line: string): string {
 export interface IcsEvent {
   title: string;
   date: Date;
+  endDate?: Date | null; // last day of a multi-day event (inclusive)
   time?: string;
   description?: string;
   checkin?: string;
@@ -70,7 +72,15 @@ export function buildIcs(
     L.push(fold(`UID:${e.permalink}`));
     L.push(fold(`DTSTAMP:${opts.dtstamp}`));
     const hm = parseEventTime(e.time);
-    if (hm) {
+    if (isMultiDay(e)) {
+      /* Multi-day: an all-day span. DTEND is exclusive, so the day after the
+         last day. The `time` text is not applied: it describes each day, not
+         one continuous block from the first morning to the last evening. */
+      const last = eventLastDay(e);
+      const after = new Date(Date.UTC(last.getUTCFullYear(), last.getUTCMonth(), last.getUTCDate() + 1));
+      L.push(fold(`DTSTART;VALUE=DATE:${ymd(e.date)}`));
+      L.push(fold(`DTEND;VALUE=DATE:${ymd(after)}`));
+    } else if (hm) {
       const [h, m] = hm.split(':').map(Number);
       L.push(fold(`DTSTART:${ymd(e.date)}T${pad(h)}${pad(m)}00`));
       const total = h * 60 + m + opts.durationMinutes;

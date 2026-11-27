@@ -41,7 +41,10 @@ const events = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/events' }),
   schema: z.object({
     title: z.string(),
-    date: z.coerce.date(), // the event's start time; upcoming vs past is decided by this
+    date: z.coerce.date(), // the event's start day; upcoming vs past is decided by its last day
+    // Last day of a multi-day event (inclusive); omit for one-day events.
+    // nullish, so a bare `endDate:` left in a template reads as unset.
+    endDate: z.coerce.date().nullish(),
     draft: z.boolean().default(false), // drafts are excluded from builds, matching Hugo
     description: z.string().optional(),
     image: z.string().optional(),
@@ -71,6 +74,8 @@ const events = defineCollection({
     talks: z.array(z.object({
       title: z.string(),
       speaker: z.string().optional(), // speaker-collection slug, same resolution as `speakers`
+      date: z.coerce.date().nullish(), // the day of a multi-day event this talk is on
+      time: z.string().optional(), // free text, e.g. "9:30 AM"
       recording: z.string().optional(),
       slides: z.string().optional(),
     })).optional(),

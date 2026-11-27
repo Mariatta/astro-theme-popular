@@ -232,7 +232,7 @@ Front-matter fields must accept the same names on both sides
 
 - **blog**: `title, date, author, authors[], guestAuthors[{name,title,photo,bio,website,social[]}], description, image, tags[], speaker{name,title,photo,bio}`
 - **authors**: `title, role, photo, bio, website, social[{label,icon,url}]`
-- **events**: `title, date (event start; upcoming/past pivot), description, image, tags[], time, venue, venueWanted, planning (event state badges, below), address, venueRef (venues slug; wins over flat venue fields), checkin, venueNotes (overrides the venue page's notes), speaker (one-liner fallback), speakers[] (speaker slugs), rsvp, meetupUrl (metadata only; not rendered), recording, slides, talks[{title, speaker, recording, slides}] (§3; talks[] wins over event-level recording/slides)`
+- **events**: `title, date (event start), endDate (last day of a multi-day event, inclusive; the upcoming/past pivot when set, see "Multi-day events" below), description, image, tags[], time, venue, venueWanted, planning (event state badges, below), address, venueRef (venues slug; wins over flat venue fields), checkin, venueNotes (overrides the venue page's notes), speaker (one-liner fallback), speakers[] (speaker slugs), rsvp, meetupUrl (metadata only; not rendered), recording, slides, talks[{title, speaker, recording, slides, date, time}] (§3; talks[] wins over event-level recording/slides)`
 - **speakers**: `title, role, photo, bio, website, social[{label,icon,url}]` (same shape as authors)
 - **venues**: `title, address, photo, notes (arrival notes, inherited by events), accessibility, website`
 - **organizers**: `title, weight, role, photo, description, social[{label,icon,url}]`
@@ -308,6 +308,45 @@ the flag comes off. The event page repeats Cancelled and Planning next to the
 `<h1>`. Presentation only: it changes no JSON-LD and no `.ics` output, since
 schema.org has no equivalent status.
 
+## Multi-day events (Tier 2)
+
+An event with an `endDate` later than its `date` runs over several days;
+`endDate` is the last day, inclusive, written as a plain date. An `endDate`
+on the same day as `date` changes nothing; one before `date` is ignored with
+a build warning. Hugo `partials/event-dates.html`, `event-date-text.html` and
+`events-split.html`; Astro `src/lib/eventdates.ts`.
+
+| Where | One day | Several days |
+|---|---|---|
+| Event row, weekday | `Sat` | `Sat – Sun` |
+| Event row, day | `Jun 6` | `Jun 6 – 7`, `Apr 30 – May 2` across months, `Dec 31 – Jan 2` across years |
+| Event page, home "next" card, `llms.txt` | the full date | the full span: Hugo writes both ends with `:date_full`, Astro uses `Intl.DateTimeFormat#formatRange`, which writes a shared month or year once |
+| Upcoming or past | past once `date` has passed | upcoming through the end of the last day |
+| `.ics` | timed or all-day, from `time` | all-day span, `DTSTART;VALUE=DATE` to `DTEND;VALUE=DATE` on the day after the last (DTEND is exclusive); `time` is not applied, since it describes each day |
+| JSON-LD | `startDate` only | plus `endDate`, date-only; `startDate` keeps the first day's start time from `time`, so here it is more specific than the all-day feed entry |
+
+The pivot also drives `@pastEventCount`, the home "next" card and `llms.txt`;
+the feed's 90-day window counts from the last day. The long date wording
+differs by implementation, as it already does for one-day events, and so
+does the separator: Hugo writes space, en dash, space, while Astro writes
+whatever `formatRange` gives the site locale (thin spaces around the en dash
+in English). The one exception is an event row that crosses a year, where
+Astro joins the two ends itself with space, en dash, space, as Hugo does.
+
+**Schedule:** a `talks[]` entry may carry `date` (the day it is on, a plain
+date) and `time` (free text, shown above the title, class `g-talk__time`). On
+a multi-day event the Talks section lists undated talks first, then dated
+talks under a heading per day (class `g-schedule-day`), days in order and
+talks within a day in the order they were written. A talk `date` outside the
+event's dates **fails the build** on both sides. The `/talks/` index shows a
+talk's own day when it has one.
+
+**Astro reads the UTC calendar day** of an event's `date` and `endDate` and of
+a talk's `date` (event rows and their year headings, the event page, the home
+card, `llms.txt`, `/talks/`, the feed, JSON-LD), so a plain
+`date: 2026-06-06` is June 6 on any build machine, matching Hugo. Blog post
+dates are not covered.
+
 ## iCalendar feed (Tier 2)
 
 `/events/calendar.ics` (Hugo `events/list.calendar.ics` + a `Calendar` output
@@ -315,8 +354,9 @@ format; Astro `events/calendar.ics.ts`). Upcoming events plus the last 90
 days, CRLF, 75-octet folded, escaped; UID = permalink; DTSTART reuses the
 `time` parse (`parse-time.html` / `parseEventTime`) so it agrees with the
 Event JSON-LD; `cancelled` -> `STATUS:CANCELLED`. `scripts/check-ics.py`
-validates built feeds. Hugo folds rune-based (octet-exact for ASCII); Astro
-folds byte-exact. Hugo requires the section opt-in; Astro emits it always.
+validates built feeds, including that each DTEND is after its DTSTART. Hugo
+folds rune-based (octet-exact for ASCII); Astro folds byte-exact. Hugo
+requires the section opt-in; Astro emits it always.
 
 The feed carries `REFRESH-INTERVAL`/`X-PUBLISHED-TTL` (PT12H) subscription
 hints. The events list and the empty state render the subscribe buttons

@@ -97,8 +97,8 @@ a.g-pager__num:hover, .g-pager__nav:hover { border-color: var(--color-primary); 
 .g-quote__role { display: block; font-size: var(--text-sm); color: var(--text-muted); }
 
 /* Year heading for date-grouped lists (events) */
-.g-year { margin: var(--space-3) 0 0; font-family: var(--font-display); font-size: var(--text-lg); font-weight: var(--weight-bold); letter-spacing: var(--tracking-wide); color: var(--text-muted); }
-.g-year:first-child { margin-top: 0; }
+.g-year, .g-schedule-day { margin: var(--space-3) 0 0; font-family: var(--font-display); font-size: var(--text-lg); font-weight: var(--weight-bold); letter-spacing: var(--tracking-wide); color: var(--text-muted); }
+.g-year:first-child, .g-schedule-day:first-child { margin-top: 0; }
 
 /* ---------- Cards ---------- */
 .g-card {
@@ -344,7 +344,7 @@ pre:hover .g-copy, .g-copy:focus-visible { opacity: 1; }
 .g-talk__title { font-weight: var(--weight-medium); }
 .g-talk__by { font-size: var(--text-sm); color: var(--text-muted); }
 .g-talk__by a { color: var(--text-link); }
-.g-talk__event { font-size: var(--text-sm); color: var(--text-muted); }
+.g-talk__event, .g-talk__time { font-size: var(--text-sm); color: var(--text-muted); }
 .g-talk__event a { color: var(--text-link); }
 
 /* Photo gallery + pullquote (§6). No JS, no lightbox: each photo links to its

@@ -167,7 +167,8 @@ Front matter is YAML (`---`). Key content types (full schema in
 
 - **Blog post** (`content/blog/*.md`): `title`, `date`, `authors: ["slug"]`
   (matching `content/authors/<slug>.md`), `description`, `image`, `tags`.
-- **Event** (`content/events/*.md`): `title`, `date`, `image`, plus venue fields.
+- **Event** (`content/events/*.md`): `title`, `date`, `image`, plus venue fields;
+  `endDate` (the last day, inclusive) for an event that runs over several days.
 - **Organizer** (`content/organizers/*.md`): `title`, `weight`, `role`, `photo`,
   `description`, `social` list (`label`, `icon`, `url`).
 - **Speaker** (`content/speakers/*.md`): same shape as authors; events reference

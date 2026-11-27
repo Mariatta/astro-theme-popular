@@ -7,7 +7,7 @@ import { safeCollection } from '../../lib/collections';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import AuthorBox from '../../components/AuthorBox.astro';
 import { eventTalks } from '../../lib/talks';
-import { formatEventDay } from '../../lib/eventdates';
+import { dayKey, eventDays, formatEventDates, formatEventDay, isMultiDay } from '../../lib/eventdates';
 
 export async function getStaticPaths() {
   const events = (await safeCollection('events')).filter((e) => !e.data.draft);
@@ -17,7 +17,7 @@ export async function getStaticPaths() {
 const { event } = Astro.props;
 const d = event.data;
 const { Content } = await render(event);
-const dateStr = formatEventDay(d.date, SITE.locale, { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+const dateStr = formatEventDates(d, SITE.locale, { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
 
 /* Venue: a venueRef to the venues collection wins over the flat fields;
    its arrival notes are inherited unless the event sets venueNotes. */
@@ -38,12 +38,41 @@ const speakerEntries = d.speakers.map((slug) => {
 const talks = eventTalks(d, allSpeakers, event.id);
 const hasTalksArray = !!(d.talks && d.talks.length > 0);
 
+/* An endDate before the start is ignored; say so, as Hugo does. */
+if (d.endDate && dayKey(d.endDate) < dayKey(d.date)) {
+  console.warn(`events/${event.id}: endDate ${dayKey(d.endDate)} is before date ${dayKey(d.date)}, so it is ignored`);
+}
+
+/* Multi-day schedule: a talk with a `date` is listed under that day, days in
+   order and talks in the order they were written; talks with no `date` come
+   first, above the day headings. The day must fall inside the event's dates,
+   so a typo fails the build instead of quietly misfiling the talk. Any other
+   event keeps the order the talks were written in. */
+const days = eventDays(d);
+for (const t of talks) {
+  if (t.day && !days.some((day) => dayKey(day) === dayKey(t.day!))) {
+    throw new Error(`events/${event.id}: talk "${t.title}" is on ${dayKey(t.day)}, outside the event's dates (${dayKey(days[0])} to ${dayKey(days[days.length - 1])})`);
+  }
+}
+const scheduled = isMultiDay(d) && talks.some((t) => t.day);
+const dayHeading = (day: Date) => formatEventDay(day, SITE.locale, { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+const talkGroups = scheduled
+  ? [
+      { heading: '', talks: talks.filter((t) => !t.day) },
+      ...days
+        .map((day) => ({ day, talks: talks.filter((t) => t.day && dayKey(t.day) === dayKey(day)) }))
+        .filter((group) => group.talks.length > 0)
+        .map((group) => ({ heading: dayHeading(group.day), talks: group.talks })),
+    ].filter((group) => group.talks.length > 0)
+  : [{ heading: '', talks }];
+
 /* schema.org/Event JSON-LD (see lib/eventld; contract in PARITY.md). */
 const siteUrl = absoluteUrl('/', Astro.site ?? Astro.url);
 const permalink = absoluteUrl(`/events/${event.id}/`, Astro.site ?? Astro.url);
 const eventLd = jsonld(buildEventLd({
   title: d.title,
   date: d.date,
+  endDate: d.endDate,
   time: d.time,
   description: d.description,
   cancelled: (d as any).cancelled,
@@ -112,8 +141,11 @@ const eventLd = jsonld(buildEventLd({
         <>
           <h2 style="font-size:var(--text-xl);margin:var(--space-5) 0 1rem">{STRINGS.talks}</h2>
           <div class="g-stack" style="gap:var(--space-3)">
-            {talks.map((t) => (
+            {talkGroups.map((group) => (<>
+            {group.heading && <h3 class="g-schedule-day">{group.heading}</h3>}
+            {group.talks.map((t) => (
               <div class="g-talk">
+                {t.time && <div class="g-talk__time"><i class="fa-solid fa-clock" aria-hidden="true"></i> {t.time}</div>}
                 <div class="g-talk__title">{t.title}</div>
                 {t.speakerName && (
                   <div class="g-talk__by"><i class="fa-solid fa-microphone-lines" aria-hidden="true"></i> {t.speakerSlug ? <a href={withBase(`/speakers/${t.speakerSlug}/`)}>{t.speakerName}</a> : t.speakerName}</div>
@@ -126,6 +158,7 @@ const eventLd = jsonld(buildEventLd({
                 )}
               </div>
             ))}
+            </>))}
           </div>
         </>
       )}

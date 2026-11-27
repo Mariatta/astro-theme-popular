@@ -13,6 +13,8 @@ export interface Talk {
   speakerName?: string; // display name (profile title, or the free-text speaker)
   recording?: string;
   slides?: string;
+  day?: Date | null; // the day of a multi-day event this talk is on
+  time?: string;
 }
 
 export interface TalkRow extends Talk {
@@ -45,7 +47,7 @@ export function eventTalks(
     return found?.data.title;
   };
   const anyD = d as EventData & {
-    talks?: Talk[]; recording?: string; slides?: string;
+    talks?: (Talk & { speaker?: string; date?: Date | null })[]; recording?: string; slides?: string;
   };
   if (anyD.talks?.length) {
     return anyD.talks.map((t) => ({
@@ -54,6 +56,8 @@ export function eventTalks(
       speakerName: nameOf(t.speaker),
       recording: t.recording,
       slides: t.slides,
+      day: t.date,
+      time: t.time,
     }));
   }
   if (anyD.recording || anyD.slides) {
@@ -80,7 +84,7 @@ export function collectTalks(
   const rows: TalkRow[] = [];
   for (const e of [...events].sort((a, b) => +b.data.date - +a.data.date)) {
     for (const t of eventTalks(e.data, speakers, e.id)) {
-      rows.push({ ...t, eventId: e.id, eventTitle: e.data.title, date: e.data.date, tags: e.data.tags });
+      rows.push({ ...t, eventId: e.id, eventTitle: e.data.title, date: t.day ?? e.data.date, tags: e.data.tags });
     }
   }
   return rows;

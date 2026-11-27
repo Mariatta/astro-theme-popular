@@ -121,6 +121,21 @@ class CheckFeed(unittest.TestCase):
         self.assertEqual(len(errors), 1)
         self.assertIn("unescaped ';' at offset 1", errors[0])
 
+    def test_multi_day_span_passes(self):
+        # all-day span: DTEND is the day after the last day (exclusive)
+        errors, _, _ = self.check(feed(*event("DTEND;VALUE=DATE:20260303")))
+        self.assertEqual(errors, [])
+
+    def test_dtend_not_after_dtstart(self):
+        errors, _, _ = self.check(feed(*event("DTEND;VALUE=DATE:20260301")))
+        self.assertEqual(len(errors), 1)
+        self.assertIn("is not after DTSTART", errors[0])
+
+    def test_dtend_mixes_date_and_date_time(self):
+        errors, _, _ = self.check(feed(*event("DTEND:20260302T180000")))
+        self.assertEqual(len(errors), 1)
+        self.assertIn("mix date and date-time", errors[0])
+
 
 class TextEscapeProblem(unittest.TestCase):
     def test_vectors(self):

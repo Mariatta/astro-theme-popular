@@ -2,6 +2,8 @@
  *  The time-parsing contract and its vectors live in PARITY.md; the Hugo and
  *  Astro implementations must agree on every vector. */
 
+import { dayKey, eventLastDay, isMultiDay } from './eventdates';
+
 /** Parse an event `time` free-text field to event-local "HH:MM", or null.
  *  Leading token only: "6:00 PM · doors 5:30" -> "18:00"; "doors 5:30" -> null. */
 export function parseEventTime(raw: string | undefined): string | null {
@@ -43,6 +45,7 @@ export function jsonld(obj: Record<string, any>): string {
 export interface EventLdInput {
   title: string;
   date: Date;
+  endDate?: Date | null;
   time?: string;
   description?: string;
   cancelled?: boolean;
@@ -72,6 +75,8 @@ export function buildEventLd(i: EventLdInput): Record<string, any> {
       : 'https://schema.org/OfflineEventAttendanceMode',
     organizer: { '@type': 'Organization', name: i.siteTitle, url: i.siteUrl },
   };
+  /* Multi-day: endDate is the last calendar day, date-only. */
+  if (isMultiDay(i)) ld.endDate = dayKey(eventLastDay(i));
   const desc = (i.description ?? '').trim();
   if (desc) ld.description = desc.length > 300 ? desc.slice(0, 299) + '…' : desc;
   if (i.online) {

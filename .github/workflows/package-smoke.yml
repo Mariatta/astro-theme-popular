@@ -108,6 +108,22 @@ jobs:
           test -f smoke/dist/llms.txt
           grep -q 'Next event:' smoke/dist/llms.txt
           grep -q 'Calendar feed' smoke/dist/llms.txt
+          # Multi-day events: a fixture that started in the past and ends far
+          # in the future counts as upcoming (so it is the next event), shows
+          # in the feed as an all-day span with an exclusive end, carries
+          # endDate in its JSON-LD, and lists its talks undated first, then
+          # by day, whatever order they were written in.
+          grep -q 'Next event: Multi-day fixture' smoke/dist/llms.txt
+          grep -q '"endDate":"2099-12-31"' smoke/dist/events/multi-day/index.html
+          grep -q 'DTSTART;VALUE=DATE:20200101' smoke/dist/events/calendar.ics
+          grep -q 'DTEND;VALUE=DATE:21000101' smoke/dist/events/calendar.ics
+          python3 - smoke/dist/events/multi-day/index.html <<'PY'
+          import sys
+          html = open(sys.argv[1], encoding="utf-8").read()
+          order = [html.index(t) for t in ("Undated session", "First-day session", "Second-day session")]
+          assert order == sorted(order), f"talks out of order: {order}"
+          assert html.count('class="g-schedule-day"') == 2, "expected one heading per scheduled day"
+          PY
       - name: Route opt-outs build
         working-directory: smoke
         run: |

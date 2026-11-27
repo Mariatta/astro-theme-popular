@@ -6,6 +6,7 @@ import EventRow from 'popular:component/EventRow';
 import Pagination from '../../components/Pagination.astro';
 import CalendarSubscribe from '../../components/CalendarSubscribe.astro';
 import EventsEmpty from '../../components/EventsEmpty.astro';
+import { isUpcomingEvent } from '../../lib/eventdates';
 import { SECTIONS, STRINGS, PAGINATION } from 'popular:config';
 
 /* One route serves /events/ and /events/page/N/, matching the Hugo theme's
@@ -14,8 +15,8 @@ import { SECTIONS, STRINGS, PAGINATION } from 'popular:config';
 export async function getStaticPaths() {
   const now = new Date();
   const all = (await safeCollection('events')).filter((e) => !e.data.draft);
-  const upcoming = all.filter((e) => e.data.date >= now).sort((a, b) => +a.data.date - +b.data.date);
-  const past = all.filter((e) => e.data.date < now).sort((a, b) => +b.data.date - +a.data.date);
+  const upcoming = all.filter((e) => isUpcomingEvent(e.data, now)).sort((a, b) => +a.data.date - +b.data.date);
+  const past = all.filter((e) => !isUpcomingEvent(e.data, now)).sort((a, b) => +b.data.date - +a.data.date);
   const size = PAGINATION.pageSize;
   const total = Math.max(1, Math.ceil(past.length / size));
   return Array.from({ length: total }, (_, i) => ({
