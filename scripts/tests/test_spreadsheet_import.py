@@ -108,6 +108,7 @@ class EndToEnd(unittest.TestCase):
                 w.writerow(["Not A Time", "2027-06-05", "2027-06-06Tuesday"])
                 w.writerow(["Text After Time", "2027-07-03", "2027-07-04T17:00 or so"])
                 w.writerow(["With A Zone", "2027-08-07", "2027-08-08T17:00:00-07:00"])
+                w.writerow(["Hour Offset", "2027-09-04", "2027-09-05T17:00-07"])
             r = run_script("spreadsheet-import.py", "--csv-dir", str(csvdir), "--site", tmp)
             self.assertEqual(r.returncode, 0, r.stderr)
             events = pathlib.Path(tmp) / "content" / "events"
@@ -126,6 +127,7 @@ class EndToEnd(unittest.TestCase):
                 self.assertIn(title, r.stderr)
             self.assertIn("endDate = 2027-05-02\n", (events / "with-a-time.md").read_text())  # time dropped
             self.assertIn("endDate = 2027-08-08\n", (events / "with-a-zone.md").read_text())
+            self.assertIn("endDate = 2027-09-05\n", (events / "hour-offset.md").read_text())
             with tempfile.TemporaryDirectory() as astro_site:
                 r = run_script("spreadsheet-import.py", "--csv-dir", str(csvdir), "--site", astro_site, "--format", "astro")
                 self.assertEqual(r.returncode, 0, r.stderr)
