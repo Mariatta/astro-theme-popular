@@ -363,8 +363,9 @@ twins disagree. An `endDate` shifts the same way. The Hugo events archetype
 writes its starting `date` without an offset for this reason.
 
 **Empty and unreadable dates:** an empty `endDate` or talk `date` (bare key
-or `""`) reads as unset on both sides. One that is not a date **fails the
-build** on both sides with a message naming the file.
+or `""`) reads as unset on both sides. Text that is not a date, such as
+`"tbd"`, **fails the build** on both sides with a message naming the file. A
+bare number or boolean is not covered: each side reads it its own way.
 
 ## iCalendar feed (Tier 2)
 
