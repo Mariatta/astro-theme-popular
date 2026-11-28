@@ -321,7 +321,7 @@ a build warning. Hugo `partials/event-dates.html`, `event-date-text.html` and
 | Event row, weekday | `Sat` | `Sat – Sun` |
 | Event row, day | `Jun 6` | `Jun 6 – 7`, `Apr 30 – May 2` across months, `Dec 31 – Jan 2` across years |
 | Event page, home "next" card, `llms.txt` | the full date | the full span: Hugo writes both ends with `:date_full`, Astro uses `Intl.DateTimeFormat#formatRange`, which writes a shared month or year once |
-| Upcoming or past | past once `date` has passed | upcoming through the end of the last day |
+| Upcoming or past | past once `date` has passed | upcoming through the end of the last day, which is the UTC day (on Hugo, the day in the site's `timeZone` when that is set) |
 | `.ics` | timed or all-day, from `time` | all-day span, `DTSTART;VALUE=DATE` to `DTEND;VALUE=DATE` on the day after the last (DTEND is exclusive); `time` is not applied, since it describes each day |
 | JSON-LD | `startDate` only | plus `endDate`, date-only; `startDate` keeps the first day's start time from `time`, so here it is more specific than the all-day feed entry |
 
@@ -359,7 +359,12 @@ dates are not covered.
 **Write event dates without a UTC offset** (`2026-06-06`, or
 `2026-06-06T18:00:00`). With one, as in `2026-09-19T18:00:00-07:00`, Astro
 shows the UTC day, September 20, while Hugo shows the day as written, so the
-twins disagree.
+twins disagree. An `endDate` shifts the same way. The Hugo events archetype
+writes its starting `date` without an offset for this reason.
+
+**Empty and unreadable dates:** an empty `endDate` or talk `date` (bare key
+or `""`) reads as unset on both sides. One that is not a date **fails the
+build** on both sides with a message naming the file.
 
 ## iCalendar feed (Tier 2)
 

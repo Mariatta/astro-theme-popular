@@ -37,14 +37,18 @@ const blog = defineCollection({
   }),
 });
 
+/* An optional calendar day. A bare key or an empty string reads as unset, as
+   it does on the Hugo side; anything else must be a date. */
+const optionalDay = z.preprocess((v) => (v === '' ? undefined : v), z.coerce.date().nullish());
+
 const events = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/events' }),
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(), // the event's start day; upcoming vs past is decided by its last day
     // Last day of a multi-day event (inclusive); omit for one-day events.
-    // nullish, so a bare `endDate:` left in a template reads as unset.
-    endDate: z.coerce.date().nullish(),
+    // A bare `endDate:` or an empty string left in a template reads as unset.
+    endDate: optionalDay,
     draft: z.boolean().default(false), // drafts are excluded from builds, matching Hugo
     description: z.string().optional(),
     image: z.string().optional(),
@@ -74,7 +78,7 @@ const events = defineCollection({
     talks: z.array(z.object({
       title: z.string(),
       speaker: z.string().optional(), // speaker-collection slug, same resolution as `speakers`
-      date: z.coerce.date().nullish(), // the day of a multi-day event this talk is on
+      date: optionalDay, // the day of a multi-day event this talk is on
       time: z.string().optional(), // free text, e.g. "9:30 AM"
       recording: z.string().optional(),
       slides: z.string().optional(),
