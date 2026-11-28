@@ -8,6 +8,7 @@
 import { SITE, STRINGS } from '../../config';
 import { safeCollection } from '../../lib/collections';
 import { collectTalks } from '../../lib/talks';
+import { formatEventDay } from '../../lib/eventdates';
 import { withBase } from '../../lib/url';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/PageHero.astro';
@@ -21,7 +22,7 @@ export async function getStaticPaths() {
 
 const { talks } = Astro.props;
 const tags = [...new Set(talks.flatMap((t) => t.tags))].sort();
-const fmt = (d: Date) => d.toLocaleDateString(SITE.locale, { month: 'short', day: 'numeric', year: 'numeric' });
+const fmt = (d: Date) => formatEventDay(d, SITE.locale, { month: 'short', day: 'numeric', year: 'numeric' });
 ---
 
 <BaseLayout title={STRINGS.talks} description={STRINGS.talksLead}>

@@ -4,6 +4,7 @@
  *  recording/slides. When talks[] is present it wins; event-level
  *  recording/slides are ignored (not merged), matching the Hugo side. */
 import type { CollectionEntry } from 'astro:content';
+import { dayKey, isMultiDay } from './eventdates';
 
 type EventData = CollectionEntry<'events'>['data'];
 
@@ -13,6 +14,8 @@ export interface Talk {
   speakerName?: string; // display name (profile title, or the free-text speaker)
   recording?: string;
   slides?: string;
+  day?: Date | null; // the day of a multi-day event this talk is on
+  time?: string;
 }
 
 export interface TalkRow extends Talk {
@@ -45,7 +48,7 @@ export function eventTalks(
     return found?.data.title;
   };
   const anyD = d as EventData & {
-    talks?: Talk[]; recording?: string; slides?: string;
+    talks?: (Talk & { speaker?: string; date?: Date | null })[]; recording?: string; slides?: string;
   };
   if (anyD.talks?.length) {
     return anyD.talks.map((t) => ({
@@ -54,6 +57,8 @@ export function eventTalks(
       speakerName: nameOf(t.speaker),
       recording: t.recording,
       slides: t.slides,
+      day: t.date,
+      time: t.time,
     }));
   }
   if (anyD.recording || anyD.slides) {
@@ -71,16 +76,22 @@ export function eventTalks(
 }
 
 /** Every talk across the given events, newest event first, for the /talks/
- *  index. Each row carries its parent event's link, date, and tags (the tags
- *  drive the shared blog-filter.js tag filter). */
+ *  index. Within an event the talks follow the event page: on a multi-day
+ *  event those with no day first, then by day, written order within a day;
+ *  on any other event the order they were written in. Each row carries its
+ *  parent event's link, date, and tags (the tags drive the shared
+ *  blog-filter.js tag filter). */
 export function collectTalks(
   events: CollectionEntry<'events'>[],
   speakers: CollectionEntry<'speakers'>[],
 ): TalkRow[] {
   const rows: TalkRow[] = [];
   for (const e of [...events].sort((a, b) => +b.data.date - +a.data.date)) {
-    for (const t of eventTalks(e.data, speakers, e.id)) {
-      rows.push({ ...t, eventId: e.id, eventTitle: e.data.title, date: e.data.date, tags: e.data.tags });
+    const order = (t: Talk) => (t.day ? dayKey(t.day) : '');
+    const talks = eventTalks(e.data, speakers, e.id);
+    if (isMultiDay(e.data)) talks.sort((a, b) => order(a).localeCompare(order(b)));
+    for (const t of talks) {
+      rows.push({ ...t, eventId: e.id, eventTitle: e.data.title, date: t.day ?? e.data.date, tags: e.data.tags });
     }
   }
   return rows;

@@ -5,20 +5,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import OrganizerCard from '../components/OrganizerCard.astro';
 import EventsEmpty from '../components/EventsEmpty.astro';
+import { formatEventDates, isUpcomingEvent } from '../lib/eventdates';
 import { HOME, SITE, STRINGS, SECTIONS_MAP, SOCIAL } from '../config';
 import { buildOrgLd, jsonld } from '../lib/jsonld';
 import { withBase, absoluteUrl } from '../lib/url';
 
 const now = new Date();
 const events = (await safeCollection('events')).filter((e) => !e.data.draft);
-const upcoming = events.filter((e) => e.data.date >= now).sort((a, b) => +a.data.date - +b.data.date);
+const upcoming = events.filter((e) => isUpcomingEvent(e.data, now)).sort((a, b) => +a.data.date - +b.data.date);
 const next = upcoming[0];
 
 const posts = (await safeCollection('blog')).filter((p) => !p.data.draft).sort((a, b) => +b.data.date - +a.data.date).slice(0, 3);
 /* Stat values: @pastEventCount and @count:<section>[:rounded] resolve to
    live numbers (Hugo parity, see lib/stats). Draft entries are excluded to
    match Hugo's RegularPages. */
-const pastCount = events.filter((e) => e.data.date < now).length;
+const pastCount = events.filter((e) => !isUpcomingEvent(e.data, now)).length;
 const counts: Record<string, number> = {};
 for (const name of countSectionsIn(HOME.stats ?? [])) {
   counts[name] = (await safeCollection(name)).filter((e) => !(e.data as any)?.draft).length;
@@ -110,7 +111,7 @@ const orgLd = jsonld(buildOrgLd({
           <span class="g-badge g-badge--soft"><i class="fa-solid fa-calendar" aria-hidden="true"></i> {STRINGS.nextMeetup}</span>
           <h2 style="margin:0">{next.data.title}</h2>
           <div class="g-meta-line">
-            <span><i class="fa-solid fa-calendar-day" aria-hidden="true"></i> {next.data.date.toLocaleDateString(SITE.locale, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}{next.data.time && ` · ${next.data.time}`}</span>
+            <span><i class="fa-solid fa-calendar-day" aria-hidden="true"></i> {formatEventDates(next.data, SITE.locale, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}{next.data.time && ` · ${next.data.time}`}</span>
             <span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> {nextVenue ?? next.data.venue ?? STRINGS.venueTba}</span>
           </div>
           {next.data.description && <p style="margin:0;color:var(--text-muted);max-width:34rem">{next.data.description}</p>}

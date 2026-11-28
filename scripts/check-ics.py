@@ -7,7 +7,8 @@ Checks, per feed: CRLF line endings, every line <= 75 octets (folded),
 required VCALENDAR/VEVENT properties, UID present + absolute + unique, and
 that the escaped text properties (PRODID, X-WR-CALNAME, SUMMARY, LOCATION,
 DESCRIPTION) contain no bare `;` or `,` and no stray backslash (RFC 5545
-section 3.3.11).
+section 3.3.11). Per event: DTEND is later than DTSTART and of the same
+kind (an all-day span ends with a date, not a date-time).
 Shared between both repos (PARITY Tier 1)."""
 import sys
 import pathlib
@@ -79,6 +80,22 @@ def check_feed(path):
             problem = text_escape_problem(value)
             if problem:
                 errors.append(f"{path}: {prop} {problem}: {value[:40]!r}")
+    # DTSTART/DTEND per event: same value type, and the end after the start.
+    # A multi-day event is an all-day span whose DTEND is the day after its
+    # last day, so an end on or before the start means the span is wrong.
+    start = None
+    for ln in unfolded:
+        name, _, value = ln.partition(":")
+        if name == "BEGIN" and value == "VEVENT":
+            start = None
+        elif name.split(";", 1)[0] == "DTSTART":
+            start = (name.endswith("VALUE=DATE"), value)
+        elif name.split(";", 1)[0] == "DTEND" and start:
+            end = (name.endswith("VALUE=DATE"), value)
+            if end[0] != start[0]:
+                errors.append(f"{path}: DTSTART {start[1]} and DTEND {end[1]} mix date and date-time")
+            elif end[1] <= start[1]:
+                errors.append(f"{path}: DTEND {end[1]} is not after DTSTART {start[1]}")
     vevents = props.count("BEGIN") - 1  # minus VCALENDAR
     return errors, len(uids), vevents
 

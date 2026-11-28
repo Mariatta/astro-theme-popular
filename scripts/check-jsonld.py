@@ -3,8 +3,9 @@
 
 Usage: python3 scripts/check-jsonld.py <built-dir> [<built-dir> ...]
 
-Fails if any block is not valid JSON or lacks @context/@type. On a subpath
-build, also asserts every url/image/logo value is absolute. Shared between
+Fails if any block is not valid JSON or lacks @context/@type, or if an Event's
+endDate is not a later calendar day than its startDate. On a subpath build,
+also asserts every url/image/logo value is absolute. Shared between
 hugo-theme-popular and astro-theme-popular (PARITY.md Tier 1)."""
 import json
 import re
@@ -50,6 +51,12 @@ def main(dirs):
                     if not isinstance(b, dict) or "@context" not in b or "@type" not in b:
                         errors.append(f"{html}: missing @context/@type")
                     walk_urls(b, errors, str(html))
+                    # endDate is only written for a multi-day event: a plain
+                    # date, on a later day than startDate.
+                    if isinstance(b, dict) and "endDate" in b:
+                        start, end = str(b.get("startDate", ""))[:10], str(b["endDate"])
+                        if len(end) != 10 or end <= start:
+                            errors.append(f"{html}: endDate {end!r} is not a date after startDate {start!r}")
     if errors:
         print("\n".join(errors))
         print(f"FAIL: {len(errors)} problem(s) in {checked} JSON-LD block(s)")

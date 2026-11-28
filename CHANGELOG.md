@@ -12,6 +12,32 @@ To hear about new releases: watch either repo on GitHub (Watch → Custom →
 Releases) or subscribe to the releases feed
 (`https://github.com/Mariatta/hugo-theme-popular/releases.atom`).
 
+## [Unreleased]
+
+### Added
+
+- **Events that run over several days.** An event can set `endDate`, its last
+  day, for a weekend away, a camp or a conference. It shows its whole span on
+  the events list ("Sat – Sun" over "Jun 6 – 7"), the event page, the home
+  page and `llms.txt`, stays under Upcoming through the end of its last day
+  instead of dropping to Past after the first, and reaches calendar
+  subscribers as an all-day block across those days. Event JSON-LD gains
+  `endDate`. Entries in `talks` can carry their own `date` and `time`, and the
+  event page then groups them under a heading per day; a day outside the event
+  fails the build. The spreadsheet importer reads an optional End Date column.
+  Events without `endDate` are unchanged. Requested by woodchukker
+  ([astro-theme-popular#92](https://github.com/Mariatta/astro-theme-popular/issues/92)).
+
+### Fixed
+
+- **Astro: event dates no longer shift a day on a build machine west of UTC.**
+  The Astro twin formatted an event's `date` in the build machine's timezone,
+  so `date: 2026-09-15` built on a laptop in North America showed as Monday,
+  September 14, while the same site built in CI, the calendar feed and the
+  JSON-LD all said Tuesday the 15th. Event rows and their year headings, the
+  event page, the home page, `llms.txt` and the talks index now read the same
+  calendar day as the feed. Hugo was not affected.
+
 ## [0.14.3] - 2026-11-10
 
 ### Fixed

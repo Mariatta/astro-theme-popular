@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { absoluteUrl } from '../lib/url';
+import { formatEventDates, isUpcomingEvent, type EventSpan } from '../lib/eventdates';
 import { SITE } from '../config';
 
 /* §8 llms.txt: a build-time plain-text summary for AI agents. Names the next
@@ -15,19 +16,19 @@ export const GET: APIRoute = async ({ site }) => {
   const events = (await getCollection('events'))
     .filter((e) => !e.data.draft)
     .sort((a, b) => +a.data.date - +b.data.date);
-  const next = events.find((e) => +e.data.date >= now);
+  const next = events.find((e) => isUpcomingEvent(e.data, now));
 
   const pageIds = new Set((await getCollection('pages')).map((p) => p.id));
   const chat = (SITE as Record<string, any>).community?.chat as { url: string; label?: string } | undefined;
   const talksOn = (SITE as Record<string, any>).talks === true;
-  const fmt = (d: Date) =>
-    d.toLocaleDateString(SITE.locale, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  const fmt = (e: EventSpan) =>
+    formatEventDates(e, SITE.locale, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
 
   const lines: string[] = [`# ${SITE.title}`, ''];
   if (SITE.description) lines.push(SITE.description, '');
   lines.push(
     next
-      ? `Next event: ${next.data.title} on ${fmt(next.data.date)}${next.data.time ? `, ${next.data.time}` : ''} (${abs(`/events/${next.id}/`)})`
+      ? `Next event: ${next.data.title} on ${fmt(next.data)}${next.data.time ? `, ${next.data.time}` : ''} (${abs(`/events/${next.id}/`)})`
       : 'No upcoming events are scheduled right now.',
     '',
   );

@@ -90,6 +90,50 @@ class EndToEnd(unittest.TestCase):
             self.assertIn('speaker = "A Stranger"', event)    # string fallback
             self.assertNotIn("speakers =", event)
 
+    def test_end_date_column_becomes_endDate(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            self.make_site(tmp)
+            csvdir = pathlib.Path(tmp) / "csv"
+            csvdir.mkdir()
+            with open(csvdir / "events.csv", "w", newline="") as f:
+                w = csv.writer(f)
+                w.writerow(["Title", "Date", "End Date"])
+                w.writerow(["Weekend Away", "2027-01-16", "2027-01-17"])
+                w.writerow(["One Evening", "2027-02-03", ""])
+                w.writerow(["Typed By Hand", "2027-03-06", "Mar 7, 2027"])
+                w.writerow(["No Such Day", "2027-02-27", "2027-02-30"])
+                w.writerow(["Trailing Text", "2027-04-03", "2027-04-04 or so"])
+                w.writerow(["With A Time", "2027-05-01", "2027-05-02T17:00:00"])
+                w.writerow(["Unpadded Month", "2027-01-16", "2027-1-17"])
+                w.writerow(["Not A Time", "2027-06-05", "2027-06-06Tuesday"])
+                w.writerow(["Text After Time", "2027-07-03", "2027-07-04T17:00 or so"])
+                w.writerow(["With A Zone", "2027-08-07", "2027-08-08T17:00:00-07:00"])
+                w.writerow(["Hour Offset", "2027-09-04", "2027-09-05T17:00-07"])
+            r = run_script("spreadsheet-import.py", "--csv-dir", str(csvdir), "--site", tmp)
+            self.assertEqual(r.returncode, 0, r.stderr)
+            events = pathlib.Path(tmp) / "content" / "events"
+            self.assertIn("endDate = 2027-01-17", (events / "weekend-away.md").read_text())  # unquoted, like date
+            self.assertNotIn("endDate", (events / "one-evening.md").read_text())
+            # not an ISO date: left out with a warning, never written half-cut
+            self.assertNotIn("endDate", (events / "typed-by-hand.md").read_text())
+            self.assertIn("Typed By Hand", r.stderr)
+            self.assertNotIn("endDate", (events / "no-such-day.md").read_text())
+            self.assertIn("No Such Day", r.stderr)
+            self.assertNotIn("endDate", (events / "trailing-text.md").read_text())
+            self.assertIn("Trailing Text", r.stderr)
+            for slug, title in (("unpadded-month", "Unpadded Month"), ("not-a-time", "Not A Time"),
+                                ("text-after-time", "Text After Time")):
+                self.assertNotIn("endDate", (events / f"{slug}.md").read_text())
+                self.assertIn(title, r.stderr)
+            self.assertIn("endDate = 2027-05-02\n", (events / "with-a-time.md").read_text())  # time dropped
+            self.assertIn("endDate = 2027-08-08\n", (events / "with-a-zone.md").read_text())
+            self.assertIn("endDate = 2027-09-05\n", (events / "hour-offset.md").read_text())
+            with tempfile.TemporaryDirectory() as astro_site:
+                r = run_script("spreadsheet-import.py", "--csv-dir", str(csvdir), "--site", astro_site, "--format", "astro")
+                self.assertEqual(r.returncode, 0, r.stderr)
+                astro = (pathlib.Path(astro_site) / "src" / "content" / "events" / "weekend-away.md").read_text()
+                self.assertIn("endDate: 2027-01-17", astro)
+
     def test_astro_skips_sponsors_tab(self):
         with tempfile.TemporaryDirectory() as tmp:
             r = run_script("spreadsheet-import.py", "--xlsx", self.sample_xlsx(tmp),
